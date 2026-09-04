@@ -89,7 +89,7 @@ const handleImageUpload = async (event) => {
   if (!file) return
 
   isProcessing.value = true
-  ocrStatus.value = '📸 正在優化手機照片中...'
+  ocrStatus.value = '📸 正在優化相片...'
   recognizedDebugText.value = ''
 
   try {
@@ -133,7 +133,7 @@ const handleImageUpload = async (event) => {
     } else {
       ocrStatus.value = ''
       alert(
-        `未能匹配成功。\n\n【辨識到的文字內容】：\n「${rawRecognizedText.trim() || '未偵測到英文字元'}」\n\n💡 建議直接點擊上方輸入框，使用 iPhone 鍵盤自帶的「相機掃描」更為即時精準！`
+        `未能成功辨識網址。\n\n【辨識到的文字】：\n「${rawRecognizedText.trim() || '未偵測到文字'}」\n\n💡 建議：\n1. 拍照時請只拍螢幕上的網址區域（避免拍到大範圍無關畫面）。\n2. 或直接點擊上方輸入框，使用 iPhone 鍵盤自帶的「相機掃描」更為即時！`
       )
     }
   } catch (err) {
@@ -180,7 +180,7 @@ const resetVerify = () => {
       <!-- 核心：iPhone 原況文字 (Live Text) 掃描輸入框 -->
       <div class="form-group">
         <label class="form-label">
-          <span>📷 方式一：iPhone 鍵盤相機即時掃描 (推薦最準確)</span>
+          <span>📷 方式一：iPhone 鍵盤相機即時掃描 (最推薦、最精準)</span>
         </label>
         <p class="tip-text">
           👉 點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示 (掃描文字)」</strong> 對準螢幕上的 <code>http://mdm.idv.tw</code>：
@@ -195,25 +195,41 @@ const resetVerify = () => {
         />
       </div>
 
-      <!-- 備用：拍照上傳 (本機 OCR) -->
+      <!-- 備用：拍照或上傳 (本機 OCR) -->
       <div class="form-group alt-method">
         <label class="form-label">
-          <span>📸 方式二：拍照上傳辨識</span>
+          <span>📸 方式二：手機拍照 / 相簿上傳辨識</span>
         </label>
         <p class="tip-text">
-          點擊下方按鈕拍攝或選擇螢幕照片：
+          點擊下方按鈕拍照或從相簿選擇螢幕照片（建議<strong>靠近螢幕拍特寫</strong>）：
         </p>
-        <label class="upload-btn" :class="{ 'btn-disabled': isProcessing }">
-          <span>{{ isProcessing ? '辨識中...' : '拍攝 / 選擇螢幕照片' }}</span>
-          <input 
-            type="file" 
-            accept="image/*" 
-            capture="environment" 
-            @change="handleImageUpload"
-            :disabled="isProcessing"
-            class="hidden-file-input"
-          />
-        </label>
+        <div class="btn-group">
+          <!-- 選項 A: 直接調用相機拍照 -->
+          <label class="upload-btn" :class="{ 'btn-disabled': isProcessing }">
+            <span>📷 直接拍照</span>
+            <input 
+              type="file" 
+              accept="image/*" 
+              capture="environment" 
+              @change="handleImageUpload"
+              :disabled="isProcessing"
+              class="hidden-file-input"
+            />
+          </label>
+
+          <!-- 選項 B: 從相簿選擇剛拍的照片或截圖 -->
+          <label class="upload-btn btn-secondary" :class="{ 'btn-disabled': isProcessing }">
+            <span>🖼 從相簿選取</span>
+            <input 
+              type="file" 
+              accept="image/*" 
+              @change="handleImageUpload"
+              :disabled="isProcessing"
+              class="hidden-file-input"
+            />
+          </label>
+        </div>
+
         <div v-if="ocrStatus" class="ocr-status">{{ ocrStatus }}</div>
         <div v-if="recognizedDebugText && !isVerified" class="debug-box">
           <small>最後辨識結果：{{ recognizedDebugText }}</small>
@@ -337,6 +353,12 @@ const resetVerify = () => {
   margin-top: 1.5rem;
 }
 
+.btn-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .upload-btn {
   display: inline-flex;
   align-items: center;
@@ -354,6 +376,17 @@ const resetVerify = () => {
 
 .upload-btn:hover {
   background-color: var(--vp-c-brand-2);
+}
+
+.btn-secondary {
+  background-color: var(--vp-c-bg-mute);
+  border-color: var(--vp-c-border);
+  color: var(--vp-c-text-1);
+}
+
+.btn-secondary:hover {
+  background-color: var(--vp-c-bg);
+  border-color: var(--vp-c-brand-1);
 }
 
 .btn-disabled {
