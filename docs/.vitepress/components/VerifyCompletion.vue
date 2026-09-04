@@ -292,12 +292,18 @@ onBeforeUnmount(() => {
           <span>📷 方案 B：iPhone 鍵盤相機原況文字 (Live Text)</span>
         </label>
         <p class="tip-text">
-          點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示」</strong> 對準螢幕上的文字 <code>http://mdm.idv.tw</code>：
+          👉 點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示 (掃描文字)」</strong>（若未出現可長按輸入框選擇「從相機插入」）：
         </p>
         <input 
           v-model="scannedText" 
           @input="checkInput"
           type="text" 
+          name="scanned_mdm_url"
+          inputmode="text"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
           placeholder="點此喚起鍵盤並點選相機圖示..." 
           class="form-input scan-input"
         />
