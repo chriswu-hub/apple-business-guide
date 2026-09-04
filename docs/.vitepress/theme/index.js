@@ -5,7 +5,7 @@ export default {
   extends: DefaultTheme,
   enhanceApp() {
     if (typeof window !== 'undefined') {
-      // 1. 監聽點擊複製事件：過濾註解 (# 開頭)
+      // 1. 複製過濾：過濾以 # 開頭的註解行
       document.addEventListener('copy', (e) => {
         const selection = window.getSelection()?.toString()
         if (selection) return
@@ -32,14 +32,15 @@ export default {
         }
       }, true)
 
-      // 2. 徹底消除 button 上所有的 title/aria 屬性
-      const cleanAllTitles = () => {
+      // 2. 徹底移除按鈕原生 title，避免瀏覽器在按鈕下方彈出原生框
+      const cleanTitles = () => {
         document.querySelectorAll('button.copy').forEach(btn => {
           btn.removeAttribute('title')
         })
       }
-      setTimeout(cleanAllTitles, 300)
-      window.addEventListener('mouseover', (e) => {
+      setTimeout(cleanTitles, 300)
+
+      document.addEventListener('mouseover', (e) => {
         const target = e.target
         if (target && target.closest) {
           const btn = target.closest('button.copy')
@@ -47,26 +48,28 @@ export default {
         }
       }, true)
 
-      // 3. 點擊按鈕時，動態在按鈕正左邊插入一個獨立乾淨的「已複製」標籤
+      // 3. 點擊複製按鈕時，在代碼區塊容器內建立獨立的左側標籤
       document.addEventListener('click', (e) => {
         const target = e.target
         if (target && target.closest) {
           const btn = target.closest('button.copy')
           if (btn) {
             btn.removeAttribute('title')
-            // 移除舊的提示
-            btn.querySelector('.custom-copy-tooltip')?.remove()
+            const parent = btn.parentElement
+            if (parent) {
+              // 移除可能存在的舊標籤
+              parent.querySelectorAll('.custom-copy-badge').forEach(el => el.remove())
 
-            // 建立獨立的左側繁體浮塊
-            const tooltip = document.createElement('span')
-            tooltip.className = 'custom-copy-tooltip'
-            tooltip.textContent = '已複製'
-            btn.appendChild(tooltip)
+              // 建立新標籤並掛載至 parent（代碼區塊右上角容器）
+              const badge = document.createElement('span')
+              badge.className = 'custom-copy-badge'
+              badge.textContent = '已複製'
+              parent.appendChild(badge)
 
-            // 2 秒後淡出移除
-            setTimeout(() => {
-              tooltip.remove()
-            }, 2000)
+              setTimeout(() => {
+                badge.remove()
+              }, 2000)
+            }
           }
         }
       }, true)

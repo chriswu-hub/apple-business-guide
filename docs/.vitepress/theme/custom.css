@@ -1,60 +1,60 @@
 /* ============================================================
-   VitePress 複製按鈕：終極乾淨修復
+   VitePress 複製按鈕全面覆寫樣式
    ============================================================ */
 
-/* 1. 全域禁用按鈕自帶的所有偽元素文字 (不讓任何 ::before / ::after 渲染在按鈕本身上) */
+/* 1. 徹底關閉按鈕的所有 ::before 與 ::after 偽元素，防止任何文字印在按鈕本身上面 */
 .vp-doc [class*='language-'] > button.copy::before,
 .vp-doc [class*='language-'] > button.copy::after,
+.vp-doc [class*='language-'] > button.copy.copied::before,
+.vp-doc [class*='language-'] > button.copy.copied::after,
+.vp-doc [class*='language-'] > button.copy:hover::before,
+.vp-doc [class*='language-'] > button.copy:hover::after,
 .vp-code-group button.copy::before,
 .vp-code-group button.copy::after,
+.vp-code-group button.copy.copied::before,
+.vp-code-group button.copy.copied::after,
 button.copy::before,
-button.copy::after {
+button.copy::after,
+button.copy.copied::before,
+button.copy.copied::after {
   display: none !important;
   content: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
-/* 2. 確保按鈕本身尺寸固定 40x40，維持原本的複製圖示 */
+/* 2. 確保按鈕本身尺寸為 40x40，沒有多餘文字 */
 .vp-doc [class*='language-'] > button.copy,
 .vp-code-group button.copy {
+  direction: ltr !important;
+  overflow: visible !important;
   width: 40px !important;
   height: 40px !important;
-  position: absolute !important;
-  top: 12px !important;
-  right: 12px !important;
-  overflow: visible !important;
 }
 
-/* 3. 使用純獨立 DOM 標籤 (.custom-copy-tooltip) 精準固定在按鈕左側 */
-.custom-copy-tooltip {
+/* 3. 自訂左側「已複製」浮塊標籤 (單獨獨立定位於按鈕左側) */
+.custom-copy-badge {
   position: absolute;
   top: 0;
-  right: 100%;
+  right: 40px; /* 精準固定在 40px 按鈕的正左邊 */
   height: 40px;
+  line-height: 38px;
   padding: 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   white-space: nowrap;
   font-size: 12px;
   font-weight: 500;
   border-radius: 4px 0 0 4px;
-  border: 1px solid var(--vp-code-copy-code-hover-border-color, #d1d5db);
+  border: 1px solid #d1d5db;
   border-right: none;
-  background-color: var(--vp-code-copy-code-hover-bg, #ffffff);
-  color: var(--vp-code-copy-code-active-text, #0071e3);
+  background-color: #ffffff;
+  color: #0071e3;
   pointer-events: none;
+  z-index: 99;
   box-sizing: border-box;
-  z-index: 10;
-  animation: fadeIn 0.15s ease-in-out;
 }
 
-.dark .custom-copy-tooltip {
+.dark .custom-copy-badge {
   background-color: #2e2e32;
   border-color: #3f3f46;
   color: #60a5fa;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateX(5px); }
-  to { opacity: 1; transform: translateX(0); }
 }
