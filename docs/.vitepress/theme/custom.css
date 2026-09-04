@@ -1,25 +1,59 @@
 /* ============================================================
-   VitePress 核心 CSS 變數覆寫：繁體中文「已複製」
+   VitePress 複製按鈕：終極排版與繁體中文修復
    ============================================================ */
 
-/* 1. 直接覆寫 VitePress 用於按鈕左側浮塊的官方 CSS 變數 */
+/* 1. 覆寫 VitePress 預設語言變數為繁體「已複製」 */
 :root,
-:root:lang(zh),
-:root:lang(zh-Hant),
-:root:lang(zh-TW),
 :lang(zh),
 :lang(zh-Hant),
 :lang(zh-TW) {
   --vp-code-copy-copied-text-content: '已複製' !important;
 }
 
-/* 2. 徹底關閉 ::after，避免雙重偽元素 (VitePress 官方架構是使用 ::before 作為左側浮塊) */
-[class*='language-'] > button.copy::after,
-[class*='language-'] > button.copy.copied::after,
+/* 2. 徹底關閉 ::after，避免任何雙重浮塊 */
+.vp-doc [class*='language-'] > button.copy::after,
+.vp-doc [class*='language-'] > button.copy.copied::after,
 .vp-code-group button.copy::after,
 .vp-code-group button.copy.copied::after,
 button.copy::after,
 button.copy.copied::after {
   display: none !important;
   content: none !important;
+}
+
+/* 3. 確保按鈕本身不換行、寬高固定 */
+.vp-doc [class*='language-'] > button.copy,
+.vp-code-group button.copy {
+  direction: ltr !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* 4. 精確定位 ::before 浮塊在按鈕左側，單行置中對齊，絕不折行 */
+.vp-doc [class*='language-'] > button.copy.copied::before,
+.vp-code-group button.copy.copied::before {
+  content: '已複製' !important;
+  position: absolute !important;
+  top: -1px !important;
+  right: 100% !important;
+  left: auto !important;
+  transform: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  height: 40px !important;
+  padding: 0 10px !important;
+  width: auto !important;
+  min-width: 60px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  z-index: 10 !important;
+  border: 1px solid var(--vp-code-copy-code-hover-border-color) !important;
+  border-right: none !important;
+  border-radius: 4px 0 0 4px !important;
+  background-color: var(--vp-code-copy-code-hover-bg) !important;
+  color: var(--vp-code-copy-code-active-text) !important;
 }
