@@ -14,10 +14,18 @@
 http://mdm.idv.tw
 ```
 
+### 📱 結訓 QR Code
+
+若使用手機進行「一鍵開啟鏡頭掃描」，可直接對準下方 QR Code：
+
+<div style="text-align: center; margin: 1.5rem 0;">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://mdm.idv.tw&margin=10" alt="MDM Completion QR Code" style="display: inline-block; border-radius: 12px; border: 1px solid var(--vp-c-divider); background: #fff; padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);" />
+</div>
+
 ---
 
 ## 📱 實作驗證卡片
 
-使用 iPhone 鍵盤自帶的 **「相機掃描」** 對準上方目標網址，或是直接拍攝螢幕上傳辨識：
+選擇最適合你的驗證方式完成結訓認證：
 
 <VerifyCompletion />

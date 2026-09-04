@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 
 const scannedText = ref('')
 const isVerified = ref(false)
@@ -7,27 +7,29 @@ const studentName = ref('')
 const ocrStatus = ref('')
 const isProcessing = ref(false)
 const recognizedDebugText = ref('')
+const isCameraOpen = ref(false)
+const cameraError = ref('')
+
 const currentDate = new Date().toLocaleDateString('zh-TW', {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
 })
 
-// 超強容錯比對：只保留英文字母與數字，支援字符混淆容錯
+let stream = null
+let scanInterval = null
+
+// 核心比對邏輯：比對是否包含 mdm.idv.tw
 const verifyContent = (rawText) => {
   if (!rawText) return false
-  
-  // 1. 先把非英數字元（包括中文字元、標點符號、亂碼符號）全部濾掉，只保留乾淨的英文字母
   let text = rawText.toLowerCase().replace(/[^a-z0-9]/g, '')
   
-  // 2. 標準特徵比對
   if (text.includes('mdmidvtw')) return true
   if (text.includes('mdm') && text.includes('idv')) return true
   if (text.includes('mdm') && text.includes('tw')) return true
   if (text.includes('idv') && text.includes('tw')) return true
   if (text.includes('mdm')) return true
 
-  // 3. 容錯替換常見 OCR 筆畫混淆 (例如把 m 誤讀為 rn/nn/iii，把 i 誤讀為 1/l)
   let normalized = text
     .replace(/rn/g, 'm')
     .replace(/nn/g, 'm')
@@ -45,10 +47,90 @@ const verifyContent = (rawText) => {
 const checkInput = () => {
   if (verifyContent(scannedText.value)) {
     isVerified.value = true
+    stopCamera()
   }
 }
 
-// 手機相片自動壓縮與色彩調校 (修正手機鏡頭過大與反光問題，提升 5 倍辨識度)
+// ==========================================
+// 方案 A：一鍵開啟鏡頭即時 QR Code / 條碼自動秒讀
+// ==========================================
+const startCamera = async () => {
+  cameraError.value = ''
+  isCameraOpen.value = true
+
+  // 1. 動態載入 jsQR (極致輕量、0.01 秒秒讀的開源 QR 引擎)
+  if (!window.jsQR) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
+      script.onload = resolve
+      script.onerror = reject
+      document.head.appendChild(script)
+    })
+  }
+
+  try {
+    const video = document.getElementById('qr-video')
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment' }
+    })
+    
+    if (video) {
+      video.srcObject = stream
+      video.setAttribute('playsinline', true) // iOS Safari 必需
+      await video.play()
+      startScanning(video)
+    }
+  } catch (err) {
+    console.error('Camera Error:', err)
+    cameraError.value = '無法存取相機，請確認已在 Safari 設定中允許相機權限。'
+  }
+}
+
+const stopCamera = () => {
+  if (scanInterval) {
+    clearInterval(scanInterval)
+    scanInterval = null
+  }
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop())
+    stream = null
+  }
+  isCameraOpen.value = false
+}
+
+const startScanning = (video) => {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+
+  scanInterval = setInterval(() => {
+    if (!video || video.readyState !== video.HAVE_ENOUGH_DATA) return
+
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    if (window.jsQR) {
+      const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert'
+      })
+
+      if (code && code.data) {
+        console.log('掃描成功:', code.data)
+        if (verifyContent(code.data)) {
+          isVerified.value = true
+          scannedText.value = code.data
+          stopCamera()
+        }
+      }
+    }
+  }, 100) // 每 0.1 秒掃描一次影格 (秒級反應)
+}
+
+// ==========================================
+// 方案 B：相片 OCR 辨識 (備用)
+// ==========================================
 const optimizePhotoForOCR = (file) => {
   return new Promise((resolve) => {
     const reader = new FileReader()
@@ -58,7 +140,6 @@ const optimizePhotoForOCR = (file) => {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
 
-        // 縮放至最適辨識尺寸 (1200px 左右)
         let width = img.width
         let height = img.height
         const maxDim = 1200
@@ -83,17 +164,15 @@ const optimizePhotoForOCR = (file) => {
   })
 }
 
-// 方式二：照片本機 OCR 辨識 (同時支援中英文混合模型，徹底避免中文造成亂碼)
 const handleImageUpload = async (event) => {
   const file = event.target.files[0]
   if (!file) return
 
   isProcessing.value = true
-  ocrStatus.value = '📸 正在優化相片...'
+  ocrStatus.value = '📸 正在分析照片...'
   recognizedDebugText.value = ''
 
   try {
-    // 1. 動態載入 Tesseract.js
     if (!window.Tesseract) {
       ocrStatus.value = '⏳ 正在載入 OCR 模組...'
       await new Promise((resolve, reject) => {
@@ -105,12 +184,9 @@ const handleImageUpload = async (event) => {
       })
     }
 
-    // 2. 手機照片優化
     const optimizedImage = await optimizePhotoForOCR(file)
-
     ocrStatus.value = '🔍 正在辨識文字中...'
 
-    // 3. 載入 eng + chi_tra 雙語模型，避免中文被認成亂碼符號干擾英文
     const result = await window.Tesseract.recognize(
       optimizedImage,
       'eng+chi_tra',
@@ -132,14 +208,12 @@ const handleImageUpload = async (event) => {
       ocrStatus.value = ''
     } else {
       ocrStatus.value = ''
-      alert(
-        `未能成功辨識網址。\n\n【辨識到的文字】：\n「${rawRecognizedText.trim() || '未偵測到文字'}」\n\n💡 建議：\n1. 拍照時請只拍螢幕上的網址區域（避免拍到大範圍無關畫面）。\n2. 或直接點擊上方輸入框，使用 iPhone 鍵盤自帶的「相機掃描」更為即時！`
-      )
+      alert(`未能成功辨識網址。\n【辨識到的文字】：\n「${rawRecognizedText.trim() || '未偵測到文字'}」`)
     }
   } catch (err) {
     console.error('OCR Error:', err)
     ocrStatus.value = ''
-    alert(`辨識過程發生異常：${err.message || '請改用 iPhone 鍵盤相機掃描'}`)
+    alert(`辨識異常：${err.message}`)
   } finally {
     isProcessing.value = false
     event.target.value = ''
@@ -152,7 +226,12 @@ const resetVerify = () => {
   ocrStatus.value = ''
   isProcessing.value = false
   recognizedDebugText.value = ''
+  stopCamera()
 }
+
+onBeforeUnmount(() => {
+  stopCamera()
+})
 </script>
 
 <template>
@@ -162,8 +241,8 @@ const resetVerify = () => {
       <div class="verify-header">
         <div class="verify-icon">📱</div>
         <div>
-          <h3 class="verify-title">結訓成果檢核與掃描</h3>
-          <p class="verify-subtitle">請使用手機掃描或拍攝 Mac 螢幕上的目標網址以完成認證</p>
+          <h3 class="verify-title">結訓成果檢核與驗證</h3>
+          <p class="verify-subtitle">請使用手機掃描螢幕上的目標網址或 QR Code 完成認證</p>
         </div>
       </div>
 
@@ -177,13 +256,43 @@ const resetVerify = () => {
         />
       </div>
 
-      <!-- 核心：iPhone 原況文字 (Live Text) 掃描輸入框 -->
-      <div class="form-group">
+      <!-- 🌟 方案 A：一鍵開啟鏡頭即時秒讀 (極致流暢) -->
+      <div class="form-group highlight-box">
         <label class="form-label">
-          <span>📷 方式一：iPhone 鍵盤相機即時掃描 (最推薦、最精準)</span>
+          <span>⚡️ 方案 A：一鍵開啟相機秒讀 (推薦最快)</span>
         </label>
         <p class="tip-text">
-          👉 點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示 (掃描文字)」</strong> 對準螢幕上的 <code>http://mdm.idv.tw</code>：
+          點擊下方按鈕直接喚醒手機相機，對準上方 <strong>QR Code</strong> 即可在 0.1 秒內自動完成驗證：
+        </p>
+        
+        <div v-if="!isCameraOpen">
+          <button @click="startCamera" class="camera-launch-btn">
+            📷 點此開啟相機即時掃描
+          </button>
+        </div>
+
+        <!-- 即時相機視窗與掃描框 -->
+        <div v-else class="camera-viewport-container">
+          <div class="camera-box">
+            <video id="qr-video" class="video-preview"></video>
+            <div class="scanner-laser"></div>
+            <div class="scanner-frame"></div>
+          </div>
+          <p class="camera-hint">請將鏡頭對準螢幕上的 QR Code</p>
+          <button @click="stopCamera" class="stop-camera-btn">
+            ✕ 關閉相機
+          </button>
+        </div>
+        <p v-if="cameraError" class="camera-error">{{ cameraError }}</p>
+      </div>
+
+      <!-- 方案 B：iPhone 鍵盤相機原況文字掃描 -->
+      <div class="form-group">
+        <label class="form-label">
+          <span>📷 方案 B：iPhone 鍵盤相機原況文字 (Live Text)</span>
+        </label>
+        <p class="tip-text">
+          點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示」</strong> 對準螢幕上的文字 <code>http://mdm.idv.tw</code>：
         </p>
         <input 
           v-model="scannedText" 
@@ -191,20 +300,15 @@ const resetVerify = () => {
           type="text" 
           placeholder="點此喚起鍵盤並點選相機圖示..." 
           class="form-input scan-input"
-          autofocus
         />
       </div>
 
-      <!-- 備用：拍照或上傳 (本機 OCR) -->
+      <!-- 方案 C：拍照或上傳圖片辨識 -->
       <div class="form-group alt-method">
         <label class="form-label">
-          <span>📸 方式二：手機拍照 / 相簿上傳辨識</span>
+          <span>📸 方案 C：拍照或從相簿上傳</span>
         </label>
-        <p class="tip-text">
-          點擊下方按鈕拍照或從相簿選擇螢幕照片（建議<strong>靠近螢幕拍特寫</strong>）：
-        </p>
         <div class="btn-group">
-          <!-- 選項 A: 直接調用相機拍照 -->
           <label class="upload-btn" :class="{ 'btn-disabled': isProcessing }">
             <span>📷 直接拍照</span>
             <input 
@@ -216,8 +320,6 @@ const resetVerify = () => {
               class="hidden-file-input"
             />
           </label>
-
-          <!-- 選項 B: 從相簿選擇剛拍的照片或截圖 -->
           <label class="upload-btn btn-secondary" :class="{ 'btn-disabled': isProcessing }">
             <span>🖼 從相簿選取</span>
             <input 
@@ -229,11 +331,7 @@ const resetVerify = () => {
             />
           </label>
         </div>
-
         <div v-if="ocrStatus" class="ocr-status">{{ ocrStatus }}</div>
-        <div v-if="recognizedDebugText && !isVerified" class="debug-box">
-          <small>最後辨識結果：{{ recognizedDebugText }}</small>
-        </div>
       </div>
     </div>
 
@@ -309,6 +407,13 @@ const resetVerify = () => {
   margin-bottom: 1.25rem;
 }
 
+.highlight-box {
+  background: rgba(0, 113, 227, 0.04);
+  border: 1px solid rgba(0, 113, 227, 0.2);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
 .form-label {
   display: block;
   font-size: 0.875rem;
@@ -322,6 +427,102 @@ const resetVerify = () => {
   color: var(--vp-c-text-2);
   margin-bottom: 0.5rem;
   line-height: 1.4;
+}
+
+.camera-launch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  border-radius: 10px;
+  background-color: #0071e3;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
+  transition: all 0.2s;
+}
+
+.camera-launch-btn:hover {
+  background-color: #0077ed;
+  transform: translateY(-1px);
+}
+
+.camera-viewport-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.camera-box {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.video-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-frame {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  border: 2px dashed #0071e3;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.scanner-laser {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #0071e3;
+  box-shadow: 0 0 8px #0071e3;
+  animation: scanning 2s infinite ease-in-out;
+}
+
+@keyframes scanning {
+  0% { top: 10%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 90%; opacity: 0; }
+}
+
+.camera-hint {
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  margin: 0.5rem 0;
+}
+
+.stop-camera-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  background: var(--vp-c-bg-mute);
+  border: 1px solid var(--vp-c-border);
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+}
+
+.camera-error {
+  font-size: 0.8rem;
+  color: #ef4444;
+  margin-top: 0.5rem;
 }
 
 .form-input {
@@ -403,16 +604,6 @@ const resetVerify = () => {
   color: var(--vp-c-brand-1);
   margin-top: 0.75rem;
   font-weight: 600;
-}
-
-.debug-box {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background-color: var(--vp-c-bg);
-  border-radius: 6px;
-  border: 1px solid var(--vp-c-divider);
-  color: var(--vp-c-text-3);
-  word-break: break-all;
 }
 
 /* 成功卡片與證書 */
