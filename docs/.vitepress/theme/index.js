@@ -32,20 +32,31 @@ export default {
         }
       }, true)
 
-      // 移除 button 上的 title 屬性，避免瀏覽器在按鈕下方彈出原生黃/黑框 tooltip
-      const cleanTitles = () => {
+      // 移除 button 上的 title 與 aria-label 屬性，避免瀏覽器在按鈕下方彈出原生 tooltip
+      const cleanTooltips = () => {
         document.querySelectorAll('button.copy').forEach((btn) => {
           btn.removeAttribute('title')
         })
       }
-      setTimeout(cleanTitles, 500)
+      setTimeout(cleanTooltips, 300)
+
+      document.addEventListener('mouseover', (e) => {
+        const target = e.target
+        if (target && target.closest) {
+          const btn = target.closest('button.copy')
+          if (btn && btn.hasAttribute('title')) {
+            btn.removeAttribute('title')
+          }
+        }
+      }, true)
+
       document.addEventListener('click', (e) => {
         const target = e.target
         if (target && target.closest) {
           const btn = target.closest('button.copy')
           if (btn) {
             btn.removeAttribute('title')
-            setTimeout(() => btn.removeAttribute('title'), 10)
+            setTimeout(() => btn.removeAttribute('title'), 0)
           }
         }
       }, true)

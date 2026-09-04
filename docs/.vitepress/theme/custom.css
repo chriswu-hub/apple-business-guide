@@ -1,25 +1,25 @@
 /* ============================================================
-   VitePress 程式碼複製按鈕：徹底解決雙重文字 & 強制繁體中文
+   VitePress 核心 CSS 變數覆寫：繁體中文「已複製」
    ============================================================ */
 
-/* 1. VitePress 預設是透過 ::after 顯示按鈕左側的提示浮塊 (tooltip) */
-html body [class*='language-'] > button.copy.copied::after,
-html body .vp-code-group button.copy.copied::after,
-html body button.copy.copied::after {
-  content: '已複製' !important;
+/* 1. 直接覆寫 VitePress 用於按鈕左側浮塊的官方 CSS 變數 */
+:root,
+:root:lang(zh),
+:root:lang(zh-Hant),
+:root:lang(zh-TW),
+:lang(zh),
+:lang(zh-Hant),
+:lang(zh-TW) {
+  --vp-code-copy-copied-text-content: '已複製' !important;
 }
 
-html body [class*='language-'] > button.copy::after,
-html body .vp-code-group button.copy::after,
-html body button.copy::after {
-  content: '複製程式碼' !important;
-}
-
-/* 2. 徹底關閉 ::before 偽元素，避免產生兩個重複的提示 */
-html body [class*='language-'] > button.copy::before,
-html body [class*='language-'] > button.copy.copied::before,
-html body button.copy::before,
-html body button.copy.copied::before {
+/* 2. 徹底關閉 ::after，避免雙重偽元素 (VitePress 官方架構是使用 ::before 作為左側浮塊) */
+[class*='language-'] > button.copy::after,
+[class*='language-'] > button.copy.copied::after,
+.vp-code-group button.copy::after,
+.vp-code-group button.copy.copied::after,
+button.copy::after,
+button.copy.copied::after {
   display: none !important;
   content: none !important;
 }
