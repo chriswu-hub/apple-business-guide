@@ -8,7 +8,11 @@ export default defineConfig({
   locales: {
     root: {
       label: '繁體中文',
-      lang: 'zh-Hant'
+      lang: 'zh-Hant',
+      themeConfig: {
+        copyCodeText: '複製程式碼',
+        copiedKeys: '已複製'
+      }
     }
   },
   themeConfig: {
@@ -56,8 +60,8 @@ export default defineConfig({
     darkModeSwitchTitle: '切換為深色模式',
     sidebarMenuLabel: '目錄選單',
     returnToTopLabel: '回到頂部',
-    // 關鍵設定：覆寫複製按鈕的 tooltip 文字為繁體中文
-    copyCodeTitle: '複製代碼',
+    // VitePress 官方設定項：按鈕提示與已複製文字
+    copyCodeText: '複製程式碼',
     copiedKeys: '已複製'
   },
   markdown: {

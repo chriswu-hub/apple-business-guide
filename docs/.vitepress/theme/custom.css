@@ -1,17 +1,18 @@
-/* 徹底覆寫所有可能出現的「已复制」簡體字樣為繁體中文「已複製」 */
+/* 覆寫按鈕預設與複製後的偽元素文字 */
+[class*='language-'] > button.copy.copied::before,
+[class*='language-'] > button.copy.copied::after,
+.vp-code-group .copy.copied::before,
 .vp-code-group .copy.copied::after,
-.vp-doc [class*='language-'] > button.copy.copied::after,
-.vp-adaptive-theme [class*='language-'] > button.copy.copied::after,
-button.copy.copied::after,
-.copy.copied::after {
+button.copy.copied::before,
+button.copy.copied::after {
   content: '已複製' !important;
 }
 
-/* 懸停複製提示 */
+[class*='language-'] > button.copy::before,
+[class*='language-'] > button.copy::after,
+.vp-code-group .copy::before,
 .vp-code-group .copy::after,
-.vp-doc [class*='language-'] > button.copy::after,
-.vp-adaptive-theme [class*='language-'] > button.copy::after,
-button.copy::after,
-.copy::after {
+button.copy::before,
+button.copy::after {
   content: '複製' !important;
 }
