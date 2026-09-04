@@ -5,14 +5,14 @@ export default {
   extends: DefaultTheme,
   enhanceApp() {
     if (typeof window !== 'undefined') {
-      // 監聽點擊複製事件，自訂過濾掉註解行 (# 開頭)
+      // 1. 監聽點擊複製事件：過濾註解 (# 開頭)
       document.addEventListener('copy', (e) => {
         const selection = window.getSelection()?.toString()
         if (selection) return
 
         const target = e.target
         if (target && target.closest) {
-          const btn = target.closest('.copy')
+          const btn = target.closest('button.copy')
           if (btn) {
             const pre = btn.parentElement?.querySelector('pre')
             if (pre) {
@@ -32,31 +32,41 @@ export default {
         }
       }, true)
 
-      // 移除 button 上的 title 與 aria-label 屬性，避免瀏覽器在按鈕下方彈出原生 tooltip
-      const cleanTooltips = () => {
-        document.querySelectorAll('button.copy').forEach((btn) => {
+      // 2. 徹底消除 button 上所有的 title/aria 屬性
+      const cleanAllTitles = () => {
+        document.querySelectorAll('button.copy').forEach(btn => {
           btn.removeAttribute('title')
         })
       }
-      setTimeout(cleanTooltips, 300)
-
-      document.addEventListener('mouseover', (e) => {
+      setTimeout(cleanAllTitles, 300)
+      window.addEventListener('mouseover', (e) => {
         const target = e.target
         if (target && target.closest) {
           const btn = target.closest('button.copy')
-          if (btn && btn.hasAttribute('title')) {
-            btn.removeAttribute('title')
-          }
+          if (btn) btn.removeAttribute('title')
         }
       }, true)
 
+      // 3. 點擊按鈕時，動態在按鈕正左邊插入一個獨立乾淨的「已複製」標籤
       document.addEventListener('click', (e) => {
         const target = e.target
         if (target && target.closest) {
           const btn = target.closest('button.copy')
           if (btn) {
             btn.removeAttribute('title')
-            setTimeout(() => btn.removeAttribute('title'), 0)
+            // 移除舊的提示
+            btn.querySelector('.custom-copy-tooltip')?.remove()
+
+            // 建立獨立的左側繁體浮塊
+            const tooltip = document.createElement('span')
+            tooltip.className = 'custom-copy-tooltip'
+            tooltip.textContent = '已複製'
+            btn.appendChild(tooltip)
+
+            // 2 秒後淡出移除
+            setTimeout(() => {
+              tooltip.remove()
+            }, 2000)
           }
         }
       }, true)
