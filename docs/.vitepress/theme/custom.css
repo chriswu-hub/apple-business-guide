@@ -1,5 +1,5 @@
 /* ============================================================
-   VitePress 複製按鈕：終極排版與繁體中文修復
+   VitePress 複製按鈕：左側無縫對齊、繁體中文「已複製」
    ============================================================ */
 
 /* 1. 覆寫 VitePress 預設語言變數為繁體「已複製」 */
@@ -21,39 +21,40 @@ button.copy.copied::after {
   content: none !important;
 }
 
-/* 3. 確保按鈕本身不換行、寬高固定 */
-.vp-doc [class*='language-'] > button.copy,
-.vp-code-group button.copy {
-  direction: ltr !important;
-  overflow: visible !important;
-  box-sizing: border-box !important;
+/* 3. 當未點擊時，隱藏 ::before */
+.vp-doc [class*='language-'] > button.copy:not(.copied)::before,
+.vp-code-group button.copy:not(.copied)::before {
+  display: none !important;
 }
 
-/* 4. 精確定位 ::before 浮塊在按鈕左側，單行置中對齊，絕不折行 */
+/* 4. 點擊後 (copied 狀態) 正確定位在按鈕「左側」，垂直完美居中 */
 .vp-doc [class*='language-'] > button.copy.copied::before,
-.vp-code-group button.copy.copied::before {
+.vp-doc [class*='language-'] > button.copy:hover.copied::before,
+.vp-code-group button.copy.copied::before,
+button.copy.copied::before {
   content: '已複製' !important;
   position: absolute !important;
   top: -1px !important;
-  right: 100% !important;
+  right: calc(100% - 1px) !important;
   left: auto !important;
+  bottom: auto !important;
   transform: none !important;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   white-space: nowrap !important;
-  word-break: keep-all !important;
   height: 40px !important;
-  padding: 0 10px !important;
+  padding: 0 12px !important;
   width: auto !important;
   min-width: 60px !important;
   font-size: 12px !important;
-  line-height: 1 !important;
-  letter-spacing: 0 !important;
+  font-weight: 500 !important;
+  line-height: 38px !important;
   z-index: 10 !important;
   border: 1px solid var(--vp-code-copy-code-hover-border-color) !important;
   border-right: none !important;
   border-radius: 4px 0 0 4px !important;
   background-color: var(--vp-code-copy-code-hover-bg) !important;
   color: var(--vp-code-copy-code-active-text) !important;
+  pointer-events: none !important;
 }
