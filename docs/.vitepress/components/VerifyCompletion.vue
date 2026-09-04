@@ -4,55 +4,148 @@ import { ref } from 'vue'
 const scannedText = ref('')
 const isVerified = ref(false)
 const studentName = ref('')
+const ocrStatus = ref('')
+const isProcessing = ref(false)
 const currentDate = new Date().toLocaleDateString('zh-TW', {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
 })
 
-// 驗證邏輯：比對是否包含 mdm.idv.tw (包含 http://, https:// 或純網域名稱)
+// 驗證核心函式：模糊比對與常見 OCR 誤判容錯
+const verifyContent = (rawText) => {
+  if (!rawText) return false
+  // 轉小寫並替換常見字符混淆 (例如將 1/l 轉為 i，或移除空格與標點)
+  let text = rawText.toLowerCase().replace(/\s+/g, '')
+  
+  // 1. 精準命中
+  if (text.includes('mdm.idv.tw')) return true
+  
+  // 2. 容錯命中：點號可能被辨識為逗號、下劃線或空格
+  if (/mdm[.,_ ]idv[.,_ ]tw/.test(text)) return true
+
+  // 3. 關鍵字同時出現
+  if (text.includes('mdm') && text.includes('idv') && text.includes('tw')) return true
+
+  return false
+}
+
+// 方式一：輸入框即時比對
 const checkInput = () => {
-  const clean = scannedText.value.trim().toLowerCase()
-  if (clean.includes('mdm.idv.tw')) {
+  if (verifyContent(scannedText.value)) {
     isVerified.value = true
   }
 }
 
-// 支援即時照片 OCR 備用上傳 (Tesseract 輕量 CDN 或本地掃描)
+// 圖片前處理：縮放 + 灰階 + 二值化提高對比度，大幅提升手機照片 OCR 成功率
+const preprocessImage = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        
+        // 限制最大寬度為 1600px，避免手機高畫質照片吃光記憶體
+        let width = img.width
+        let height = img.height
+        const maxDim = 1600
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width)
+            width = maxDim
+          } else {
+            width = Math.round((width * maxDim) / height)
+            height = maxDim
+          }
+        }
+
+        canvas.width = width
+        canvas.height = height
+        ctx.drawImage(img, 0, 0, width, height)
+
+        // 取得像素並提高對比度 (Grayscale + Contrast)
+        const imgData = ctx.getImageData(0, 0, width, height)
+        const d = imgData.data
+        for (let i = 0; i < d.length; i += 4) {
+          // 灰階亮度
+          const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
+          // 簡單二值化增強文字邊緣
+          const val = gray > 140 ? 255 : 0
+          d[i] = val
+          d[i + 1] = val
+          d[i + 2] = val
+        }
+        ctx.putImageData(imgData, 0, 0)
+        resolve(canvas.toDataURL('image/jpeg', 0.85))
+      }
+      img.src = e.target.result
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
+// 方式二：照片本機 OCR 辨識
 const handleImageUpload = async (event) => {
   const file = event.target.files[0]
   if (!file) return
 
-  // 載入 Tesseract.js 進行照片本機 OCR
-  if (!window.Tesseract) {
-    const script = document.createElement('script')
-    script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
-    document.head.appendChild(script)
-    await new Promise(resolve => script.onload = resolve)
-  }
-
-  const statusText = document.getElementById('ocr-status')
-  if (statusText) statusText.innerText = '正在本機分析照片文字中...'
+  isProcessing.value = true
+  ocrStatus.value = '📸 正在優化照片對比度並啟動神經網路模型...'
 
   try {
-    const result = await window.Tesseract.recognize(file, 'eng')
-    const text = result.data.text.toLowerCase()
-    if (text.includes('mdm.idv.tw')) {
+    // 1. 動態載入 Tesseract.js (若尚未載入)
+    if (!window.Tesseract) {
+      ocrStatus.value = '⏳ 正在載入本機 OCR 引擎 (約需數秒)...'
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
+        script.onload = resolve
+        script.onerror = reject
+        document.head.appendChild(script)
+      })
+    }
+
+    // 2. 影像前處理
+    ocrStatus.value = '🔍 正在分析照片文字...'
+    const processedImageData = await preprocessImage(file)
+
+    // 3. 執行 OCR
+    const worker = await window.Tesseract.createWorker('eng')
+    const result = await worker.recognize(processedImageData)
+    await worker.terminate()
+
+    const rawRecognizedText = result.data.text || ''
+    console.log('OCR 辨識結果:', rawRecognizedText)
+
+    if (verifyContent(rawRecognizedText)) {
       isVerified.value = true
       scannedText.value = 'http://mdm.idv.tw'
+      ocrStatus.value = ''
     } else {
-      alert('未在照片中辨識到指定網址，請確認照片清晰或直接使用 iPhone 原況相機掃描！')
+      // 容錯提示並顯示辨識到的文字
+      ocrStatus.value = ''
+      alert(
+        `未能在照片中清楚識別到「http://mdm.idv.tw」。\n\n【辨識到的文字片段】：\n${rawRecognizedText.slice(0, 100) || '(未偵測到文字)'}\n\n💡 建議：\n1. 拍照時靠近螢幕、避免反光與斜角。\n2. 或直接點擊上方輸入框，使用 iPhone 內建的「原況相機」掃描！`
+      )
     }
   } catch (err) {
-    alert('辨識失敗，請改用 iPhone 原況文字輸入框掃描。')
+    console.error('OCR Error:', err)
+    ocrStatus.value = ''
+    alert('照片處理發生錯誤，建議改用 iPhone 鍵盤自帶的「原況相機掃描」！')
   } finally {
-    if (statusText) statusText.innerText = ''
+    isProcessing.value = false
+    // 重設 input 讓使用者可重複選同一張
+    event.target.value = ''
   }
 }
 
 const resetVerify = () => {
   isVerified.value = false
   scannedText.value = ''
+  ocrStatus.value = ''
+  isProcessing.value = false
 }
 </script>
 
@@ -81,7 +174,7 @@ const resetVerify = () => {
       <!-- 核心：iPhone 原況文字 (Live Text) 掃描輸入框 -->
       <div class="form-group">
         <label class="form-label">
-          <span>📷 方式一：iPhone 鍵盤相機即時掃描 (推薦)</span>
+          <span>📷 方式一：iPhone 鍵盤相機即時掃描 (推薦最準確)</span>
         </label>
         <p class="tip-text">
           👉 點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示 (掃描文字)」</strong> 對準螢幕上的 <code>http://mdm.idv.tw</code>：
@@ -99,19 +192,23 @@ const resetVerify = () => {
       <!-- 備用：拍照上傳 (本機 OCR) -->
       <div class="form-group alt-method">
         <label class="form-label">
-          <span>📸 方式二：拍照上傳辨識</span>
+          <span>📸 方式二：拍照上傳辨識 (加強版 OCR)</span>
         </label>
-        <label class="upload-btn">
-          <span>拍攝 / 選擇螢幕照片</span>
+        <p class="tip-text">
+          點擊下方按鈕直接拍照。拍照時請盡量<strong>靠近螢幕、水平正對、避免螢幕反光</strong>：
+        </p>
+        <label class="upload-btn" :class="{ 'btn-disabled': isProcessing }">
+          <span>{{ isProcessing ? '處理中...' : '拍攝 / 選擇螢幕照片' }}</span>
           <input 
             type="file" 
             accept="image/*" 
             capture="environment" 
             @change="handleImageUpload"
+            :disabled="isProcessing"
             class="hidden-file-input"
           />
         </label>
-        <div id="ocr-status" class="ocr-status"></div>
+        <div v-if="ocrStatus" class="ocr-status">{{ ocrStatus }}</div>
       </div>
     </div>
 
@@ -237,18 +334,22 @@ const resetVerify = () => {
   justify-content: center;
   padding: 0.65rem 1.25rem;
   border-radius: 8px;
-  background-color: var(--vp-c-bg-mute);
-  border: 1px solid var(--vp-c-border);
+  background-color: var(--vp-c-brand-1);
+  border: 1px solid var(--vp-c-brand-1);
   font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--vp-c-text-1);
+  font-weight: 600;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .upload-btn:hover {
-  background-color: var(--vp-c-bg);
-  border-color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-2);
+}
+
+.btn-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .hidden-file-input {
@@ -256,10 +357,10 @@ const resetVerify = () => {
 }
 
 .ocr-status {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--vp-c-brand-1);
-  margin-top: 0.5rem;
-  font-weight: 500;
+  margin-top: 0.75rem;
+  font-weight: 600;
 }
 
 /* 成功卡片與證書 */
