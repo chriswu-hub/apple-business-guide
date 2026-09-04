@@ -5,13 +5,11 @@ export default {
   extends: DefaultTheme,
   enhanceApp() {
     if (typeof window !== 'undefined') {
-      // 監聽點擊複製事件，自訂過濾掉註解行
+      // 1. 監聽點擊複製事件，自訂過濾掉註解行 (# 開頭)
       document.addEventListener('copy', (e) => {
-        // 如果使用者有自行反白選取文字，遵照原生選取邏輯
         const selection = window.getSelection()?.toString()
         if (selection) return
 
-        // 若是透過 VitePress 複製按鈕觸發
         const target = e.target
         if (target && target.closest) {
           const btn = target.closest('.copy')
@@ -19,7 +17,6 @@ export default {
             const pre = btn.parentElement?.querySelector('pre')
             if (pre) {
               const text = pre.innerText || ''
-              // 過濾掉以 # 開頭的註解行或 inline 註解，或是只過濾全行註解
               const cleanText = text
                 .split('\n')
                 .map(line => line.trim())
@@ -31,6 +28,22 @@ export default {
                 e.preventDefault()
               }
             }
+          }
+        }
+      }, true)
+
+      // 2. 監聽按鈕點擊，防止 VitePress 預設行為干擾，確保強制替換 title/aria-label/dataset
+      document.addEventListener('click', (e) => {
+        const target = e.target
+        if (target && target.closest) {
+          const btn = target.closest('button.copy')
+          if (btn) {
+            btn.setAttribute('title', '已複製')
+            btn.setAttribute('aria-label', '已複製')
+            setTimeout(() => {
+              btn.setAttribute('title', '已複製')
+              btn.setAttribute('aria-label', '已複製')
+            }, 50)
           }
         }
       }, true)

@@ -1,18 +1,24 @@
-/* 覆寫按鈕預設與複製後的偽元素文字 */
-[class*='language-'] > button.copy.copied::before,
-[class*='language-'] > button.copy.copied::after,
-.vp-code-group .copy.copied::before,
-.vp-code-group .copy.copied::after,
-button.copy.copied::before,
-button.copy.copied::after {
+/* ============================================================
+   徹底覆寫 VitePress 程式碼複製按鈕的 tooltip 文字為繁體中文
+   ============================================================ */
+
+/* 1. 預設狀態 (未點擊前) 覆寫文字為「複製程式碼」 */
+html body .vp-doc [class*='language-'] > button.copy::before,
+html body .vp-code-group button.copy::before,
+html body button.copy::before {
+  content: '複製程式碼' !important;
+}
+
+/* 2. 點擊後 (copied 狀態) 強制覆寫文字為「已複製」 */
+html body .vp-doc [class*='language-'] > button.copy.copied::before,
+html body .vp-code-group button.copy.copied::before,
+html body button.copy.copied::before {
   content: '已複製' !important;
 }
 
-[class*='language-'] > button.copy::before,
-[class*='language-'] > button.copy::after,
-.vp-code-group .copy::before,
-.vp-code-group .copy::after,
-button.copy::before,
-button.copy::after {
-  content: '複製' !important;
+/* 針對可能的 ::after 也一併防禦覆寫 */
+html body .vp-doc [class*='language-'] > button.copy.copied::after,
+html body .vp-code-group button.copy.copied::after,
+html body button.copy.copied::after {
+  content: '' !important;
 }

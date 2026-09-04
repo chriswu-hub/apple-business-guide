@@ -5,16 +5,6 @@ export default defineConfig({
   description: '現代化企業 Apple 裝置管理與部署完整教學',
   base: '/apple-business-guide/',
   lang: 'zh-Hant',
-  locales: {
-    root: {
-      label: '繁體中文',
-      lang: 'zh-Hant',
-      themeConfig: {
-        copyCodeText: '複製程式碼',
-        copiedKeys: '已複製'
-      }
-    }
-  },
   themeConfig: {
     nav: [
       { text: '首頁', link: '/' },
@@ -59,10 +49,7 @@ export default defineConfig({
     lightModeSwitchTitle: '切換為淺色模式',
     darkModeSwitchTitle: '切換為深色模式',
     sidebarMenuLabel: '目錄選單',
-    returnToTopLabel: '回到頂部',
-    // VitePress 官方設定項：按鈕提示與已複製文字
-    copyCodeText: '複製程式碼',
-    copiedKeys: '已複製'
+    returnToTopLabel: '回到頂部'
   },
   markdown: {
     theme: {
