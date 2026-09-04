@@ -5,7 +5,7 @@ export default {
   extends: DefaultTheme,
   enhanceApp() {
     if (typeof window !== 'undefined') {
-      // 1. 監聽點擊複製事件，自訂過濾掉註解行 (# 開頭)
+      // 監聽點擊複製事件，自訂過濾掉註解行 (# 開頭)
       document.addEventListener('copy', (e) => {
         const selection = window.getSelection()?.toString()
         if (selection) return
@@ -32,18 +32,20 @@ export default {
         }
       }, true)
 
-      // 2. 監聽按鈕點擊，防止 VitePress 預設行為干擾，確保強制替換 title/aria-label/dataset
+      // 移除 button 上的 title 屬性，避免瀏覽器在按鈕下方彈出原生黃/黑框 tooltip
+      const cleanTitles = () => {
+        document.querySelectorAll('button.copy').forEach((btn) => {
+          btn.removeAttribute('title')
+        })
+      }
+      setTimeout(cleanTitles, 500)
       document.addEventListener('click', (e) => {
         const target = e.target
         if (target && target.closest) {
           const btn = target.closest('button.copy')
           if (btn) {
-            btn.setAttribute('title', '已複製')
-            btn.setAttribute('aria-label', '已複製')
-            setTimeout(() => {
-              btn.setAttribute('title', '已複製')
-              btn.setAttribute('aria-label', '已複製')
-            }, 50)
+            btn.removeAttribute('title')
+            setTimeout(() => btn.removeAttribute('title'), 10)
           }
         }
       }, true)
