@@ -11,6 +11,7 @@ const isCameraOpen = ref(false)
 const cameraError = ref('')
 const liveOcrText = ref('')
 const isCapturing = ref(false)
+const currentFacingMode = ref('environment')
 
 const currentDate = new Date().toLocaleDateString('zh-TW', {
   year: 'numeric',
@@ -54,14 +55,56 @@ const checkInput = () => {
 }
 
 // ==========================================
-// 方案 A：一鍵開啟鏡頭即時辨識 (同時支援 文字 OCR + QR Code)
+// 方案 A：一鍵開啟鏡頭即時辨識 (支援切換前後鏡頭)
 // ==========================================
+const initCameraStream = async (facing = 'environment') => {
+  // 先停止當前串流
+  if (stream) {
+    stream.getTracks().forEach(t => t.stop())
+    stream = null
+  }
+
+  const video = document.getElementById('qr-video')
+  if (!video) return
+
+  // iOS Safari 相機約束最佳配置
+  const constraints = {
+    audio: false,
+    video: {
+      facingMode: facing === 'environment' ? { ideal: 'environment' } : { ideal: 'user' },
+      width: { ideal: 1280 },
+      height: { ideal: 720 }
+    }
+  }
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia(constraints)
+    video.srcObject = stream
+    video.setAttribute('playsinline', 'true')
+    video.setAttribute('autoplay', 'true')
+    video.setAttribute('muted', 'true')
+    await video.play()
+    currentFacingMode.value = facing
+    startLiveScanning(video)
+  } catch (err) {
+    // 容錯降級嘗試
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true })
+      video.srcObject = stream
+      await video.play()
+      startLiveScanning(video)
+    } catch (finalErr) {
+      console.error('Camera Fatal Error:', finalErr)
+      cameraError.value = '無法啟動相機，請確認已在 Safari 設定中給予相機權限。'
+    }
+  }
+}
+
 const startCamera = async () => {
   cameraError.value = ''
   isCameraOpen.value = true
   liveOcrText.value = '鏡頭已啟動，請對準螢幕上的文字或 QR Code...'
 
-  // 1. 動態載入 jsQR 與 Tesseract.js
   if (!window.jsQR) {
     const s1 = document.createElement('script')
     s1.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
@@ -73,57 +116,16 @@ const startCamera = async () => {
     document.head.appendChild(s2)
   }
 
-  try {
-    const video = document.getElementById('qr-video')
-    
-    // 取得所有相機設備，精確找出後置主鏡頭 (back / environment)
-    let selectedDeviceId = null
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices()
-      const videoDevices = devices.filter(d => d.kind === 'videoinput')
-      // 優先尋找 label 包含 back / rear / environment 的後置鏡頭
-      const backCamera = videoDevices.find(d => 
-        /back|rear|environment|後置|背面/i.test(d.label)
-      )
-      if (backCamera) {
-        selectedDeviceId = backCamera.deviceId
-      } else if (videoDevices.length > 1) {
-        // 多鏡頭情況下，後置鏡頭通常排在後面 (非第一顆前置)
-        selectedDeviceId = videoDevices[videoDevices.length - 1].deviceId
-      }
-    } catch (e) {
-      console.warn('Enumerate devices warning:', e)
-    }
+  // 稍等 DOM 渲染完成後啟動預設後鏡頭
+  setTimeout(() => {
+    initCameraStream('environment')
+  }, 100)
+}
 
-    // 構建精準 constraints
-    let constraints
-    if (selectedDeviceId) {
-      constraints = { video: { deviceId: { exact: selectedDeviceId } } }
-    } else {
-      constraints = { video: { facingMode: { ideal: 'environment' } } }
-    }
-
-    try {
-      stream = await navigator.mediaDevices.getUserMedia(constraints)
-    } catch (e) {
-      // 容錯退回
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
-      })
-    }
-    
-    if (video) {
-      video.srcObject = stream
-      video.setAttribute('playsinline', true)
-      video.setAttribute('autoplay', true)
-      video.setAttribute('muted', true)
-      await video.play()
-      startLiveScanning(video)
-    }
-  } catch (err) {
-    console.error('Camera Error:', err)
-    cameraError.value = '無法存取相機，請確認已在 Safari 設定中允許相機權限。'
-  }
+// 手動一鍵切換鏡頭 (前後鏡頭切換)
+const toggleCameraFacing = async () => {
+  const targetFacing = currentFacingMode.value === 'environment' ? 'user' : 'environment'
+  await initCameraStream(targetFacing)
 }
 
 const stopCamera = () => {
@@ -139,10 +141,12 @@ const stopCamera = () => {
   liveOcrText.value = ''
 }
 
-// 自動循環掃描：QR Code (0.1秒) + 即時文字辨識 (按鈕觸發或定期巡檢)
+// 自動循環掃描：QR Code (0.1秒秒讀)
 const startLiveScanning = (video) => {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
+
+  if (scanInterval) clearInterval(scanInterval)
 
   scanInterval = setInterval(() => {
     if (!video || video.readyState !== video.HAVE_ENOUGH_DATA || isVerified.value) return
@@ -151,7 +155,7 @@ const startLiveScanning = (video) => {
     canvas.height = video.videoHeight
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
     
-    // 優先 1：QR Code 掃描
+    // QR Code 掃描
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     if (window.jsQR) {
       const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
@@ -167,13 +171,13 @@ const startLiveScanning = (video) => {
   }, 150)
 }
 
-// 點擊「即時擷取辨識畫面上文字」按鈕
+// 點擊「對準文字，立即辨識」按鈕
 const captureAndRecognizeText = async () => {
   const video = document.getElementById('qr-video')
   if (!video) return
 
   isCapturing.value = true
-  liveOcrText.value = '🔍 正在辨識畫面中的文字，請保持相機穩定...'
+  liveOcrText.value = '🔍 正在分析畫面文字，請保持相機穩定...'
 
   const canvas = document.createElement('canvas')
   canvas.width = video.videoWidth
@@ -195,7 +199,7 @@ const captureAndRecognizeText = async () => {
       scannedText.value = 'http://mdm.idv.tw'
       stopCamera()
     } else {
-      liveOcrText.value = `未匹配成功。偵測到文字：「${rawText.trim().slice(0, 40) || '無'}」，請對準「http://mdm.idv.tw」再按一次！`
+      liveOcrText.value = `未匹配成功。偵測到：「${rawText.trim().slice(0, 40) || '無'}」，請對準「http://mdm.idv.tw」再按一次！`
     }
   } catch (err) {
     liveOcrText.value = '辨識發生異常，請重試或改用下方方案 B。'
@@ -338,7 +342,7 @@ onBeforeUnmount(() => {
           <span>⚡️ 方案 A：一鍵開啟鏡頭掃描 (支援文字與 QR Code)</span>
         </label>
         <p class="tip-text">
-          點擊下方按鈕直接喚醒相機，對準螢幕上的文字 <code>http://mdm.idv.tw</code> 或 QR Code 即可辨識：
+          點擊下方按鈕直接喚醒後置鏡頭，對準螢幕上的文字 <code>http://mdm.idv.tw</code> 或 QR Code 即可辨識：
         </p>
         
         <div v-if="!isCameraOpen">
@@ -353,6 +357,10 @@ onBeforeUnmount(() => {
             <video id="qr-video" class="video-preview"></video>
             <div class="scanner-laser"></div>
             <div class="scanner-frame"></div>
+            <!-- 切換前後鏡頭浮鈕 -->
+            <button @click="toggleCameraFacing" class="camera-switch-btn" title="切換鏡頭">
+              🔄 切換{{ currentFacingMode === 'environment' ? '前置' : '後置' }}鏡頭
+            </button>
           </div>
           
           <div class="camera-action-bar">
@@ -568,6 +576,21 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.camera-switch-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(4px);
 }
 
 .scanner-frame {
