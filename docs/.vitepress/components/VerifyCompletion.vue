@@ -9,6 +9,8 @@ const isProcessing = ref(false)
 const recognizedDebugText = ref('')
 const isCameraOpen = ref(false)
 const cameraError = ref('')
+const liveOcrText = ref('')
+const isCapturing = ref(false)
 
 const currentDate = new Date().toLocaleDateString('zh-TW', {
   year: 'numeric',
@@ -43,7 +45,7 @@ const verifyContent = (rawText) => {
   return false
 }
 
-// 方式一：輸入框即時比對
+// 方案 B：輸入框即時比對
 const checkInput = () => {
   if (verifyContent(scannedText.value)) {
     isVerified.value = true
@@ -52,27 +54,29 @@ const checkInput = () => {
 }
 
 // ==========================================
-// 方案 A：一鍵開啟鏡頭即時 QR Code / 條碼自動秒讀
+// 方案 A：一鍵開啟鏡頭即時辨識 (同時支援 文字 OCR + QR Code)
 // ==========================================
 const startCamera = async () => {
   cameraError.value = ''
   isCameraOpen.value = true
+  liveOcrText.value = '鏡頭已啟動，請對準螢幕上的文字或 QR Code...'
 
-  // 1. 動態載入 jsQR (極致輕量、0.01 秒秒讀的開源 QR 引擎)
+  // 1. 動態載入 jsQR 與 Tesseract.js
   if (!window.jsQR) {
-    await new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
-      script.onload = resolve
-      script.onerror = reject
-      document.head.appendChild(script)
-    })
+    const s1 = document.createElement('script')
+    s1.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
+    document.head.appendChild(s1)
+  }
+  if (!window.Tesseract) {
+    const s2 = document.createElement('script')
+    s2.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
+    document.head.appendChild(s2)
   }
 
   try {
     const video = document.getElementById('qr-video')
     
-    // 強制指定後置鏡頭 (iOS Safari 最佳實踐：exact 或 ideal environment)
+    // 強制指定後置鏡頭
     const constraints = {
       video: {
         facingMode: { exact: 'environment' }
@@ -82,7 +86,6 @@ const startCamera = async () => {
     try {
       stream = await navigator.mediaDevices.getUserMedia(constraints)
     } catch (e) {
-      // 若某些瀏覽器不支援 exact，退回 ideal 後置鏡頭
       stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' }
       })
@@ -90,11 +93,11 @@ const startCamera = async () => {
     
     if (video) {
       video.srcObject = stream
-      video.setAttribute('playsinline', true) // iOS Safari 必需
+      video.setAttribute('playsinline', true)
       video.setAttribute('autoplay', true)
       video.setAttribute('muted', true)
       await video.play()
-      startScanning(video)
+      startLiveScanning(video)
     }
   } catch (err) {
     console.error('Camera Error:', err)
@@ -112,39 +115,76 @@ const stopCamera = () => {
     stream = null
   }
   isCameraOpen.value = false
+  liveOcrText.value = ''
 }
 
-const startScanning = (video) => {
+// 自動循環掃描：QR Code (0.1秒) + 即時文字辨識 (按鈕觸發或定期巡檢)
+const startLiveScanning = (video) => {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
 
   scanInterval = setInterval(() => {
-    if (!video || video.readyState !== video.HAVE_ENOUGH_DATA) return
+    if (!video || video.readyState !== video.HAVE_ENOUGH_DATA || isVerified.value) return
 
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
     
+    // 優先 1：QR Code 掃描
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     if (window.jsQR) {
       const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
         inversionAttempts: 'dontInvert'
       })
 
-      if (code && code.data) {
-        console.log('掃描成功:', code.data)
-        if (verifyContent(code.data)) {
-          isVerified.value = true
-          scannedText.value = code.data
-          stopCamera()
-        }
+      if (code && code.data && verifyContent(code.data)) {
+        isVerified.value = true
+        scannedText.value = code.data
+        stopCamera()
       }
     }
-  }, 100) // 每 0.1 秒掃描一次影格 (秒級反應)
+  }, 150)
+}
+
+// 點擊「即時擷取辨識畫面上文字」按鈕
+const captureAndRecognizeText = async () => {
+  const video = document.getElementById('qr-video')
+  if (!video) return
+
+  isCapturing.value = true
+  liveOcrText.value = '🔍 正在辨識畫面中的文字，請保持相機穩定...'
+
+  const canvas = document.createElement('canvas')
+  canvas.width = video.videoWidth
+  canvas.height = video.videoHeight
+  const ctx = canvas.getContext('2d')
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+
+  try {
+    if (!window.Tesseract) {
+      await new Promise(r => setTimeout(r, 1000))
+    }
+    const result = await window.Tesseract.recognize(dataUrl, 'eng+chi_tra')
+    const rawText = result?.data?.text || ''
+    console.log('相機文字辨識結果:', rawText)
+
+    if (verifyContent(rawText)) {
+      isVerified.value = true
+      scannedText.value = 'http://mdm.idv.tw'
+      stopCamera()
+    } else {
+      liveOcrText.value = `未匹配成功。偵測到文字：「${rawText.trim().slice(0, 40) || '無'}」，請對準「http://mdm.idv.tw」再按一次！`
+    }
+  } catch (err) {
+    liveOcrText.value = '辨識發生異常，請重試或改用下方方案 B。'
+  } finally {
+    isCapturing.value = false
+  }
 }
 
 // ==========================================
-// 方案 B：相片 OCR 辨識 (備用)
+// 方案 C：相片 OCR 辨識 (備用)
 // ==========================================
 const optimizePhotoForOCR = (file) => {
   return new Promise((resolve) => {
@@ -271,13 +311,13 @@ onBeforeUnmount(() => {
         />
       </div>
 
-      <!-- 🌟 方案 A：一鍵開啟鏡頭即時秒讀 (極致流暢) -->
+      <!-- 🌟 方案 A：一鍵開啟鏡頭即時文字 / QR 掃描 -->
       <div class="form-group highlight-box">
         <label class="form-label">
-          <span>⚡️ 方案 A：一鍵開啟相機秒讀 (推薦最快)</span>
+          <span>⚡️ 方案 A：一鍵開啟鏡頭掃描 (支援文字與 QR Code)</span>
         </label>
         <p class="tip-text">
-          點擊下方按鈕直接喚醒手機相機，對準上方 <strong>QR Code</strong> 即可在 0.1 秒內自動完成驗證：
+          點擊下方按鈕直接喚醒相機，對準螢幕上的文字 <code>http://mdm.idv.tw</code> 或 QR Code 即可辨識：
         </p>
         
         <div v-if="!isCameraOpen">
@@ -293,7 +333,20 @@ onBeforeUnmount(() => {
             <div class="scanner-laser"></div>
             <div class="scanner-frame"></div>
           </div>
-          <p class="camera-hint">請將鏡頭對準螢幕上的 QR Code</p>
+          
+          <div class="camera-action-bar">
+            <!-- 專為文字辨識設計的一鍵快拍辨識鈕 -->
+            <button 
+              @click="captureAndRecognizeText" 
+              :disabled="isCapturing"
+              class="recognize-text-btn"
+            >
+              {{ isCapturing ? '🔍 分析文字中...' : '🎯 對準文字，點此立即辨識' }}
+            </button>
+          </div>
+
+          <p v-if="liveOcrText" class="live-ocr-hint">{{ liveOcrText }}</p>
+
           <button @click="stopCamera" class="stop-camera-btn">
             ✕ 關閉相機
           </button>
@@ -301,13 +354,13 @@ onBeforeUnmount(() => {
         <p v-if="cameraError" class="camera-error">{{ cameraError }}</p>
       </div>
 
-      <!-- 方案 B：iPhone 鍵盤相機原況文字掃描 -->
+      <!-- 方案 B：iPhone 鍵盤相機原況文字 (Live Text) -->
       <div class="form-group">
         <label class="form-label">
-          <span>📷 方案 B：iPhone 鍵盤相機原況文字 (Live Text)</span>
+          <span>📷 方案 B：iPhone 鍵盤原況文字 (Live Text) 掃描</span>
         </label>
         <p class="tip-text">
-          👉 點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示 (掃描文字)」</strong>（若未出現可長按輸入框選擇「從相機插入」）：
+          👉 點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示 (掃描文字)」</strong> 對準螢幕上的 <code>http://mdm.idv.tw</code>：
         </p>
         <input 
           v-model="scannedText" 
@@ -524,13 +577,46 @@ onBeforeUnmount(() => {
   100% { top: 90%; opacity: 0; }
 }
 
-.camera-hint {
+.camera-action-bar {
+  margin-top: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.recognize-text-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background-color: #10b981;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+  transition: all 0.2s;
+}
+
+.recognize-text-btn:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.recognize-text-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.live-ocr-hint {
   font-size: 0.8rem;
   color: var(--vp-c-text-2);
   margin: 0.5rem 0;
+  text-align: center;
+  max-width: 320px;
+  line-height: 1.4;
 }
 
 .stop-camera-btn {
+  margin-top: 0.5rem;
   padding: 0.4rem 1rem;
   border-radius: 6px;
   background: var(--vp-c-bg-mute);
