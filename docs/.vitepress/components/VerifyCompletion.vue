@@ -76,16 +76,37 @@ const startCamera = async () => {
   try {
     const video = document.getElementById('qr-video')
     
-    // 強制指定後置鏡頭
-    const constraints = {
-      video: {
-        facingMode: { exact: 'environment' }
+    // 取得所有相機設備，精確找出後置主鏡頭 (back / environment)
+    let selectedDeviceId = null
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      const videoDevices = devices.filter(d => d.kind === 'videoinput')
+      // 優先尋找 label 包含 back / rear / environment 的後置鏡頭
+      const backCamera = videoDevices.find(d => 
+        /back|rear|environment|後置|背面/i.test(d.label)
+      )
+      if (backCamera) {
+        selectedDeviceId = backCamera.deviceId
+      } else if (videoDevices.length > 1) {
+        // 多鏡頭情況下，後置鏡頭通常排在後面 (非第一顆前置)
+        selectedDeviceId = videoDevices[videoDevices.length - 1].deviceId
       }
+    } catch (e) {
+      console.warn('Enumerate devices warning:', e)
+    }
+
+    // 構建精準 constraints
+    let constraints
+    if (selectedDeviceId) {
+      constraints = { video: { deviceId: { exact: selectedDeviceId } } }
+    } else {
+      constraints = { video: { facingMode: { ideal: 'environment' } } }
     }
 
     try {
       stream = await navigator.mediaDevices.getUserMedia(constraints)
     } catch (e) {
+      // 容錯退回
       stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' }
       })
