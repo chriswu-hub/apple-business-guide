@@ -1,24 +1,25 @@
 /* ============================================================
-   徹底覆寫 VitePress 程式碼複製按鈕的 tooltip 文字為繁體中文
+   VitePress 程式碼複製按鈕：徹底解決雙重文字 & 強制繁體中文
    ============================================================ */
 
-/* 1. 預設狀態 (未點擊前) 覆寫文字為「複製程式碼」 */
-html body .vp-doc [class*='language-'] > button.copy::before,
-html body .vp-code-group button.copy::before,
-html body button.copy::before {
-  content: '複製程式碼' !important;
-}
-
-/* 2. 點擊後 (copied 狀態) 強制覆寫文字為「已複製」 */
-html body .vp-doc [class*='language-'] > button.copy.copied::before,
-html body .vp-code-group button.copy.copied::before,
-html body button.copy.copied::before {
+/* 1. VitePress 預設是透過 ::after 顯示按鈕左側的提示浮塊 (tooltip) */
+html body [class*='language-'] > button.copy.copied::after,
+html body .vp-code-group button.copy.copied::after,
+html body button.copy.copied::after {
   content: '已複製' !important;
 }
 
-/* 針對可能的 ::after 也一併防禦覆寫 */
-html body .vp-doc [class*='language-'] > button.copy.copied::after,
-html body .vp-code-group button.copy.copied::after,
-html body button.copy.copied::after {
-  content: '' !important;
+html body [class*='language-'] > button.copy::after,
+html body .vp-code-group button.copy::after,
+html body button.copy::after {
+  content: '複製程式碼' !important;
+}
+
+/* 2. 徹底關閉 ::before 偽元素，避免產生兩個重複的提示 */
+html body [class*='language-'] > button.copy::before,
+html body [class*='language-'] > button.copy.copied::before,
+html body button.copy::before,
+html body button.copy.copied::before {
+  display: none !important;
+  content: none !important;
 }
