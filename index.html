@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Business 企業管理實務指南 | Apple at Work</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        apple: {
+                            blue: '#0071e3',
+                            gray: '#86868b',
+                            dark: '#1d1d1f',
+                            light: '#f5f5f7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'SF Pro Display', 'PingFang TC', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .apple-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+        }
+    </style>
+</head>
+<body class="bg-apple-light text-apple-dark antialiased selection:bg-apple-blue selection:text-white">
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 bg-white/80 apple-blur border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i data-lucide="apple" class="w-6 h-6 text-apple-dark"></i>
+                <span class="font-semibold text-lg tracking-tight">Apple Business 實務指南</span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600">
+                <a href="#abm" class="hover:text-apple-blue transition">ABM 核心</a>
+                <a href="#mdm" class="hover:text-apple-blue transition">MDM 管理</a>
+                <a href="#ade" class="hover:text-apple-blue transition">自動裝置註冊 (ADE)</a>
+                <a href="#identity" class="hover:text-apple-blue transition">身分驗證與帳號</a>
+                <a href="#security" class="hover:text-apple-blue transition">安全合規</a>
+            </nav>
+            <div>
+                <a href="https://github.com/chriswu-hub" target="_blank" class="text-xs bg-apple-dark text-white px-3 py-1.5 rounded-full hover:bg-gray-800 transition flex items-center gap-1.5">
+                    <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-20 px-6 max-w-5xl mx-auto text-center">
+        <span class="inline-block px-3 py-1 bg-blue-50 text-apple-blue font-medium text-xs rounded-full uppercase tracking-wider mb-4 border border-blue-100">
+            Apple at Work • Enterprise IT Playbook
+        </span>
+        <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-apple-dark mb-6">
+            現代化企業的 <br class="hidden sm:inline" />
+            <span class="text-apple-blue">Apple 裝置管理</span> 完整指南
+        </h1>
+        <p class="text-lg sm:text-xl text-apple-gray max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
+            從 Apple Business Manager (ABM) 基礎架構、零接觸部署 (Zero-Touch Deployment) 到 MDM 策略與安全合規，打造極致的企業級 Apple 生態系。
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="#abm" class="px-6 py-3 bg-apple-blue text-white rounded-full font-medium hover:bg-blue-600 transition shadow-sm">
+                開始探索教學
+            </a>
+            <a href="#best-practices" class="px-6 py-3 bg-white border border-gray-300 text-apple-dark rounded-full font-medium hover:bg-gray-50 transition shadow-sm">
+                最佳實踐架構
+            </a>
+        </div>
+    </section>
+
+    <!-- Key Pillars Cards -->
+    <section class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-apple-blue rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="cloud" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Apple Business Manager</h3>
+                <p class="text-apple-gray text-sm leading-relaxed mb-4">
+                    企業專屬入口網站，集中管理裝置、大量購買 App (Apps and Books)、以及建立受管理 Apple 帳號 (Managed Apple ID)。
+                </p>
+                <a href="#abm" class="text-apple-blue text-sm font-semibold flex items-center gap-1 hover:underline">了解更多 <i data-lucide="chevron-right" class="w-4 h-4"></i></a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">零接觸部署 (ADE)</h3>
+                <p class="text-apple-gray text-sm leading-relaxed mb-4">
+                    開箱即可使用。裝置開機自動連線至 Apple 啟動伺服器，自動套用公司 MDM 設定檔與應用程式，無需 IT 手動接觸。
+                </p>
+                <a href="#ade" class="text-apple-blue text-sm font-semibold flex items-center gap-1 hover:underline">部署流程 <i data-lucide="chevron-right" class="w-4 h-4"></i></a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">MDM 策略與安全</h3>
+                <p class="text-apple-gray text-sm leading-relaxed mb-4">
+                    支援 Jamf Pro, Microsoft Intune, Kandji, Mosyle 等 MDM 解決方案。支援 FileVault 加密、OS 更新控制與合規檢查。
+                </p>
+                <a href="#mdm" class="text-apple-blue text-sm font-semibold flex items-center gap-1 hover:underline">管理設定 <i data-lucide="chevron-right" class="w-4 h-4"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Section -->
+    <main class="max-w-5xl mx-auto px-6 py-12 space-y-16">
+
+        <!-- Topic 1: ABM -->
+        <section id="abm" class="scroll-mt-20">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-apple-blue text-white flex items-center justify-center font-bold text-sm">01</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-apple-dark">Apple Business Manager (ABM) 核心概念</h2>
+            </div>
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
+                <p class="text-gray-700 leading-relaxed">
+                    <strong>Apple Business Manager (ABM)</strong> 是企業部署 Apple 設備的基石，它將 <strong>裝置註冊計劃 (DEP)</strong> 與 <strong>大量採購計劃 (VPP)</strong> 整合在單一網頁介面 (<a href="https://business.apple.com" target="_blank" class="text-apple-blue underline">business.apple.com</a>) 中。
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <h4 class="font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i>
+                            組織認證 (D-U-N-S)
+                        </h4>
+                        <p class="text-xs text-gray-600">申請 ABM 需要有效的 D-U-N-S 編號及具備合法簽署權限的企業聯絡人。</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <h4 class="font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i>
+                            經銷商綁定 (Reseller ID)
+                        </h4>
+                        <p class="text-xs text-gray-600">購買設備時提供 Apple 經銷商 ID，採購的序號將自動同步進入 ABM 庫存。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 2: ADE Flow -->
+        <section id="ade" class="scroll-mt-20">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-apple-blue text-white flex items-center justify-center font-bold text-sm">02</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-apple-dark">零接觸自動裝置註冊 (Automated Device Enrollment)</h2>
+            </div>
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-sm space-y-6">
+                <p class="text-gray-700 leading-relaxed">
+                    透過 ADE，員工拿到未拆封的 Mac 或 iPhone，只需連上 Wi-Fi，裝置就會自動受企業監管（Supervised），無法手動移除 MDM Profile。
+                </p>
+
+                <!-- Flowchart -->
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h4 class="text-xs font-semibold uppercase tracking-wider text-apple-gray mb-4">零接觸部署工作流程</h4>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+                        <div class="flex-1 bg-white p-4 rounded-lg shadow-sm border border-gray-200 w-full">
+                            <div class="font-bold text-sm text-apple-dark">1. 採購並指派</div>
+                            <div class="text-xs text-apple-gray mt-1">經銷商同步序號至 ABM → ABM 指派至指定 MDM</div>
+                        </div>
+                        <i data-lucide="arrow-right" class="hidden md:block w-5 h-5 text-gray-400"></i>
+                        <i data-lucide="arrow-down" class="md:hidden w-5 h-5 text-gray-400"></i>
+                        <div class="flex-1 bg-white p-4 rounded-lg shadow-sm border border-gray-200 w-full">
+                            <div class="font-bold text-sm text-apple-dark">2. 設備開機聯網</div>
+                            <div class="text-xs text-apple-gray mt-1">使用者連線 Wi-Fi → 裝置向 Apple 啟動伺服器查詢</div>
+                        </div>
+                        <i data-lucide="arrow-right" class="hidden md:block w-5 h-5 text-gray-400"></i>
+                        <i data-lucide="arrow-down" class="md:hidden w-5 h-5 text-gray-400"></i>
+                        <div class="flex-1 bg-white p-4 rounded-lg shadow-sm border border-gray-200 w-full">
+                            <div class="font-bold text-sm text-apple-dark">3. 自動載入設定</div>
+                            <div class="text-xs text-apple-gray mt-1">下載企業 Profile、安裝公司 Apps、啟動安全防護</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 3: MDM Management & Scripting -->
+        <section id="mdm" class="scroll-mt-20">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-apple-blue text-white flex items-center justify-center font-bold text-sm">03</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-apple-dark">macOS MDM 實用終端機指令 (Terminal Cheatsheet)</h2>
+            </div>
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
+                <p class="text-gray-700 leading-relaxed text-sm">
+                    在 IT 維運或偵錯裝置註冊狀態時，以下是 macOS 管理者最常用的指令：
+                </p>
+
+                <div class="space-y-3">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-600 mb-1">檢查目前 MDM 註冊狀態與設定檔：</div>
+                        <div class="code-block p-3 rounded-lg text-xs overflow-x-auto">
+                            <code>sudo profiles status -type enrollment</code>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-xs font-semibold text-gray-600 mb-1">強制重新向 Apple 啟動伺服器拉取雲端指派設定檔：</div>
+                        <div class="code-block p-3 rounded-lg text-xs overflow-x-auto">
+                            <code>sudo profiles renew -type enrollment</code>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-xs font-semibold text-gray-600 mb-1">檢查 FileVault 加密狀態：</div>
+                        <div class="code-block p-3 rounded-lg text-xs overflow-x-auto">
+                            <code>fdesetup status</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topic 4: Identity & Managed Apple ID -->
+        <section id="identity" class="scroll-mt-20">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-apple-blue text-white flex items-center justify-center font-bold text-sm">04</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-apple-dark">身分整合與受管理 Apple ID (Managed Apple ID)</h2>
+            </div>
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-sm space-y-4">
+                <p class="text-gray-700 leading-relaxed">
+                    透過 <strong>同盟身分驗證 (Federated Authentication)</strong>，企業可將 ABM 與 Microsoft Entra ID (Azure AD) 或 Google Workspace 進行 SSO 串接。
+                </p>
+                <div class="border-l-4 border-apple-blue pl-4 py-1 text-sm text-gray-600 bg-blue-50/50 rounded-r-lg">
+                    <strong>優勢：</strong> 員工可以使用原有的企業電子郵件與密碼登入 Apple 服務，並支援 iCloud 企業版協作、金鑰存取管理與帳號自動生命週期管理 (SCIM Provisioning)。
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12 px-6 mt-20">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-apple-gray">
+            <div>
+                © 2026 Apple Business Guide. Built for Enterprise IT Administrators.
+            </div>
+            <div class="flex items-center space-x-6">
+                <span>Privacy & Policy</span>
+                <span>Documentation</span>
+                <span>GitHub Pages</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
