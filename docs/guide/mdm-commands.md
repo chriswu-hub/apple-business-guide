@@ -6,8 +6,9 @@
 
 ## 檢查 MDM 註冊狀態
 
+檢查目前是否已註冊 MDM 以及是否處於 Supervised 監管狀態：
+
 ```bash
-# 檢查目前是否已註冊 MDM 以及是否處於 Supervised 狀態
 sudo profiles status -type enrollment
 ```
 
@@ -18,7 +19,6 @@ sudo profiles status -type enrollment
 當後台變更了 ADE 指派，需要 Mac 重新向 Apple 啟動伺服器請求最新設定：
 
 ```bash
-# 強制重新向 Apple 取得 ADE 指派
 sudo profiles renew -type enrollment
 ```
 
@@ -26,8 +26,9 @@ sudo profiles renew -type enrollment
 
 ## 查看已安裝的描述檔
 
+列出系統中目前安裝的所有 Profile 設定檔：
+
 ```bash
-# 列出系統中目前安裝的所有 Profile
 sudo profiles show
 ```
 
@@ -35,10 +36,14 @@ sudo profiles show
 
 ## 磁碟加密 (FileVault) 狀態檢查
 
-```bash
-# 檢查 FileVault 加密是否已開啟
-fdesetup status
+檢查 FileVault 加密是否已開啟：
 
-# 查看有哪些使用者有權限解鎖 FileVault
+```bash
+fdesetup status
+```
+
+查看有哪些本機帳號具備解鎖 FileVault 的權限：
+
+```bash
 fdesetup list
 ```

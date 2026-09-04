@@ -1,0 +1,5 @@
+/* 確保複製按鈕的 tooltip 顯示繁體中文「已複製」 */
+.vp-copy:after,
+.copy:after {
+  content: '已複製' !important;
+}

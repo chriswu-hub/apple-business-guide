@@ -44,6 +44,15 @@ export default defineConfig({
     },
     outline: {
       label: '本頁目錄'
+    },
+    // 繁體中文程式碼複製按鈕提示
+    copyCodeTitle: '複製程式碼',
+    copiedKeys: '已複製！'
+  },
+  markdown: {
+    theme: {
+      light: 'github-light',
+      dark: 'github-dark'
     }
   }
 })
