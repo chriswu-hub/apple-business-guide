@@ -1,5 +1,17 @@
-/* 確保複製按鈕的 tooltip 顯示繁體中文「已複製」 */
-.vp-copy:after,
-.copy:after {
+/* 徹底覆寫所有可能出現的「已复制」簡體字樣為繁體中文「已複製」 */
+.vp-code-group .copy.copied::after,
+.vp-doc [class*='language-'] > button.copy.copied::after,
+.vp-adaptive-theme [class*='language-'] > button.copy.copied::after,
+button.copy.copied::after,
+.copy.copied::after {
   content: '已複製' !important;
+}
+
+/* 懸停複製提示 */
+.vp-code-group .copy::after,
+.vp-doc [class*='language-'] > button.copy::after,
+.vp-adaptive-theme [class*='language-'] > button.copy::after,
+button.copy::after,
+.copy::after {
+  content: '複製' !important;
 }

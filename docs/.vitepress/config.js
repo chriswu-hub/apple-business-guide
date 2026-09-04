@@ -5,6 +5,12 @@ export default defineConfig({
   description: '現代化企業 Apple 裝置管理與部署完整教學',
   base: '/apple-business-guide/',
   lang: 'zh-Hant',
+  locales: {
+    root: {
+      label: '繁體中文',
+      lang: 'zh-Hant'
+    }
+  },
   themeConfig: {
     nav: [
       { text: '首頁', link: '/' },
@@ -45,9 +51,14 @@ export default defineConfig({
     outline: {
       label: '本頁目錄'
     },
-    // 繁體中文程式碼複製按鈕提示
-    copyCodeTitle: '複製程式碼',
-    copiedKeys: '已複製！'
+    darkModeSwitchLabel: '切換外觀',
+    lightModeSwitchTitle: '切換為淺色模式',
+    darkModeSwitchTitle: '切換為深色模式',
+    sidebarMenuLabel: '目錄選單',
+    returnToTopLabel: '回到頂部',
+    // 關鍵設定：覆寫複製按鈕的 tooltip 文字為繁體中文
+    copyCodeTitle: '複製代碼',
+    copiedKeys: '已複製'
   },
   markdown: {
     theme: {
