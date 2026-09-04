@@ -9,7 +9,8 @@ export default defineConfig({
     nav: [
       { text: '首頁', link: '/' },
       { text: '教學指引', link: '/guide/introduction' },
-      { text: 'MDM 指令手冊', link: '/guide/mdm-commands' }
+      { text: 'MDM 指令手冊', link: '/guide/mdm-commands' },
+      { text: '結訓認證', link: '/guide/verify' }
     ],
     sidebar: [
       {
@@ -31,6 +32,12 @@ export default defineConfig({
         text: '安全性與合規',
         items: [
           { text: 'FileVault 與安全防護', link: '/guide/security' }
+        ]
+      },
+      {
+        text: '培訓考核',
+        items: [
+          { text: '實作檢核與結訓認證', link: '/guide/verify' }
         ]
       }
     ],

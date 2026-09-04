@@ -1,9 +1,13 @@
 import DefaultTheme from 'vitepress/theme'
+import VerifyCompletion from '../components/VerifyCompletion.vue'
 import './custom.css'
 
 export default {
   extends: DefaultTheme,
-  enhanceApp() {
+  enhanceApp({ app }) {
+    // 註冊全域結訓驗證組件
+    app.component('VerifyCompletion', VerifyCompletion)
+
     if (typeof window !== 'undefined') {
       // 1. 複製過濾：過濾以 # 開頭的註解行
       document.addEventListener('copy', (e) => {
@@ -57,10 +61,7 @@ export default {
             btn.removeAttribute('title')
             const parent = btn.parentElement
             if (parent) {
-              // 移除可能存在的舊標籤
               parent.querySelectorAll('.custom-copy-badge').forEach(el => el.remove())
-
-              // 建立新標籤並掛載至 parent（代碼區塊右上角容器）
               const badge = document.createElement('span')
               badge.className = 'custom-copy-badge'
               badge.textContent = '已複製'
