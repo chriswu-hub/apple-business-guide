@@ -6,6 +6,7 @@ const isVerified = ref(false)
 const studentName = ref('')
 const ocrStatus = ref('')
 const isProcessing = ref(false)
+const recognizedDebugText = ref('')
 const currentDate = new Date().toLocaleDateString('zh-TW', {
   year: 'numeric',
   month: 'long',
@@ -17,7 +18,7 @@ const verifyContent = (rawText) => {
   if (!rawText) return false
   
   // 轉小寫、清除空白與所有特殊標點
-  let text = rawText.toLowerCase().replace(/[\s\r\n\t_.,:;/-]+/g, '')
+  let text = rawText.toLowerCase().replace(/[\s\r\n\t_.,:;/\-對準螢幕上的]+/g, '')
   
   // 1. 標準網址特徵
   if (text.includes('mdmidvtw')) return true
@@ -26,6 +27,7 @@ const verifyContent = (rawText) => {
   if (text.includes('mdm') && text.includes('idv')) return true
   if (text.includes('mdm') && text.includes('tw')) return true
   if (text.includes('idv') && text.includes('tw')) return true
+  if (text.includes('mdm')) return true
 
   // 3. 常見 OCR 字符誤判替換 (例如把 m 誤認為 rn/nn，把 i 誤認為 1/l/!)
   let normalized = text
@@ -36,7 +38,7 @@ const verifyContent = (rawText) => {
     .replace(/vv/g, 'w')
   
   if (normalized.includes('mdmidvtw')) return true
-  if (normalized.includes('mdm') && normalized.includes('idv')) return true
+  if (normalized.includes('mdm') || normalized.includes('idv')) return true
 
   return false
 }
@@ -48,18 +50,18 @@ const checkInput = () => {
   }
 }
 
-// 方式二：照片本機 OCR 辨識 (直接使用原圖 + 放大處理，不破壞彩色文字細節)
+// 方式二：照片本機 OCR 辨識 (採用 Tesseract.recognize 最穩定 API)
 const handleImageUpload = async (event) => {
   const file = event.target.files[0]
   if (!file) return
 
   isProcessing.value = true
-  ocrStatus.value = '🔍 正在本機啟動文字辨識模型...'
+  ocrStatus.value = '⏳ 正在啟動神經網路模型...'
+  recognizedDebugText.value = ''
 
   try {
-    // 1. 動態載入 Tesseract.js
+    // 1. 動態載入 Tesseract.js (若尚未載入)
     if (!window.Tesseract) {
-      ocrStatus.value = '⏳ 正在載入 OCR 辨識模組...'
       await new Promise((resolve, reject) => {
         const script = document.createElement('script')
         script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
@@ -69,37 +71,38 @@ const handleImageUpload = async (event) => {
       })
     }
 
-    ocrStatus.value = '🧠 正在分析照片中文字...'
+    ocrStatus.value = '🔍 正在分析照片文字 (約 2~3 秒)...'
 
-    // 2. 使用原生 Worker 進行多語系 (eng + chi_tra/chi_sim) 辨識
-    const worker = await window.Tesseract.createWorker(['eng', 'chi_tra'])
-    
-    // 設定辨識參數以適應網址與程式碼文字
-    await worker.setParameters({
-      tessedit_char_whitelist: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:/_ -對準螢幕上的'
-    }).catch(() => {})
+    // 2. 採用最穩定的單次識別 API，載入 eng 語言包
+    const result = await window.Tesseract.recognize(
+      file,
+      'eng',
+      {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            ocrStatus.value = `🔍 辨識進度: ${Math.round(m.progress * 100)}%`
+          }
+        }
+      }
+    )
 
-    const result = await worker.recognize(file)
-    await worker.terminate()
-
-    const rawRecognizedText = result.data.text || ''
-    console.log('OCR 辨識結果:', rawRecognizedText)
+    const rawRecognizedText = result?.data?.text || ''
+    recognizedDebugText.value = rawRecognizedText
 
     if (verifyContent(rawRecognizedText)) {
       isVerified.value = true
       scannedText.value = 'http://mdm.idv.tw'
       ocrStatus.value = ''
     } else {
-      // 容錯提示並顯示辨識到的文字片段
       ocrStatus.value = ''
       alert(
-        `未能成功驗證網址。\n\n【辨識到的文字】：\n${rawRecognizedText.trim() || '(未偵測到有效文字)'}\n\n💡 建議：\n1. 點擊上方輸入框，直接使用 iPhone 鍵盤自帶的「相機掃描文字」即時完成。\n2. 或拍照時盡量拍攝完整的網址區域。`
+        `未能匹配成功。\n\n【辨識到的文字內容】：\n「${rawRecognizedText.trim() || '未偵測到英文字元'}」\n\n💡 建議直接點擊上方輸入框，使用 iPhone 鍵盤自帶的「相機掃描」更為即時精準！`
       )
     }
   } catch (err) {
     console.error('OCR Error:', err)
     ocrStatus.value = ''
-    alert('照片處理發生錯誤，建議改用方式一（iPhone 鍵盤相機掃描）！')
+    alert(`辨識過程發生異常：${err.message || '請改用 iPhone 鍵盤相機掃描'}`)
   } finally {
     isProcessing.value = false
     event.target.value = ''
@@ -111,6 +114,7 @@ const resetVerify = () => {
   scannedText.value = ''
   ocrStatus.value = ''
   isProcessing.value = false
+  recognizedDebugText.value = ''
 }
 </script>
 
@@ -174,6 +178,9 @@ const resetVerify = () => {
           />
         </label>
         <div v-if="ocrStatus" class="ocr-status">{{ ocrStatus }}</div>
+        <div v-if="recognizedDebugText && !isVerified" class="debug-box">
+          <small>最後辨識結果：{{ recognizedDebugText }}</small>
+        </div>
       </div>
     </div>
 
@@ -326,6 +333,16 @@ const resetVerify = () => {
   color: var(--vp-c-brand-1);
   margin-top: 0.75rem;
   font-weight: 600;
+}
+
+.debug-box {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--vp-c-bg);
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-3);
+  word-break: break-all;
 }
 
 /* 成功卡片與證書 */
