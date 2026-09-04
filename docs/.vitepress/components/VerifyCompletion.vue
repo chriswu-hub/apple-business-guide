@@ -71,13 +71,28 @@ const startCamera = async () => {
 
   try {
     const video = document.getElementById('qr-video')
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment' }
-    })
+    
+    // 強制指定後置鏡頭 (iOS Safari 最佳實踐：exact 或 ideal environment)
+    const constraints = {
+      video: {
+        facingMode: { exact: 'environment' }
+      }
+    }
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia(constraints)
+    } catch (e) {
+      // 若某些瀏覽器不支援 exact，退回 ideal 後置鏡頭
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' }
+      })
+    }
     
     if (video) {
       video.srcObject = stream
       video.setAttribute('playsinline', true) // iOS Safari 必需
+      video.setAttribute('autoplay', true)
+      video.setAttribute('muted', true)
       await video.play()
       startScanning(video)
     }
