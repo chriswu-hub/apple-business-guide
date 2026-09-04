@@ -12,20 +12,31 @@ const currentDate = new Date().toLocaleDateString('zh-TW', {
   day: 'numeric'
 })
 
-// 驗證核心函式：模糊比對與常見 OCR 誤判容錯
+// 超強容錯比對：支援全形半形、移除符號、常見字元誤判
 const verifyContent = (rawText) => {
   if (!rawText) return false
-  // 轉小寫並替換常見字符混淆 (例如將 1/l 轉為 i，或移除空格與標點)
-  let text = rawText.toLowerCase().replace(/\s+/g, '')
   
-  // 1. 精準命中
-  if (text.includes('mdm.idv.tw')) return true
+  // 轉小寫、清除空白與所有特殊標點
+  let text = rawText.toLowerCase().replace(/[\s\r\n\t_.,:;/-]+/g, '')
   
-  // 2. 容錯命中：點號可能被辨識為逗號、下劃線或空格
-  if (/mdm[.,_ ]idv[.,_ ]tw/.test(text)) return true
+  // 1. 標準網址特徵
+  if (text.includes('mdmidvtw')) return true
 
-  // 3. 關鍵字同時出現
-  if (text.includes('mdm') && text.includes('idv') && text.includes('tw')) return true
+  // 2. 包含核心關鍵字
+  if (text.includes('mdm') && text.includes('idv')) return true
+  if (text.includes('mdm') && text.includes('tw')) return true
+  if (text.includes('idv') && text.includes('tw')) return true
+
+  // 3. 常見 OCR 字符誤判替換 (例如把 m 誤認為 rn/nn，把 i 誤認為 1/l/!)
+  let normalized = text
+    .replace(/rn/g, 'm')
+    .replace(/nn/g, 'm')
+    .replace(/[1l!|]/g, 'i')
+    .replace(/[0o]/g, 'o')
+    .replace(/vv/g, 'w')
+  
+  if (normalized.includes('mdmidvtw')) return true
+  if (normalized.includes('mdm') && normalized.includes('idv')) return true
 
   return false
 }
@@ -37,67 +48,18 @@ const checkInput = () => {
   }
 }
 
-// 圖片前處理：縮放 + 灰階 + 二值化提高對比度，大幅提升手機照片 OCR 成功率
-const preprocessImage = (file) => {
-  return new Promise((resolve) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const img = new Image()
-      img.onload = () => {
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
-        
-        // 限制最大寬度為 1600px，避免手機高畫質照片吃光記憶體
-        let width = img.width
-        let height = img.height
-        const maxDim = 1600
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width)
-            width = maxDim
-          } else {
-            width = Math.round((width * maxDim) / height)
-            height = maxDim
-          }
-        }
-
-        canvas.width = width
-        canvas.height = height
-        ctx.drawImage(img, 0, 0, width, height)
-
-        // 取得像素並提高對比度 (Grayscale + Contrast)
-        const imgData = ctx.getImageData(0, 0, width, height)
-        const d = imgData.data
-        for (let i = 0; i < d.length; i += 4) {
-          // 灰階亮度
-          const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
-          // 簡單二值化增強文字邊緣
-          const val = gray > 140 ? 255 : 0
-          d[i] = val
-          d[i + 1] = val
-          d[i + 2] = val
-        }
-        ctx.putImageData(imgData, 0, 0)
-        resolve(canvas.toDataURL('image/jpeg', 0.85))
-      }
-      img.src = e.target.result
-    }
-    reader.readAsDataURL(file)
-  })
-}
-
-// 方式二：照片本機 OCR 辨識
+// 方式二：照片本機 OCR 辨識 (直接使用原圖 + 放大處理，不破壞彩色文字細節)
 const handleImageUpload = async (event) => {
   const file = event.target.files[0]
   if (!file) return
 
   isProcessing.value = true
-  ocrStatus.value = '📸 正在優化照片對比度並啟動神經網路模型...'
+  ocrStatus.value = '🔍 正在本機啟動文字辨識模型...'
 
   try {
-    // 1. 動態載入 Tesseract.js (若尚未載入)
+    // 1. 動態載入 Tesseract.js
     if (!window.Tesseract) {
-      ocrStatus.value = '⏳ 正在載入本機 OCR 引擎 (約需數秒)...'
+      ocrStatus.value = '⏳ 正在載入 OCR 辨識模組...'
       await new Promise((resolve, reject) => {
         const script = document.createElement('script')
         script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
@@ -107,13 +69,17 @@ const handleImageUpload = async (event) => {
       })
     }
 
-    // 2. 影像前處理
-    ocrStatus.value = '🔍 正在分析照片文字...'
-    const processedImageData = await preprocessImage(file)
+    ocrStatus.value = '🧠 正在分析照片中文字...'
 
-    // 3. 執行 OCR
-    const worker = await window.Tesseract.createWorker('eng')
-    const result = await worker.recognize(processedImageData)
+    // 2. 使用原生 Worker 進行多語系 (eng + chi_tra/chi_sim) 辨識
+    const worker = await window.Tesseract.createWorker(['eng', 'chi_tra'])
+    
+    // 設定辨識參數以適應網址與程式碼文字
+    await worker.setParameters({
+      tessedit_char_whitelist: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:/_ -對準螢幕上的'
+    }).catch(() => {})
+
+    const result = await worker.recognize(file)
     await worker.terminate()
 
     const rawRecognizedText = result.data.text || ''
@@ -124,19 +90,18 @@ const handleImageUpload = async (event) => {
       scannedText.value = 'http://mdm.idv.tw'
       ocrStatus.value = ''
     } else {
-      // 容錯提示並顯示辨識到的文字
+      // 容錯提示並顯示辨識到的文字片段
       ocrStatus.value = ''
       alert(
-        `未能在照片中清楚識別到「http://mdm.idv.tw」。\n\n【辨識到的文字片段】：\n${rawRecognizedText.slice(0, 100) || '(未偵測到文字)'}\n\n💡 建議：\n1. 拍照時靠近螢幕、避免反光與斜角。\n2. 或直接點擊上方輸入框，使用 iPhone 內建的「原況相機」掃描！`
+        `未能成功驗證網址。\n\n【辨識到的文字】：\n${rawRecognizedText.trim() || '(未偵測到有效文字)'}\n\n💡 建議：\n1. 點擊上方輸入框，直接使用 iPhone 鍵盤自帶的「相機掃描文字」即時完成。\n2. 或拍照時盡量拍攝完整的網址區域。`
       )
     }
   } catch (err) {
     console.error('OCR Error:', err)
     ocrStatus.value = ''
-    alert('照片處理發生錯誤，建議改用 iPhone 鍵盤自帶的「原況相機掃描」！')
+    alert('照片處理發生錯誤，建議改用方式一（iPhone 鍵盤相機掃描）！')
   } finally {
     isProcessing.value = false
-    // 重設 input 讓使用者可重複選同一張
     event.target.value = ''
   }
 }
@@ -192,13 +157,13 @@ const resetVerify = () => {
       <!-- 備用：拍照上傳 (本機 OCR) -->
       <div class="form-group alt-method">
         <label class="form-label">
-          <span>📸 方式二：拍照上傳辨識 (加強版 OCR)</span>
+          <span>📸 方式二：拍照上傳辨識</span>
         </label>
         <p class="tip-text">
-          點擊下方按鈕直接拍照。拍照時請盡量<strong>靠近螢幕、水平正對、避免螢幕反光</strong>：
+          點擊下方按鈕拍攝或選擇螢幕照片：
         </p>
         <label class="upload-btn" :class="{ 'btn-disabled': isProcessing }">
-          <span>{{ isProcessing ? '處理中...' : '拍攝 / 選擇螢幕照片' }}</span>
+          <span>{{ isProcessing ? '辨識中...' : '拍攝 / 選擇螢幕照片' }}</span>
           <input 
             type="file" 
             accept="image/*" 
