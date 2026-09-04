@@ -1,6 +1,6 @@
 # 身分整合與 Managed Apple Account
 
-## 什麼是受管理 Apple 帳號 (Managed Apple Account)？
+## 什麼是受管理 Apple 帳號 (Managed Apple Account)呢？
 
 受管理 Apple 帳號由企業組織建立與控管，與一般個人的 Apple 帳號主要差異在於：
 - **所有權歸屬企業**：組織可隨時重設密碼或停用存取權。
