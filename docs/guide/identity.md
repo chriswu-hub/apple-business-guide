@@ -112,13 +112,56 @@
 
 ## 3.3 Microsoft Entra ID 聯合驗證設定（重點）
 
-### 📋 設定步驟：
-1. **選擇連結供應商**：在 Apple 商務中選擇「設定」>「識別身分提供者」> 選擇「連結至身分供應商」。
-2. **選擇 IdP 類型**：選擇「Microsoft Entra ID」。
-3. **管理員授權**：以 Entra ID 全域管理員（Global Administrator）身分登入並同意授權連線。
-4. **選擇聯合網域**：選擇要啟用聯合驗證的網域（例如：`mdm.idv.tw`）。
-5. **設定使用者名稱格式**：設定 User Principal Name (UPN) 與 Managed Apple Account 的對齊格式。
-6. **完成驗證**：儲存並完成聯合驗證連線設定。
+### 📋 圖文設定步驟：
+
+#### 步驟 1：進入用戶登入與目錄同步並點選「連接」
+在 Apple 商務中依序選擇「設定」>「網域」，在「用戶登入和目錄同步」區塊點選 **「連接」**：
+
+<div class="step-image-container">
+  <img src="/images/entra_step1_connect.png" alt="設定 > 網域 > 用戶登入和目錄同步 點選連接" class="step-image" />
+</div>
+
+---
+
+#### 步驟 2：選擇身分識別供應商
+在選擇身分識別供應商清單中，選取 **「Microsoft Entra ID」** 並點選「繼續」：
+
+<div class="step-image-container">
+  <img src="/images/entra_step2_select_idp.png" alt="選擇身分識別供應商 Microsoft Entra ID" class="step-image" />
+</div>
+
+系統會進入準備連結畫面：
+
+<div class="step-image-container">
+  <img src="/images/entra_step3_preparing.png" alt="準備連結 Microsoft Entra ID" class="step-image" />
+</div>
+
+點選 **「使用 Microsoft 登入」** 開始進行管理員授權：
+
+<div class="step-image-container">
+  <img src="/images/entra_step4_login_btn.png" alt="點選 使用 Microsoft 登入" class="step-image" />
+</div>
+
+---
+
+#### 步驟 3：以 Entra ID 全域管理員身分授權並完成連線
+在彈出的 Microsoft 登入視窗中，輸入 Entra ID 全域管理員（Global Administrator）認證：
+
+<div class="step-image-container">
+  <img src="/images/entra_step5_ms_login.png" alt="Microsoft 登入管理員帳號" class="step-image" />
+</div>
+
+檢視並勾選「代表您的組織同意」，點選 **「接受」** 要求的權限：
+
+<div class="step-image-container">
+  <img src="/images/entra_step6_permissions.png" alt="同意 Microsoft 要求權限" class="step-image" />
+</div>
+
+授權完成後，系統會顯示 **「已連接 Microsoft Entra ID」** 綠色打勾成功畫面，點選「繼續」即可完成網域聯合與目錄設定：
+
+<div class="step-image-container">
+  <img src="/images/entra_step7_connected.png" alt="已成功連接 Microsoft Entra ID" class="step-image" />
+</div>
 
 ---
 
