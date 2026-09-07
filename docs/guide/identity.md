@@ -187,6 +187,34 @@
 - **完整支援 MFA**：原生支援 Microsoft Entra ID 端設定的多重要素驗證（MFA / Authenticator App / 條件式存取原則）。
 - **密碼中心化管理**：所有密碼變更、忘記密碼重設均由 Entra ID 端集中管理，Apple 端不儲存企業密碼。
 
+---
+
+## 3.4 目錄同步（從 Entra ID）
+
+- **SCIM 型態的同步**：  
+  採用業界標準的跨網域身分管理系統（System for Cross-domain Identity Management, SCIM）協定，在雲端之間進行安全的使用者生命週期同步。
+- **同步的資料**：
+  - 使用者姓名（First Name, Last Name）
+  - 使用者主要名稱與電子郵件（User Principal Name / Email）
+  - 群組與組織單位隸屬關係（Groups & Roles）
+- **同步衝突解決**：
+  - 若 Entra ID 匯入的使用者名稱與 Apple 商務現有帳號或保留帳號重複，系統會標示為「衝突」，管理員可在後台選擇覆蓋、合併或手動變更後綴名稱。
+- **同步頻率與手動觸發**：
+  - **自動排程同步**：Entra ID 端預設會定期（約每 40 分鐘）在背景自動推送資料變更。
+  - **隨選手動觸發**：若有新進員工或緊急異動，可在 Entra ID 企業應用程式頁面點選 **「隨選佈建 (Provision on demand)」** 或手動重新啟動同步。
+
+---
+
+## 3.5 常見整合情境
+
+在規劃企業 Apple 裝置身分架構時，常見的實務部署情境與建議做法：
+
+| 情境 | 建議做法 |
+| :--- | :--- |
+| **全新部署，公司用 M365** | **Entra ID 聯合 + 目錄同步**<br>直接一步到位串接 Entra ID，實現開箱即用 SSO 登入與帳號全自動佈建。 |
+| **已有部分 Mac，要統一管理** | **先網域驗證 → 帳號移轉 → 聯合驗證**<br>先證明網域所有權，透過「網域擷取」通知員工將原本用公務信箱註冊的個人 Apple ID 改名移轉，完成後再開啟聯合驗證。 |
+| **混合環境（部分 Google / 部分 M365）** | **可同時設定多個 IdP，按網域區分**<br>例如總部使用 `corp.company.com` 串接 Entra ID，研發部門使用 `dev.company.com` 串接 Google Workspace。 |
+
 <style>
 .step-image-container {
   margin: 1.5rem 0;
