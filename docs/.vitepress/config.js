@@ -8,7 +8,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '首頁', link: '/' },
-      { text: '教學指引', link: '/guide/introduction' },
+      { text: '商務概覽', link: '/guide/introduction' },
       { text: 'MDM 指令手冊', link: '/guide/mdm-commands' },
       { text: '結訓認證', link: '/guide/verify' }
     ],
@@ -16,7 +16,8 @@ export default defineConfig({
       {
         text: '基礎概念',
         items: [
-          { text: 'Apple Business 介紹', link: '/guide/introduction' },
+          { text: 'Apple 商務概覽', link: '/guide/introduction' },
+          { text: '註冊與機構設定', link: '/guide/organization' },
           { text: '帳號與身分整合', link: '/guide/identity' }
         ]
       },

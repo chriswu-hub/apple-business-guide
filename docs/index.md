@@ -15,11 +15,11 @@ hero:
 
 features:
   - icon: 🏢
-    title: Apple Business 核心
-    details: 整合裝置註冊計劃與大量採購計劃，集中管理組織擁有的硬體、App 與帳號。
+    title: Apple 商務統一平台
+    details: 整合 Apple 商務管理、商務必備與 Business Connect，一站式管理硬體、App 與身分。
   - icon: ⚡️
-    title: 零接觸自動註冊 (ADE)
-    details: 開箱即自動連線註冊並套用企業 MDM 策略，實現標準化、無痛的部署體驗。
+    title: 零接觸自動註冊 (Zero-Touch)
+    details: 開箱即自動連線註冊並套用企業 MDM 策略，實現標準化、無痛的自動部署體驗。
   - icon: 🛡️
     title: MDM 與安全合規
     details: 搭配 Jamf、Microsoft Intune、Kandji 等解決方案，落實 FileVault 加密與權限控管。

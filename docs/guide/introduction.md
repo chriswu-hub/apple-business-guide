@@ -1,27 +1,28 @@
-# Apple Business 介紹
+# Apple 商務概覽
 
-**Apple Business** 是企業部署與管理 Apple 設備的核心網頁入口平台 ([business.apple.com](https://business.apple.com))。
+**Apple 商務 = 統一平台**
 
-它將企業過去分散的兩大功能完美整合：
-1. **裝置註冊 (Device Enrollment)**：自動將組織採購的 Mac、iPad、iPhone 指派至 MDM。
-2. **App 與書籍 (Apps and Books)**：集中大量採購企業所需 App 並透過 MDM 靜默分發給使用者。
+Apple 商務（Apple Business）是現代化企業部署、管理與維護 Apple 裝置生態系的核心統一入口。
 
----
-
-## 申請 Apple Business 前置需求
-
-在開始註冊 Apple Business 組織前，需準備以下資訊：
-
-- **D-U-N-S 編號**：鄧白氏環球編碼（D&B D-U-N-S Number），用於驗證企業法人身分。
-- **具法律約束力之聯絡人**：填寫具備代表公司簽署條款權限的主管姓名與公務信箱。
-- **組織網域名稱 (Domain)**：例如 `yourcompany.com`，供後續建立 Managed Apple Account。
+- **整合自**：Apple 商務管理 (Apple Business Manager) + Apple 商務必備 (Apple Business Essentials) + Apple Business Connect
+- **上線日期**：2026 年 4 月
+- **平台入口**：[business.apple.com](https://business.apple.com)
 
 ---
 
-## 經銷商綁定 (Reseller ID)
+## 🌟 六大核心功能
 
-為了讓採購的設備能自動出現在 Apple Business 庫存中：
-1. 向 Apple 授權經銷商索取其 **Reseller ID (經銷商編號)**。
-2. 在 Apple Business 後台加入該經銷商編號。
-3. 提供企業的 **Organization ID (組織 ID)** 給經銷商。
-4. 未來每筆採購訂單將自動同步序號進入 Apple Business。
+Apple 商務將企業日常 IT 管理與商務營運整合為六大支柱能力：
+
+1. **內建裝置管理（MDM）**
+   - 原生支援雲端行動裝置管理，直接在平台派送組態設定檔與安全限制。
+2. **自動裝置註冊（Zero-Touch）**
+   - 整合自動裝置註冊（ADE），開箱聯網即可自動向指定 MDM 伺服器報到，實現零接觸開箱即用。
+3. **管理式 Apple 帳號（身分管理）**
+   - 建立並控管專屬企業的 Managed Apple Account，支援同盟身分驗證（SSO 與 SCIM 生命週期自動化）。
+4. **App 與書籍部署**
+   - 集中大量採購 App Store 應用程式與自訂 B2B App，免 Apple 帳號即可靜默分發至員工裝置。
+5. **設定與預設集**
+   - 預先配置 Wi-Fi、VPN、密碼原則與安全性基準線，統一組織管理範本。
+6. **AppleCare+ for Business**
+   - 集中檢視與管理企業採購硬體的 AppleCare+ 保固狀態、快速維修派件與技術支援資源。
