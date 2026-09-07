@@ -103,7 +103,14 @@ business.apple.com → 填寫資訊 → 驗證機構(兩種方式，最多5天) 
 
 2. **步驟 2：在 Apple 商務後台「加入經銷商編號」**
    - **白話解釋**：告訴 Apple 官方：*「我信任這家經銷商，未來只要是這家經銷商出貨給我的設備，我都允許它登錄進我的公司後台。」*
-   - **操作路徑**：登入 `business.apple.com` > 點擊「偏好設定」>「MDM 伺服器指派 / 裝置管理設定」> 新增經銷商編號。
+   - **操作路徑**：登入 `business.apple.com` > 點擊頂部導覽列**「裝置」** > 點擊左側側邊欄**「庫存」** > 點選右上角的 **「+」**（新增顧客編號/經銷商編號）：
+   <div class="step-image-container">
+     <img src="/images/reseller_step1_inventory.png" alt="裝置 > 庫存 > 新增編號" class="step-image" />
+   </div>
+   點選 **「+」** 後，在彈出視窗中輸入經銷商提供的詳細資料並確認：
+   <div class="step-image-container">
+     <img src="/images/reseller_step2_add_details.png" alt="輸入經銷商詳細資料" class="step-image" />
+   </div>
 
 3. **步驟 3：提供公司的「組織識別碼 (Organization ID)」給經銷商**
    - **白話解釋**：這是**雙向確認**。在 Apple 商務後台取得企業的身分證字號（Organization ID）。
