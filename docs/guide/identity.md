@@ -163,6 +163,23 @@
   <img src="/images/entra_step7_connected.png" alt="已成功連接 Microsoft Entra ID" class="step-image" />
 </div>
 
+點選繼續後，回到 Apple 商務網域設定頁面，會看到已成功帶出同步的網域清單、Apple 帳戶格式設定，以及下方的目錄同步連線選項：
+
+<div class="step-image-container">
+  <img src="/images/entra_step8_domains_overview.png" alt="完整的網域列表與目錄同步總覽" class="step-image" />
+</div>
+
+::: warning ⚠️【注意：目錄同步前置條件】
+此時若直接在下方「目錄同步」點選「連結」，系統會彈出警告視窗：  
+**「目前無法啟用 Microsoft Entra Connect Sync。如要啟用 Microsoft Entra Connect Sync，你必須先為網域建立聯合認證。」**
+
+<div class="step-image-container">
+  <img src="/images/entra_step9_sync_warning.png" alt="目前無法啟用目錄同步警告" class="step-image" />
+</div>
+
+👉 **重點說明**：必須先針對欲使用的網域（如 `mdm.idv.tw`）完成「管理」中的**啟用聯合認證（或開啟使用 Microsoft Entra ID 登入）**，後續才能順利啟用 Microsoft Entra Connect Sync 目錄同步！
+:::
+
 ---
 
 ### 💡 關鍵概念：
