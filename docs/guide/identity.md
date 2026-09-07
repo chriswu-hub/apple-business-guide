@@ -88,6 +88,20 @@
 
 ## 3.2 聯合驗證（同盟身分驗證）
 
+### 概覽
+你可以使用聯合驗證將「Apple 商務」連結到下列服務：
+- **Google Workspace**
+- **Microsoft Entra ID OpenID Connect（OIDC）全球服務**（`login.microsoftonline.com`）
+  - *附註：目前不支援與國家雲端的整合。*
+- **任何使用 OIDC 或跨域身分管理系統 (SCIM) 的識別身分供應商 (IdP)**
+
+---
+
+### 聯合驗證搭配目錄同步
+你也可以將 Google Workspace、Microsoft Entra ID 或 IdP 上的使用者帳號同步至「Apple 商務」。當你設定目錄同步連線時，你可以新增「Apple 商務」屬性（例如職務）至上述服務所輸入的使用者帳號資料。系統會以**唯讀形式**新增服務的使用者帳號資訊，直到你關閉同步為止。
+
+---
+
 ### 什麼是管理式 Apple 帳號 (Managed Apple Account)？
 受管理 Apple 帳號由企業組織建立與控管，與一般個人的 Apple 帳號主要差異在於：
 - **所有權歸屬企業**：組織可隨時重設密碼、調整存取權限或停用帳號。
@@ -96,15 +110,22 @@
 
 ---
 
-### 同盟身分驗證 (Federated Authentication) 原理
-企業無需手動在 Apple 商務逐一建立帳號，可直接將 Apple 商務與企業既有的 IdP（Identity Provider）串接：
+## 3.3 Microsoft Entra ID 聯合驗證設定（重點）
 
-- **Microsoft Entra ID (Azure AD)**
-- **Google Workspace**
+### 📋 設定步驟：
+1. **選擇連結供應商**：在 Apple 商務中選擇「設定」>「識別身分提供者」> 選擇「連結至身分供應商」。
+2. **選擇 IdP 類型**：選擇「Microsoft Entra ID」。
+3. **管理員授權**：以 Entra ID 全域管理員（Global Administrator）身分登入並同意授權連線。
+4. **選擇聯合網域**：選擇要啟用聯合驗證的網域（例如：`mdm.idv.tw`）。
+5. **設定使用者名稱格式**：設定 User Principal Name (UPN) 與 Managed Apple Account 的對齊格式。
+6. **完成驗證**：儲存並完成聯合驗證連線設定。
 
-#### 優勢與效益：
-- **SSO 單一登入**：員工直接以公司原本的 Microsoft 365 / Google 工作信箱與密碼登入 Apple 裝置與服務。
-- **SCIM 目錄自動同步**：HR 或 IT 在 Entra ID 新增或停用員工時，Apple 商務會即時自動建立或註銷該帳號。
+---
+
+### 💡 關鍵概念：
+- **企業憑證直登**：聯合驗證啟用後，使用者直接使用既有的 Entra ID 帳號密碼登入管理式 Apple 帳號。
+- **完整支援 MFA**：原生支援 Microsoft Entra ID 端設定的多重要素驗證（MFA / Authenticator App / 條件式存取原則）。
+- **密碼中心化管理**：所有密碼變更、忘記密碼重設均由 Entra ID 端集中管理，Apple 端不儲存企業密碼。
 
 <style>
 .step-image-container {
