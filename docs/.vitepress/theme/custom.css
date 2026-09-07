@@ -58,3 +58,35 @@ button.copy.copied::after {
   border-color: #3f3f46;
   color: #60a5fa;
 }
+
+/* ============================================================
+   首頁 Hero 標題排版：單行不折行與自適應字級
+   ============================================================ */
+.VPHero .name {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+}
+
+.VPHero .text {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+}
+
+/* 在中大螢幕放寬 Hero 主區塊最大寬度，確保大標題與副標題完美單行展開 */
+@media (min-width: 640px) {
+  .VPHero .main {
+    max-width: 100% !important;
+  }
+}
+
+/* 小螢幕自適應縮放，避免破版 */
+@media (max-width: 639px) {
+  .VPHero .name {
+    font-size: 32px !important;
+    line-height: 40px !important;
+  }
+  .VPHero .text {
+    font-size: 24px !important;
+    line-height: 32px !important;
+  }
+}
