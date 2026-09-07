@@ -62,6 +62,30 @@
 
 ---
 
+### 🔒 鎖定網域（防止其他機構使用）
+
+鎖定網域後，**只能使用已驗證的網域建立管理式 Apple 帳號**。除非啟動「網域擷取」，否則此網域中無法建立非管理式（個人）Apple 帳號，且在啟用鎖定之前所建立的現有 Apple 帳號會保持原樣。此選項有助於確保日後所有使用該網域的帳號均為機構擁有。
+
+#### 鎖定步驟：
+1. 在「Apple 商務」中，以其職務有權檢視、編輯和刪除機構網域的使用者身分登入。
+2. 登入 Apple 商務，依序選擇「設定」>「網域」。
+3. 選取你要鎖定的網域，點選 **「管理」**：
+   <div class="step-image-container">
+     <img src="/images/domain_lock_step1_manage.png" alt="網域列表點選管理" class="step-image" />
+   </div>
+4. 開啟 **「鎖定網域」**（或同時開啟「使用 Microsoft Entra ID 登入」）：
+   <div class="step-image-container">
+     <img src="/images/domain_lock_step2_toggle.png" alt="開啟鎖定網域開關" class="step-image" />
+   </div>
+
+::: warning ⚠️【重要事項】
+鎖定網域可**永久防止任何人使用該網域建立非管理式（個人）Apple 帳號**，且除非移除網域，否則無法關閉此功能。
+:::
+
+5. 確認後選取 **「完成 / 鎖定網域」**。
+
+---
+
 ## 3.2 聯合驗證（同盟身分驗證）
 
 ### 什麼是管理式 Apple 帳號 (Managed Apple Account)？
