@@ -21,11 +21,36 @@
 business.apple.com → 填寫資訊 → Apple 審核(1-3天) → 驗證完成 → 開始設定
 ```
 
-1. **前往官網**：瀏覽 [business.apple.com](https://business.apple.com) 並點選「立即註冊」。
-2. **填寫組織與驗證聯絡人資訊**：輸入公司基本資料、D-U-N-S 編號與授權簽署人聯絡方式。
-3. **Apple 人工審核**：Apple 審核團隊通常在 1–3 個工作天內，透過電話或公務信箱聯繫授權聯絡人以確認申請意向。
-4. **驗證完成**：驗證通過後，建立首位組織管理員（Administrator）帳號。
-5. **開始設定**：登入後台開始設定機構單位、綁定經銷商並指派 MDM 伺服器。
+### 步驟 1：前往官網與點選註冊
+瀏覽 [business.apple.com](https://business.apple.com)，在登入畫面下方點選 **「立即註冊」**：
+
+<div class="step-image-container">
+  <img src="/apple-business-guide/images/step1_landing.png" alt="Apple Business 登入與立即註冊" class="step-image" />
+</div>
+
+---
+
+### 步驟 2：加入機構詳細資料
+填寫組織的基本登記資訊（包含機構名稱、商戶電郵、網站、國家/地區及登記地址）：
+
+<div class="step-image-container">
+  <img src="/apple-business-guide/images/step2_organization.png" alt="加入機構詳細資料" class="step-image" />
+</div>
+
+---
+
+### 步驟 3：建立管理式 Apple 帳戶
+點選「下一步」後，建立首位管理員的 **管理式 Apple 帳戶**（填寫姓名、公務電郵、密碼以及接收驗證碼的手機號碼）：
+
+<div class="step-image-container">
+  <img src="/apple-business-guide/images/step3_account.png" alt="建立管理式 Apple 帳戶" class="step-image" />
+</div>
+
+---
+
+### 步驟 4：Apple 人工審核與完成驗證
+- **Apple 人工審核**：Apple 審核團隊通常在 1–3 個工作天內，透過電話或公務信箱聯繫授權聯絡人以確認申請意向。
+- **驗證完成**：驗證通過後即可正式登入後台開始設定。
 
 ---
 
@@ -47,3 +72,18 @@ business.apple.com → 填寫資訊 → Apple 審核(1-3天) → 驗證完成 �
 2. **後台新增綁定**：在 Apple 商務後台進入「偏好設定」>「MDM 伺服器指派 / 裝置管理設定」，加入經銷商編號。
 3. **提供組織識別碼**：提供企業的 **Organization ID（組織 ID）** 給經銷商以完成雙向認證。
 4. **自動同步**：後續每筆採購訂單只要經銷商完成入庫，序號將即時同步至 Apple 商務。
+
+<style>
+.step-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.step-image {
+  display: inline-block;
+  max-width: 420px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+</style>
