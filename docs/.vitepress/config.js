@@ -18,7 +18,7 @@ export default defineConfig({
         items: [
           { text: 'Apple 商務概覽', link: '/guide/introduction' },
           { text: '註冊與機構設定', link: '/guide/organization' },
-          { text: '帳號與身分整合', link: '/guide/identity' }
+          { text: '網域和識別身分', link: '/guide/identity' }
         ]
       },
       {
