@@ -36,8 +36,9 @@ export default defineConfig({
         ]
       },
       {
-        text: '培訓考核',
+        text: '培訓考核與實作',
         items: [
+          { text: 'Lab 1: Entra ID 目錄同步實作', link: '/guide/lab1' },
           { text: '實作檢核與結訓認證', link: '/guide/verify' }
         ]
       }

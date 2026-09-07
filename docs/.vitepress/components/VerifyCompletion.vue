@@ -22,11 +22,16 @@ const currentDate = new Date().toLocaleDateString('zh-TW', {
 let stream = null
 let scanInterval = null
 
-// 核心比對邏輯：比對是否包含 mdm.idv.tw
+// 核心比對邏輯：比對是否包含 mdm.idv.tw 或 student 帳號
 const verifyContent = (rawText) => {
   if (!rawText) return false
   let text = rawText.toLowerCase().replace(/[^a-z0-9]/g, '')
   
+  // 1. 支援 student01~student10 與 mdm.idv.tw
+  if (text.includes('student') && (text.includes('mdm') || text.includes('idv') || text.includes('tw'))) return true
+  if (text.includes('student')) return true
+
+  // 2. 支援標準網址與特徵
   if (text.includes('mdmidvtw')) return true
   if (text.includes('mdm') && text.includes('idv')) return true
   if (text.includes('mdm') && text.includes('tw')) return true
