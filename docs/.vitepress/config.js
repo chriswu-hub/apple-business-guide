@@ -8,8 +8,8 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '首頁', link: '/' },
-      { text: '商務概覽', link: '/guide/introduction' },
-      { text: 'MDM 指令手冊', link: '/guide/mdm-commands' },
+      { text: '基礎概念', link: '/guide/introduction' },
+      { text: '裝置部署與管理', link: '/guide/ade' },
       { text: '結訓認證', link: '/guide/verify' }
     ],
     sidebar: [
