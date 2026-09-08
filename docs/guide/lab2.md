@@ -1,7 +1,7 @@
 # Lab 2: 裝置自動註冊與零接觸部署模擬
 
 **預估時間：** 20 分鐘  
-**實作目標：** 在 Apple 商務後台確認分配到的 Mac 序號，指派管理服務與預設集，接著將 Mac 開機連網，體驗零接觸自動下載描述檔與受監管（Supervised）部署流程。
+**實作目標：** 在 Apple 商務後台確認分配到的 Mac 序號，指派管理服務與藍圖，接著將 Mac 開機連網，體驗零接觸自動下載描述檔與受監管（Supervised）部署流程。
 
 ---
 
@@ -9,7 +9,7 @@
 
 每位學員拿到一台已預先透過 Configurator 加入 Apple 商務的實體 Mac。請先確認外殼底部的 **Mac 序號 (Serial Number)**：
 
-| 座號 | 分配學員帳號 | 目標預設集 | 驗證檢核點 |
+| 座號 | 分配學員帳號 | 目標藍圖 | 驗證檢核點 |
 | :--- | :--- | :--- | :--- |
 | **學員 01** | `student01@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
 | **學員 02** | `student02@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
@@ -42,11 +42,27 @@
 
 ---
 
-### 步驟 3：建立與指派「預設集」
-1. 導覽至左側選單 **「預設集 (Blueprints / Presets)」**。
-2. 點選「+ 新增預設集」，命名為 **`商務部門-Mac`**。
-3. 設定 Wi-Fi 自動連線設定、密碼安全性原則與必要企業 App。
-4. 將此預設集指派給你的測試使用者群組（例如：`商務部門` 或你的學員帳號）。
+### 步驟 3：建立與指派「藍圖 (Blueprints)」
+1. 導覽至左側選單「裝置」>「內置管理」> 點選 **「藍圖」**，點選藍圖旁的 **「+」**（新增藍圖）：
+   <div class="step-image-container">
+     <img src="/images/blueprint_step1_plus.png" alt="點選藍圖旁的+新增藍圖" class="step-image" />
+   </div>
+
+2. 在建立藍圖選單中，選擇 **「用戶裝置藍圖」**（使用建議預設設定來管理用戶裝置），點選「繼續」：
+   <div class="step-image-container">
+     <img src="/images/blueprint_step2_select_type.png" alt="建立藍圖選擇用戶裝置藍圖" class="step-image" />
+   </div>
+
+3. 將藍圖名稱命名為 **`商務部門-Mac`**：
+   <div class="step-image-container">
+     <img src="/images/blueprint_step3_config.png" alt="藍圖命名商務部門-Mac與設定" class="step-image" />
+   </div>
+
+4. **設定藍圖組態與用戶**：
+   - 設定 **用户裝置藍圖 Wi-Fi**、**密碼規則 - 強制執行** 與 **軟件更新 - 自動**。
+   - **App**：稍後設定即可。
+   - **用戶**：點選「+ 加入用戶」，加入自己的帳號（例如：你的學員帳號 `studentXX@mdm.idv.tw`）。
+   - 完成後點選右下角 **「建立藍圖」**。
 
 ---
 
@@ -90,3 +106,18 @@ Supervised: Yes
 👉 [前往「實作檢核與結訓認證」頁面](/guide/verify)
 
 使用手機相機掃描 Mac 終端機顯示的 **`Enrolled via DEP: Yes`** 或 `Supervised: Yes`，系統確認通過後將立即頒發專屬結訓認證證書！
+
+<style>
+.step-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.step-image {
+  display: inline-block;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+</style>
