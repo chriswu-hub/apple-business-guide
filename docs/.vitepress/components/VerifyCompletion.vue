@@ -22,22 +22,27 @@ const currentDate = new Date().toLocaleDateString('zh-TW', {
 let stream = null
 let scanInterval = null
 
-// 核心比對邏輯：比對是否包含 mdm.idv.tw、student 帳號、或 Lab 2 的 DEP/Supervised/MDM 狀態
+// 核心比對邏輯：比對是否包含 mdm.idv.tw、student 帳號、Lab 2 DEP/MDM 狀態、或 Lab 3 鎖定畫面資產文字
 const verifyContent = (rawText) => {
   if (!rawText) return false
   let text = rawText.toLowerCase().replace(/[^a-z0-9]/g, '')
   
-  // 1. 支援 Lab 2 的 DEP / Supervised / MDM Enrollment 終端機狀態
+  // 1. 支援 Lab 3 鎖定畫面「Apple at Work - studentXX」與 FileVault
+  if (text.includes('appleatwork') && text.includes('student')) return true
+  if (text.includes('appleatwork')) return true
+  if (text.includes('filevaultison') || text.includes('filevault')) return true
+
+  // 2. 支援 Lab 2 的 DEP / Supervised / MDM Enrollment 終端機狀態
   if (text.includes('enrolledviadep') || text.includes('supervisedyes') || text.includes('enrolledviadepyes')) return true
   if (text.includes('mdmenrollmentyes') || text.includes('userapproved')) return true
   if (text.includes('enrolled') && text.includes('dep')) return true
   if (text.includes('supervised') && text.includes('yes')) return true
 
-  // 2. 支援 student01~student10 與 mdm.idv.tw
+  // 3. 支援 student01~student10 與 mdm.idv.tw
   if (text.includes('student') && (text.includes('mdm') || text.includes('idv') || text.includes('tw'))) return true
   if (text.includes('student')) return true
 
-  // 3. 支援標準網址與特徵
+  // 4. 支援標準網址與特徵
   if (text.includes('mdmidvtw')) return true
   if (text.includes('mdm') && text.includes('idv')) return true
   if (text.includes('mdm') && text.includes('tw')) return true
