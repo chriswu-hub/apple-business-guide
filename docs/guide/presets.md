@@ -72,14 +72,24 @@
 
 ---
 
-### ⚙️ 3. 個人化與管理設定
+### ⚙️ 3. 個人化設定
 
-| 設定項目 | 用途說明 | 實務配置重點 |
-| :--- | :--- | :--- |
-| **iCloud** | 控制 iCloud 同步項目與雲端備份 | 僅允許管理式 Apple 帳號同步公務 iCloud Drive |
-| **App 取用** | 限制或允許特定 App 的執行與存取 | 允許企業指派 App，限制隨意安裝非工作軟體 |
-| **資料管理 (Managed Open In)** | 控制公務資料在 App 之間的分享流向 | 禁止將公務郵件附件透過非受管個人 App 開啟 |
-| **鎖定畫面** | 自訂 Mac 鎖定畫面上的資產標籤與聯絡資訊 | 顯示 *「[公司名稱] 資產，拾獲請聯繫 it@company.com」* |
+進入 Apple 商務點選 **「裝置」>「設定」>「個人化」**，可檢視並配置所有與裝置介面、能源及個人使用環境相關的原則：
+
+<div class="step-image-container">
+  <img src="/images/settings_personalization_grid.png" alt="裝置 > 設定 > 個人化 組態列表" class="step-image" />
+</div>
+
+| 設定項目 | 用途說明 | 支援平台 | 實務配置重點 |
+| :--- | :--- | :--- | :--- |
+| **自訂設定** | 上載並分派設定描述檔（.mobileconfig） | macOS / iOS / tvOS / visionOS | 派送進階自訂 XML 設定檔 |
+| **能源節約器** | 管理裝置能源使用的相關功能和設定 | macOS | 設定睡眠排程與喚醒原則 |
+| **網頁過濾器** | 設定自動內容過濾器以封鎖或允許 Safari 和其他瀏覽器中的特定網站 | iOS / visionOS | 限制或封鎖不適當內容 |
+| **鎖定畫面** | 管理鎖定畫面和用戶工作階段的顯示方式和功能 | macOS / iOS | 自訂資產標籤與公司聯絡資訊 |
+| **AirPlay** | 配置 AirPlay 接收與發送設定 | macOS / tvOS | 會議室螢幕鏡像輸出管理 |
+| **Apple Intelligence 和 Siri** | 設定 Apple Intelligence 和 Siri 功能的可用性 | iOS / macOS / visionOS | 依企業合規政策進行功能開關 |
+| **iCloud** | 限制取用 iCloud 功能和資料同步 | iOS / macOS / visionOS | 僅限管理式 Apple 帳號同步公務資料 |
+| **Web Clip** | 將網頁連結置於 iOS 和 iPadOS 裝置的主畫面上 | iOS | 快速派送企業內部 Portal 捷徑 |
 
 ---
 
@@ -99,10 +109,10 @@
 │   ├── Wi-Fi：自動連線 802.1X 企業無線網路
 │   ├── VPN：自動按需連線 (On-Demand) 至企業 VPN
 │   └── 證書 (Certificates)：自動派送企業內部 CA 根憑證
-├── ⚙️ 管理與個人化
+├── ⚙️ 個人化設定
 │   ├── iCloud：僅允許管理式帳號 iCloud Drive（公私資料隔離）
-│   ├── AirDrop：僅限「聯絡人」
-│   └── App 取用：允許企業指派之 App Store 軟體
+│   ├── 鎖定畫面：顯示公司資產與 IT 聯絡資訊
+│   └── 自訂設定：預先派送合規描述檔
 └── 📦 應用程式 (Apps)
     ├── Microsoft 365 套件 (Word, Excel, PowerPoint, Outlook)
     ├── Microsoft Teams
