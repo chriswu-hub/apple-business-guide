@@ -92,25 +92,86 @@
 
 以下是零接觸自動註冊（Zero-Touch Deployment）從採購到開箱上線的 8 大標準步驟：
 
-```mermaid
-flowchart TD
-    A[🛒 1. 向 Apple 或經銷商採購] --> B[📦 2. 序號自動出現在 Apple 商務]
-    B --> C[⚙️ 3. 指派至內建裝置管理服務]
-    C --> D[📋 4. 建立預設集並指派群組]
-    D --> E[💻 5. 使用者開箱 ➔ 聯網 Wi-Fi]
-    E --> F[🔐 6. 管理式 Apple 帳號 SSO 登入]
-    F --> G[🚀 7. 自動套用設定檔與安裝 App]
-    G --> H[✅ 8. 完成 ➔ 裝置完全受監管]
+<div class="flowchart-container">
+  <div class="flow-step blue">
+    <div class="flow-icon">🛒</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 01</div>
+      <div class="flow-title">採購裝置</div>
+      <div class="flow-desc">向 Apple 或授權經銷商採購</div>
+    </div>
+  </div>
+  <div class="flow-connector">➔</div>
 
-    style A fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0369a1
-    style B fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0369a1
-    style C fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#b45309
-    style D fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#b45309
-    style E fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#7e22ce
-    style F fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#7e22ce
-    style G fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#15803d
-    style H fill:#dcfce7,stroke:#16a34a,stroke-width:3px,color:#15803d
-```
+  <div class="flow-step blue">
+    <div class="flow-icon">📦</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 02</div>
+      <div class="flow-title">自動入庫</div>
+      <div class="flow-desc">序號自動進入 Apple 商務</div>
+    </div>
+  </div>
+  <div class="flow-connector">➔</div>
+
+  <div class="flow-step amber">
+    <div class="flow-icon">⚙️</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 03</div>
+      <div class="flow-title">指派伺服器</div>
+      <div class="flow-desc">指派至內建/第三方 MDM</div>
+    </div>
+  </div>
+  <div class="flow-connector">➔</div>
+
+  <div class="flow-step amber">
+    <div class="flow-icon">📋</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 04</div>
+      <div class="flow-title">配置預設集</div>
+      <div class="flow-desc">建立設定檔並指派群組</div>
+    </div>
+  </div>
+  <div class="flow-connector">➔</div>
+
+  <div class="flow-step purple">
+    <div class="flow-icon">💻</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 05</div>
+      <div class="flow-title">使用者開箱</div>
+      <div class="flow-desc">開機連線 Wi-Fi 網路</div>
+    </div>
+  </div>
+  <div class="flow-connector">➔</div>
+
+  <div class="flow-step purple">
+    <div class="flow-icon">🔐</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 06</div>
+      <div class="flow-title">身分驗證</div>
+      <div class="flow-desc">管理式 Apple 帳號 SSO</div>
+    </div>
+  </div>
+  <div class="flow-connector">➔</div>
+
+  <div class="flow-step green">
+    <div class="flow-icon">🚀</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 07</div>
+      <div class="flow-title">靜默部署</div>
+      <div class="flow-desc">自動套用設定與安裝 App</div>
+    </div>
+  </div>
+  <div class="flow-connector">➔</div>
+
+  <div class="flow-step green-highlight">
+    <div class="flow-icon">✅</div>
+    <div class="flow-content">
+      <div class="flow-num">Step 08</div>
+      <div class="flow-title">完成納管</div>
+      <div class="flow-desc">裝置完全受企業監管</div>
+    </div>
+  </div>
+</div>
 
 ### 📋 詳細步驟拆解：
 1. **採購設備**：向 Apple 直營企業團隊或授權經銷商下單採購。
@@ -374,5 +435,118 @@ flowchart TD
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
+}
+
+/* 5.4 裝置自動註冊流程圖樣式 */
+.flowchart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--vp-c-bg-soft);
+  border-radius: 16px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 480px;
+  padding: 0.9rem 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.flow-step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.flow-step.blue {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+.dark .flow-step.blue {
+  background: #1e293b;
+  border-color: #3b82f6;
+}
+
+.flow-step.amber {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.dark .flow-step.amber {
+  background: #2d2618;
+  border-color: #f59e0b;
+}
+
+.flow-step.purple {
+  background: #faf5ff;
+  border-color: #e9d5ff;
+}
+.dark .flow-step.purple {
+  background: #2c1b4d;
+  border-color: #a855f7;
+}
+
+.flow-step.green {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.dark .flow-step.green {
+  background: #143522;
+  border-color: #22c55e;
+}
+
+.flow-step.green-highlight {
+  background: #dcfce7;
+  border: 2px solid #16a34a;
+}
+.dark .flow-step.green-highlight {
+  background: #154528;
+  border: 2px solid #4ade80;
+}
+
+.flow-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.flow-content {
+  flex: 1;
+}
+
+.flow-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.75;
+}
+
+.flow-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+}
+
+.flow-desc {
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  margin-top: 2px;
+}
+
+.flow-connector {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--vp-c-brand-1);
+  transform: rotate(90deg);
+  margin: -2px 0;
 }
 </style>
