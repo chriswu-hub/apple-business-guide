@@ -9,7 +9,7 @@ export default defineConfig({
     nav: [
       { text: '首頁', link: '/' },
       { text: '基礎概念', link: '/guide/introduction' },
-      { text: '裝置部署與管理', link: '/guide/ade' },
+      { text: '裝置部署與管理', link: '/guide/enrollment' },
       { text: '結訓認證', link: '/guide/verify' }
     ],
     sidebar: [
@@ -25,6 +25,7 @@ export default defineConfig({
       {
         text: '裝置部署與管理',
         items: [
+          { text: '註冊方式與部署', link: '/guide/enrollment' },
           { text: '自動裝置註冊 (ADE)', link: '/guide/ade' },
           { text: 'MDM 管理與設定檔', link: '/guide/mdm' },
           { text: 'macOS 終端機指令集', link: '/guide/mdm-commands' }
