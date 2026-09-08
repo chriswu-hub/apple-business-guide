@@ -246,9 +246,16 @@
     <div class="flow-arrow">➔</div>
     <div class="flow-item">☁️ 上傳序號至 Apple 商務</div>
     <div class="flow-arrow">➔</div>
-    <div class="flow-item">💻 Mac 顯示「已加入組織」</div>
+    <div class="flow-item">💻 Mac 顯示「已加入Mac」</div>
   </div>
 </div>
+
+掃描成功後，Mac 畫面會顯示：  
+**「將此 Mac 指定至 Apple 商務中的裝置管理服務來設定其註冊設置並啟用『自動裝置註冊』。」**
+
+::: tip 💡【收編完成交付】
+此時收編流程已完成，直接**按右下角「關機」**。此 Mac 即可放心打包交給使用者，使用者收到 Mac 開機聯網後，即可無縫實現**裝置自動註冊（Zero-Touch，完全監管）**！
+:::
 
 ---
 
