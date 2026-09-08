@@ -66,7 +66,22 @@
 
 ---
 
-### 步驟 4：Mac 開機 — 模擬裝置設定輔助程式
+### 步驟 4：從建立的藍圖中加入裝置
+1. 點選剛剛建立的 **「商務部門-Mac」** 藍圖，切換至 **「裝置」** 標籤頁，點選右側的 **「加入」** 按鈕：
+   <div class="step-image-container">
+     <img src="/images/lab2_step3_add_device_btn.png" alt="商務部門-Mac藍圖 > 裝置標籤頁 > 點選加入" class="step-image" />
+   </div>
+
+2. 在「加入裝置」彈出視窗中，搜尋並勾選**學員手中該台 Mac 序號**的裝置：
+   <div class="step-image-container">
+     <img src="/images/lab2_step3_select_device_dialog.png" alt="加入裝置視窗中勾選學員Mac裝置" class="step-image" />
+   </div>
+
+3. 確認勾選「自動批准已加入此藍圖的裝置的首次註冊」，點選右下角 **「加入」** 完成綁定與儲存！
+
+---
+
+### 步驟 5：Mac 開機 — 模擬裝置設定輔助程式
 1. 將測試 Mac 開機，進入「設定輔助程式 (Setup Assistant)」。
 2. 連線至現場 **Wi-Fi 網路**。
 3. **觀察自動偵測到管理服務的神奇時刻**：
@@ -77,7 +92,7 @@
 
 ---
 
-### 步驟 5：驗證管理狀態（3 大檢核點）
+### 步驟 6：驗證管理狀態（3 大檢核點）
 
 #### 🔍 檢核點 A：Mac 本機終端機檢驗（最推薦、最快速）
 在 Mac 上開啟「終端機 (Terminal)」，執行以下指令：
