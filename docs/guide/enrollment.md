@@ -202,7 +202,7 @@
 ### 📱 iPhone 版 Apple Configurator 納管實作流程：
 
 #### 步驟 1：iPhone 登入 Apple Configurator
-在 iPhone 下載開啟 **Apple Configurator** App，使用具有管理權限的管理式 Apple 帳號登入。
+在 iPhone 下載開啟 [Apple Configurator (App Store 下載連結)](https://apps.apple.com/app/apple-configurator/id1588794674)，使用具有管理權限的管理式 Apple 帳號登入。
 
 <div class="interactive-demo-card">
   <div class="demo-badge">DEMO STEP 1</div>
@@ -222,24 +222,15 @@
 
 ---
 
-#### 步驟 2：Mac 開機至「國別 / 語言選擇」畫面
-將待收編的 Mac 清除重置，開機停留在設定輔助程式的**語言選擇**或**國別選擇**畫面。
+#### 步驟 2：Mac 開機至國家選擇並停留等待配對
 
-<div class="interactive-demo-card">
-  <div class="demo-badge">DEMO STEP 2</div>
-  <div class="demo-title">Mac 端出現動態星雲配對光球</div>
-  <div class="demo-mac-mockup">
-    <div class="mac-header">
-      <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-      <span class="mac-title">Setup Assistant (設定輔助程式)</span>
-    </div>
-    <div class="mac-screen-content">
-      <div class="cloud-orb">
-        <div class="orb-inner"></div>
-      </div>
-      <p class="mac-hint">將 iPhone 靠近此 Mac 並對準圖樣以加入組織</p>
-    </div>
-  </div>
+::: danger 🚨【關鍵核心步驟】請特別注意！
+將待收編的 Mac 清除重置後開機，**在看到「選擇你的國家或地區」窗格時請務必「停止操作」！**  
+這一步非常重要，**請絕對不要直接按「繼續」**！在國家選擇頁面請先稍等一下，**將已開啟 Apple Configurator 的 iPhone 靠近 Mac**，Mac 螢幕端就會自動彈出「將此 Mac 加入你的機構 (Add this Mac to Your Organization)」並出現**藍色動態星雲配對光球**！
+:::
+
+<div class="step-image-container">
+  <img src="/images/configurator_mac_orb.png" alt="Mac 螢幕出現動態星雲光球 (Add this Mac to Your Organization)" class="step-image-laptop" />
 </div>
 
 ---
@@ -279,6 +270,13 @@
   border-radius: 12px;
   border: 1px solid var(--vp-c-divider);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+.step-image-laptop {
+  display: inline-block;
+  max-width: 640px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 /* Demo Mockup Styles */
