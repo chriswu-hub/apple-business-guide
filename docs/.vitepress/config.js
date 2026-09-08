@@ -26,7 +26,7 @@ export default defineConfig({
         text: '裝置部署與管理',
         items: [
           { text: '註冊方式與部署', link: '/guide/enrollment' },
-          { text: '預設集、設定與安全性組態', link: '/guide/presets' },
+          { text: '加入藍圖、配置設定與安全性組態', link: '/guide/presets' },
           { text: '自動裝置註冊 (ADE)', link: '/guide/ade' },
           { text: 'MDM 管理與設定檔', link: '/guide/mdm' },
           { text: 'macOS 終端機指令集', link: '/guide/mdm-commands' }
