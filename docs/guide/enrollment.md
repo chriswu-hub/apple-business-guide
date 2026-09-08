@@ -261,9 +261,16 @@
 
 #### 步驟 4：在 Apple 商務後台完成指派
 1. 登入 [business.apple.com](https://business.apple.com) 進入「裝置」。
-2. 該台 Mac 會出現在清單中，來源標註為 **「Apple Configurator」**。
-3. 勾選裝置，點選「編輯 MDM 伺服器」指派給公司的 MDM 系統。
-4. **完成納管**：該裝置即刻享有與一般 ADE 採購裝置同等的**完全監管 (Supervised)** 待遇！
+2. 該台 Mac 會出現在**「庫存」**中，來源標註為 **「Devices Added by Apple Configurator」**：
+   <div class="step-image-container">
+     <img src="/images/configurator_step4_inventory.png" alt="裝置庫存中出現 Apple Configurator 納管設備並點選分派裝置管理" class="step-image" />
+   </div>
+3. 勾選該裝置，點選下方操作列紅框的 **「分派裝置管理」**：
+   <div class="step-image-container">
+     <img src="/images/configurator_step4_assign_dialog.png" alt="分派裝置管理彈出視窗" class="step-image" />
+   </div>
+4. 選擇欲指派的「裝置管理服務」（例如：內置裝置管理或自訂 MDM），點選「繼續」確認。
+5. **完成納管**：該裝置即刻享有與一般 ADE 採購裝置同等的**完全監管 (Supervised)** 待遇！
 
 <style>
 .step-image-container {
