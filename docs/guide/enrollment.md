@@ -226,11 +226,11 @@
 
 ::: danger 🚨【關鍵核心步驟】請特別注意！
 將待收編的 Mac 清除重置後開機，**在看到「選擇你的國家或地區」窗格時請務必「停止操作」！**  
-這一步非常重要，**請絕對不要直接按「繼續」**！在國家選擇頁面請先稍等一下，**將已開啟 Apple Configurator 的 iPhone 靠近 Mac**，Mac 螢幕端就會自動彈出「將此 Mac 加入你的機構 (Add this Mac to Your Organization)」並出現**藍色動態星雲配對光球**！
+這一步非常重要，**請絕對不要直接按「繼續」**！在國家選擇頁面請先稍等一下，**將已開啟 Apple Configurator 的 iPhone 靠近 Mac**，Mac 螢幕端就會自動彈出「將此 Mac 加入你的組織」並出現**藍色動態星雲配對光球**！
 :::
 
 <div class="step-image-container">
-  <img src="/images/configurator_mac_orb.png" alt="Mac 螢幕出現動態星雲光球 (Add this Mac to Your Organization)" class="step-image-laptop" />
+  <img src="/images/configurator_mac_orb.png" alt="Mac 螢幕出現動態星雲光球 (將此 Mac 加入你的組織)" class="step-image-laptop" />
 </div>
 
 ---
