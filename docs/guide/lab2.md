@@ -11,16 +11,16 @@
 
 | 座號 | 分配學員帳號 | 目標藍圖 | 驗證檢核點 |
 | :--- | :--- | :--- | :--- |
-| **學員 01** | `student01@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 02** | `student02@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 03** | `student03@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 04** | `student04@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 05** | `student05@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 06** | `student06@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 07** | `student07@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 08** | `student08@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 09** | `student09@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
-| **學員 10** | `student10@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `Supervised: Yes` |
+| **學員 01** | `student01@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 02** | `student02@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 03** | `student03@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 04** | `student04@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 05** | `student05@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 06** | `student06@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 07** | `student07@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 08** | `student08@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 09** | `student09@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+| **學員 10** | `student10@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
 
 ---
 
@@ -113,8 +113,8 @@ sudo profiles status -type enrollment
 **預期輸出**：
 ```
 Enrolled via DEP: Yes
+MDM enrollment: Yes (User Approved)
 MDM server: https://...
-Supervised: Yes
 ```
 
 #### 🔍 檢核點 B：Mac「系統設定」確認

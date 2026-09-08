@@ -22,13 +22,14 @@ const currentDate = new Date().toLocaleDateString('zh-TW', {
 let stream = null
 let scanInterval = null
 
-// 核心比對邏輯：比對是否包含 mdm.idv.tw、student 帳號、或 Lab 2 的 DEP/Supervised 狀態
+// 核心比對邏輯：比對是否包含 mdm.idv.tw、student 帳號、或 Lab 2 的 DEP/Supervised/MDM 狀態
 const verifyContent = (rawText) => {
   if (!rawText) return false
   let text = rawText.toLowerCase().replace(/[^a-z0-9]/g, '')
   
-  // 1. 支援 Lab 2 的 DEP / Supervised 終端機狀態
+  // 1. 支援 Lab 2 的 DEP / Supervised / MDM Enrollment 終端機狀態
   if (text.includes('enrolledviadep') || text.includes('supervisedyes') || text.includes('enrolledviadepyes')) return true
+  if (text.includes('mdmenrollmentyes') || text.includes('userapproved')) return true
   if (text.includes('enrolled') && text.includes('dep')) return true
   if (text.includes('supervised') && text.includes('yes')) return true
 
