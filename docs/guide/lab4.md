@@ -55,13 +55,13 @@
 ### 步驟 3：Mac 端觀察背景靜默安裝
 回到你面前的測試 Mac（無需重開機、無需開啟 App Store、無需輸入個人密碼）：
 1. 保持 Mac 聯網約 1~3 分鐘。
-2. **觀察 Dock 欄或啟動台 (Launchpad)**：
+2. **觀察 Dock 或 Launchpad**：
    - 系統會在背景默默下載，隨後 **`Microsoft Outlook` 圖示將自動出現在應用程式清單中**！
 
 ---
 
 ### 步驟 4：驗證與開啟 App
-1. 在 Mac 上開啟「訪達 (Finder)」>「應用程式」，點擊啟動 **Microsoft Outlook**。
+1. 在 Mac 上開啟「Finder」>「應用程式」，點擊啟動 **Microsoft Outlook**。
 2. 確認能正常開啟歡迎畫面。
 
 ---
