@@ -16,7 +16,7 @@
 在 Apple 商務的「App 及服務」專區，企業可集中統一採購 App Store 上的免費或付費軟體許可（Volume Purchase / 原 VPP）：
 
 - **大量採購（Volume Purchase）**：  
-  即使是免費 App（如 Microsoft Teams、Outlook），企業也需在 Apple 商務後台採購「0 元許可（如購買 500 套）」，以取得合法的批次部署授權權限。
+  即使是免費 App（如 Microsoft Teams、OneDrive、Outlook），企業也需在 Apple 商務後台採購「0 元許可（如購買 500 套）」，以取得合法的批次部署授權權限。
 - **兩大核心指派方式**：
   - **裝置指派 (Device-based Assignment)**：  
     將 App 許可直接綁定在特定設備的硬體序號上。**使用者完全不需要登入個人 Apple 帳號，設備即可在背景自動靜默下載並安裝 App**，非常適合企業公發電腦與專職設備。
@@ -26,6 +26,39 @@
   所有採購的軟體許可所有權皆歸屬於**機構**。當員工離職或裝置歸還時，IT 人員可隨時將授權自該裝置/帳號撤銷回收，並立即重新分發給新進員工，保護企業軟體資產。
 - **自訂 App (Custom Apps)**：  
   企業內部自行開發或由委外協力廠商客製的 B2B 私有 App，可透過 App Store Connect 專屬分發至企業的 Apple 商務後台，無需公開上架至公共 App Store，兼具隱私與安全性。
+
+---
+
+### 🛒 大量取得與分派 App 圖文步驟
+
+#### 步驟 1：進入「App 及服務」並點選「檢視商店」
+登入 Apple 商務後，點選頂部導覽列 **「App 及服務」**，在左側「App」頁面中央會看到「取得 App 和自訂 App」，點選藍色按鈕 **「檢視商店」**：
+
+<div class="step-image-container">
+  <img src="/images/vpp_step1_nav.png" alt="點選頂部 App 及服務並進入檢視商店" class="step-image" />
+</div>
+
+---
+
+#### 步驟 2：搜尋欲採購之 App 並選擇分派機構單位
+在商店左側搜尋列輸入欲採購的軟體名稱（例如輸入 `One` 搜尋 `OneDrive`），選取該 App 後，於右側「購買許可證」的「分派予」下拉選單中**選擇目標機構單位（例如你的公司組織）**：
+
+<div class="step-image-container">
+  <img src="/images/vpp_step2_search_assign.png" alt="搜尋 OneDrive 並選擇分派機構單位" class="step-image" />
+</div>
+
+---
+
+#### 步驟 3：輸入採購數量並點選「取得」
+在「數量」欄位輸入企業預計採購或分發的授權套數（例如輸入 `10` 套，免費 App 總計金額為 NT$0.00），確認無誤後點選右側藍色按鈕 **「取得」**：
+
+<div class="step-image-container">
+  <img src="/images/vpp_step3_quantity_get.png" alt="輸入數量並點選取得許可證" class="step-image" />
+</div>
+
+::: tip 💡【授權即時入庫】
+按下「取得」後，該軟體許可證會即時出現在 Apple 商務後台庫存與 MDM 系統中。接著即可前往「藍圖」將該 App 加入並自動推送至受管裝置！
+:::
 
 ---
 
@@ -67,3 +100,18 @@ Apple 商務整合了全方位的企業雲端訂閱與商務服務營運管理�
   企業可直接在後台統一配置員工公務 iCloud 空間，每位員工**最高可配置 2TB 儲存空間**。所有空間費用由機構統一集中出資，確保公務檔案、桌上檔案夾與鑰匙圈安全備份在企業雲端儲存池中。
 - **帳單與付款管理**：  
   集中管理機構的付款方式（如企業信用卡、採購單結帳協議）、集中檢視所有 App 採購明細、大量軟體發票與 AppleCare+ 保固合約期程。
+
+<style>
+.step-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.step-image {
+  display: inline-block;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+</style>
