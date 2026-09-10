@@ -20,21 +20,35 @@
 ### 步驟 1：在 Apple 商務取得 App 許可
 1. 使用管理員帳號登入 [business.apple.com](https://business.apple.com)。
 2. 點選頂部導覽列 **「App 及服務」** > 點選 **「檢視商店」**。
-3. 在左側搜尋列輸入 **`Microsoft Outlook`** 並選取該 App。
+3. 在左側搜尋列輸入 **`Outlook`** 並選取 **Microsoft Outlook (macOS App)**。
 4. 在右側「購買許可證」區塊：
    - **分派予**：確認選擇你的組織機構單位。
    - **數量**：輸入 `10`（NT$0.00 免費授權）。
-5. 點選右側藍色按鈕 **「取得」**。
+5. 點選右側藍色按鈕 **「取得」**：
+
+<div class="step-image-container">
+  <img src="/images/lab4_step1_buy_outlook.png" alt="在商店搜尋 Outlook、選擇機構單位並取得 10 套許可" class="step-image" />
+</div>
 
 ---
 
 ### 步驟 2：將 App 加入「藍圖」並設定自動安裝
 1. 導覽至左側選單「裝置」>「內置管理」> 點選 **「藍圖」**。
-2. 點選先前建立的 **「商務部門-Mac」** 藍圖。
-3. 切換至 **「App」** 標籤頁（或在編輯頁面點選「+ 加入 App」）。
-4. 勾選剛剛取得的 **「Microsoft Outlook」**。
-5. 安裝方式確認為 **「自動安裝」**（裝置聯網後在背景自動靜默推送）。
-6. 點選右下角 **「儲存 / 更新藍圖」**。
+2. 點選先前建立的 **「商務部門-Mac」** 藍圖，切換至 **「App」** 標籤頁，點選右側的 **「編輯」** 按鈕：
+   <div class="step-image-container">
+     <img src="/images/lab4_step2_blueprint_app_tab.png" alt="商務部門-Mac 藍圖 > App 標籤頁 > 點選編輯" class="step-image" />
+   </div>
+
+3. 在「編輯 App」彈出視窗中，勾選剛剛取得的 **「Microsoft Outlook」**，點選 **「儲存」**：
+   <div class="step-image-container">
+     <img src="/images/lab4_step2_select_outlook.png" alt="勾選 Microsoft Outlook 並點選儲存" class="step-image" />
+   </div>
+
+4. 前往左側選單「裝置」>「受管理的 App」，點選 **「Microsoft Outlook」** > 切換至 **「設定」** 標籤頁：
+   - **注意：安裝方式請務必確認為「自動」**（分派到裝置後立即自動安裝《Microsoft Outlook》），點選右下角 **「儲存」**！
+   <div class="step-image-container">
+     <img src="/images/lab4_step2_auto_install_setting.png" alt="受管理的 App > 設定 > 確認安裝方式為自動" class="step-image" />
+   </div>
 
 ---
 
@@ -59,3 +73,18 @@
 👉 [前往「實作檢核與結訓認證」頁面](/guide/verify)
 
 使用手機相機掃描 Mac 螢幕上已安裝完成的 **`Microsoft Outlook`** 視窗、圖示或終端機查詢結果，系統確認通過後將立即頒發專屬數位結訓證書！
+
+<style>
+.step-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.step-image {
+  display: inline-block;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+</style>
