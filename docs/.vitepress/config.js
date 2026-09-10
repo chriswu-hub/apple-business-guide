@@ -45,6 +45,7 @@ export default defineConfig({
           { text: 'Lab 1: Entra ID 目錄同步實作', link: '/guide/lab1' },
           { text: 'Lab 2: 裝置自動註冊模擬', link: '/guide/lab2' },
           { text: 'Lab 3: 建立企業安全性藍圖', link: '/guide/lab3' },
+          { text: 'Lab 4: App 大量部署實作', link: '/guide/lab4' },
           { text: '實作檢核與結訓認證', link: '/guide/verify' }
         ]
       }
