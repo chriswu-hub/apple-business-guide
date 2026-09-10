@@ -117,8 +117,8 @@
     <div class="flow-icon">⚙️</div>
     <div class="flow-content">
       <div class="flow-num">Step 03</div>
-      <div class="flow-title">指派伺服器</div>
-      <div class="flow-desc">指派至內建/第三方 MDM</div>
+      <div class="flow-title">內置裝置管理</div>
+      <div class="flow-desc">指派至內建裝置管理服務</div>
     </div>
   </div>
   <div class="flow-connector">➔</div>
@@ -127,7 +127,7 @@
     <div class="flow-icon">📋</div>
     <div class="flow-content">
       <div class="flow-num">Step 04</div>
-      <div class="flow-title">配置預設集</div>
+      <div class="flow-title">配置藍圖</div>
       <div class="flow-desc">建立設定檔並指派群組</div>
     </div>
   </div>
@@ -176,8 +176,8 @@
 ### 📋 詳細步驟拆解：
 1. **採購設備**：向 Apple 直營企業團隊或授權經銷商下單採購。
 2. **自動入庫**：經銷商出貨掃描，序號即時出現在 Apple 商務「裝置」清單中。
-3. **指派服務**：在 Apple 商務後台將該批序號指派至指定裝置管理伺服器（MDM）。
-4. **預設集配置**：建立企業設定檔（Wi-Fi、密碼原則、FileVault）並指派給對應人員群組。
+3. **指派服務**：在 Apple 商務後台將該批序號指派至內置裝置管理服務（MDM）。
+4. **配置藍圖**：建立藍圖（Wi-Fi、密碼原則、FileVault）並指派給對應人員群組。
 5. **開箱聯網**：員工收到全新未拆封 Mac/iPhone，開機連上 Wi-Fi。
 6. **身分驗證**：在設定輔助程式中輸入管理式 Apple 帳號（Entra ID SSO 登入）。
 7. **靜默部署**：裝置自主向伺服器拉取所有企業組態並背景安裝公司必要 App。

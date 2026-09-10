@@ -66,22 +66,7 @@
 
 ---
 
-### 步驟 4：從建立的藍圖中加入裝置
-1. 點選剛剛建立的 **「商務部門-Mac」** 藍圖，切換至 **「裝置」** 標籤頁，點選右側的 **「加入」** 按鈕：
-   <div class="step-image-container">
-     <img src="/images/lab2_step3_add_device_btn.png" alt="商務部門-Mac藍圖 > 裝置標籤頁 > 點選加入" class="step-image" />
-   </div>
-
-2. 在「加入裝置」彈出視窗中，搜尋並勾選**學員手中該台 Mac 序號**的裝置：
-   <div class="step-image-container">
-     <img src="/images/lab2_step3_select_device_dialog.png" alt="加入裝置視窗中勾選學員Mac裝置" class="step-image" />
-   </div>
-
-3. 確認勾選「自動批准已加入此藍圖的裝置的首次註冊」，點選右下角 **「加入」** 完成綁定與儲存！
-
----
-
-### 步驟 5：Mac 開機 — 模擬裝置設定輔助程式
+### 步驟 4：Mac 開機 — 模擬裝置設定輔助程式
 1. 將測試 Mac 開機，進入「設定輔助程式 (Setup Assistant)」，在「將你的資料移轉到此 Mac 上」的步驟時選擇 **「設定為新裝置即可」**。
 2. 連線至現場 **Wi-Fi 網路**。
 
@@ -97,13 +82,36 @@
      - **全名**：`studentXX`（例如 `student01`）
      - **密碼**：`admin`
    - 按下「繼續」後，🔍 **請觀察！** 左下角會顯示 **「正在建立帳號」**。
-5. **進入系統**：
+5. **登入管理式 Apple 帳號**：
+   - 輸入你的管理式 Apple 帳號（例如：你的學員帳號 `studentXX@mdm.idv.tw`）。
+   - 輸入完按下「下一步」後，此時系統會**自動導向至 Microsoft SSO 登入畫面**。
+   - 驗證完成後，系統會**自動安裝企業組態描述檔**！
+6. **進入系統**：
    - 在「檔案保險箱 (FileVault)」步驟時可選擇 **「稍後再說」**。
    - 等待設定檔與必要 App 在背景自動套用並順利進入桌面！
 
 ---
 
-### 步驟 6：驗證管理狀態（3 大檢核點）
+### 🌟 加分練習：從建立的藍圖中加入裝置
+::: info 💡【加分練習說明】
+如果要選用**「服務裝置藍圖」**，就需要將裝置加入藍圖內。
+:::
+
+1. 點選剛剛建立的 **「商務部門-Mac」** 藍圖，切換至 **「裝置」** 標籤頁，點選右側的 **「加入」** 按鈕：
+   <div class="step-image-container">
+     <img src="/images/lab2_step3_add_device_btn.png" alt="商務部門-Mac藍圖 > 裝置標籤頁 > 點選加入" class="step-image" />
+   </div>
+
+2. 在「加入裝置」彈出視窗中，搜尋並勾選**學員手中該台 Mac 序號**的裝置：
+   <div class="step-image-container">
+     <img src="/images/lab2_step3_select_device_dialog.png" alt="加入裝置視窗中勾選學員Mac裝置" class="step-image" />
+   </div>
+
+3. 確認勾選「自動批准已加入此藍圖的裝置的首次註冊」，點選右下角 **「加入」** 完成綁定與儲存！
+
+---
+
+### 步驟 5：驗證管理狀態（3 大檢核點）
 
 #### 🔍 檢核點 A：Mac 本機終端機檢驗（最推薦、最快速）
 在 Mac 上開啟「終端機 (Terminal)」，執行以下指令：
