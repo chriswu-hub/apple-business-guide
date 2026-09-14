@@ -34,18 +34,16 @@
 在日常 IT 運維中，如果你拿到一個未知的 `.pkg` 或 App，請依照以下步驟提取「套裝 ID」與「雜湊值」：
 
 ### 任務 A：取得套裝 ID
-1. 在 Finder 的「應用程式」資料夾中找到該 App（例如 Box）。
-2. 按住 **Control** 並按一下 App 圖示，在快顯功能表中選擇 **「顯示套裝內容」**：
+1. 在 Finder 的「應用程式」資料夾中找到該 App（例如 Box）。按住 **Control** 並按一下 App 圖示，在快顯功能表中選擇 **「顯示套裝內容」**：
    <div class="step-image-container">
      <img src="/images/lab5_step1_show_package_menu.png" alt="右鍵選擇顯示套裝內容" class="step-image" />
    </div>
-
-3. 開啟 **「Contents」** 資料夾，找到 **`Info.plist`** 檔案：
    <div class="step-image-container">
      <img src="/images/lab5_step1_pkg_contents.png" alt="Contents 資料夾中的 Info.plist" class="step-image" />
    </div>
 
-4. 在文字編輯器（TextEdit）或 Xcode 中開啟 `Info.plist`，使用「尋找」功能搜尋 **`CFBundleIdentifier`**，複製其下方的字串（本練習為 `com.box.desktop`）：
+2. 開啟 **「Contents」** 資料夾，找到 **`Info.plist`** 檔案。
+3. 在文字編輯器（TextEdit）或 Xcode 中開啟 `Info.plist`，使用「尋找」功能搜尋 **`CFBundleIdentifier`**，複製其下方的字串（本練習為 `com.box.desktop`）：
    <div class="step-image-container">
      <img src="/images/lab5_step1_infoplist_bundleid.png" alt="Info.plist 中尋找 CFBundleIdentifier" class="step-image" />
    </div>
@@ -74,7 +72,11 @@
 
 ### 步驟 1：在 Apple 商務建立新程式套件
 1. 使用管理員帳號登入 [business.apple.com](https://business.apple.com)。
-2. 進入頂部導覽列 **「裝置」** > 左側選單 **「內置管理」** > 點選 **「macOS 套裝」**。
+2. 進入頂部導覽列 **「裝置」** > 左側選單 **「內置管理」** > 點選 **「macOS 套裝」**：
+   <div class="step-image-container">
+     <img src="/images/lab5_step1_packages_list.png" alt="裝置 > 內置管理 > macOS 套裝 列表畫面" class="step-image" />
+   </div>
+
 3. 點選「你的 macOS 套件」旁的 **「+」**（加入新程式套件）：
 4. 依序填入從前置資訊中獲得的必要欄位：
    - **套件名稱**：輸入 `Box-XX`（例如學員 01 輸入 `Box-01`）
@@ -96,16 +98,12 @@
 ### 步驟 2：將套件加入「藍圖」進行派送
 1. 導覽至左側選單「裝置」>「內置管理」> 點選 **「藍圖」**。
 2. 點選在 Lab 2 建立的 **「商務部門-Mac」** 藍圖。
-3. 切換至 **「App」** 標籤頁，點選右側紅框的 **「編輯」** 按鈕：
+3. 切換至 **「App」** 標籤頁，點選右側紅框的 **「編輯」** 按鈕，彈出「編輯 App」視窗：
    <div class="step-image-container">
-     <img src="/images/lab5_step2_blueprint_app_edit.png" alt="藍圖 App 標籤頁點選編輯" class="step-image" />
+     <img src="/images/lab5_step2_blueprint_app_edit.png" alt="編輯 App 彈出視窗並勾選 Box-01 套件" class="step-image" />
    </div>
 
-4. 在「編輯 App」彈出清單中，勾選剛剛建立的套件 **「Box-XX」**（例如 `Box-01`），點選 **「儲存」**：
-   <div class="step-image-container">
-     <img src="/images/lab5_step2_select_package.png" alt="勾選 Box-01 套件並儲存" class="step-image" />
-   </div>
-
+4. 在彈出清單中，勾選剛剛建立的套件 **「Box-XX」**（例如 `Box-01`），點選 **「儲存」**。
 5. 確認藍圖 App 清單中已成功包含 Microsoft Outlook、OneDrive 以及 **Box-XX**，點選右下角 **「儲存」** 完成藍圖更新！
    <div class="step-image-container">
      <img src="/images/lab5_step2_package_added.png" alt="藍圖中已成功加入 Box-01 套件" class="step-image" />
