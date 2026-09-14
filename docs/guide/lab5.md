@@ -69,12 +69,12 @@
 
 ### 步驟 1：在 Apple 商務建立新程式套件
 1. 使用管理員帳號登入 [business.apple.com](https://business.apple.com)。
-2. 進入頂部導覽列 **「裝置」** > 左側選單 **「內置管理」** > 點選 **「macOS 套裝」**：
+2. 進入頂部導覽列 **「裝置」** > 左側選單 **「內置管理」** > 點選 **「macOS 套裝」**。
+3. 點選「你的 macOS 套件」旁的 **「+」**（加入新程式套件）：
    <div class="step-image-container">
      <img src="/images/lab5_step1_packages_list.png" alt="裝置 > 內置管理 > macOS 套裝 列表畫面" class="step-image" />
    </div>
 
-3. 點選「你的 macOS 套件」旁的 **「+」**（加入新程式套件）：
 4. 依序填入從前置資訊中獲得的必要欄位：
    - **套件名稱**：輸入 `Box-XX`（例如學員 01 輸入 `Box-01`）
    - **macOS 套件 URL**：`https://apple.box.com/shared/static/my1q4f12uw88uaybixx2mee2qnukz1y8.pkg`
