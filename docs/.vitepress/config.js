@@ -8,8 +8,37 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '首頁', link: '/' },
-      { text: '基礎概念', link: '/guide/introduction' },
-      { text: '裝置部署與管理', link: '/guide/enrollment' },
+      {
+        text: '基礎概念',
+        items: [
+          { text: 'Apple 商務概覽', link: '/guide/introduction' },
+          { text: '註冊與機構設定', link: '/guide/organization' },
+          { text: '網域和識別身分', link: '/guide/identity' },
+          { text: '管理式 Apple 帳號與使用者管理', link: '/guide/accounts' }
+        ]
+      },
+      {
+        text: '裝置部署與管理',
+        items: [
+          { text: '註冊方式與部署', link: '/guide/enrollment' },
+          { text: '加入藍圖與配置設定', link: '/guide/presets' },
+          { text: 'App 部署與訂閱管理', link: '/guide/apps' },
+          { text: '套件部署簡介', link: '/guide/packages' },
+          { text: '監管模式與安全性政策深潛', link: '/guide/ade' },
+          { text: 'macOS 終端機指令集', link: '/guide/mdm-commands' }
+        ]
+      },
+      {
+        text: '實作考核 (Labs)',
+        items: [
+          { text: 'Lab 1: Entra ID 目錄同步實作', link: '/guide/lab1' },
+          { text: 'Lab 2: 裝置自動註冊模擬', link: '/guide/lab2' },
+          { text: 'Lab 3: 建立企業安全性藍圖', link: '/guide/lab3' },
+          { text: 'Lab 4: App 大量部署實作', link: '/guide/lab4' },
+          { text: 'Lab 5: macOS 套件建立與部署', link: '/guide/lab5' },
+          { text: '🏆 實作檢核與結訓認證', link: '/guide/verify' }
+        ]
+      },
       { text: '結訓認證', link: '/guide/verify' }
     ],
     sidebar: [
