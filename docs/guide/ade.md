@@ -18,220 +18,25 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
 
 目前合法取得監管模式僅有以下兩種途徑：
 
-<div class="supervision-diagram-container">
-  <div class="sup-root-box">
-    <div class="sup-root-title">如何取得「監管模式」？</div>
-  </div>
+::: info 📌 如何取得「監管模式」？
+目前企業將設備納入「監管模式」僅有以下兩大法定途徑：
+:::
 
-  <div class="sup-cards-row">
-    <!-- 途徑 1 -->
-    <div class="sup-card blue">
-      <div class="sup-card-header">
-        <span class="sup-badge">途徑 1</span>
-        <h4>自動裝置註冊 (ADE)</h4>
-      </div>
-      <div class="sup-card-body">
-        <div class="sup-info-item">
-          <span class="info-label">採購來源</span>
-          <span class="info-text">原廠直營或授權經銷商綁定入庫</span>
-        </div>
-        <div class="sup-info-item">
-          <span class="info-label">部署體驗</span>
-          <span class="info-text">開箱聯網自動強制監管，零接觸自動設定</span>
-        </div>
-        <div class="sup-info-item">
-          <span class="info-label">權限特性</span>
-          <span class="info-text highlight-blue">永久鎖定，不可移除 MDM 描述檔</span>
-        </div>
-      </div>
-    </div>
+### 途徑 1：自動裝置註冊 (ADE)
+- **採購來源**：向 Apple 原廠直營或授權經銷商綁定入庫採購。
+- **部署體驗**：開箱連線 Wi-Fi 自動強制監管，零接觸自動設定。
+- **權限特性**：**永久鎖定**，使用者在系統設定中完全無法手動移除 MDM 描述檔。
 
-    <!-- 途徑 2 -->
-    <div class="sup-card purple">
-      <div class="sup-card-header">
-        <span class="sup-badge purple-badge">途徑 2</span>
-        <h4>Apple Configurator</h4>
-      </div>
-      <div class="sup-card-body">
-        <div class="sup-card-img-box">
-          <img src="/images/configurator_mac_orb.png" alt="Mac 螢幕出現動態星雲光球配對畫面" class="sup-mini-img" />
-        </div>
-        <div class="sup-info-item">
-          <span class="info-label">採購來源</span>
-          <span class="info-text">一般零售門市散買、二手或既有設備收編</span>
-        </div>
-        <div class="sup-info-item">
-          <span class="info-label">部署體驗</span>
-          <span class="info-text">需清除重置，以 iPhone 靠近掃描配對光球</span>
-        </div>
-        <div class="sup-info-item">
-          <span class="info-label">權限特性</span>
-          <span class="info-text highlight-purple">具備 30 天手動移除寬限期，過後永久鎖定</span>
-        </div>
-      </div>
-    </div>
-  </div>
+---
+
+### 途徑 2：Apple Configurator（手動收編）
+- **採購來源**：一般零售門市散買、二手或既有設備收編納管。
+- **部署體驗**：需先將 Mac 清除重置，開機至國家選擇畫面，以 iPhone 靠近掃描配對光球。
+- **權限特性**：具備 **30 天手動移除寬限期**，寬限期過後永久鎖定。
+
+<div class="step-image-container">
+  <img src="/images/configurator_mac_orb.png" alt="Mac 螢幕出現動態星雲光球配對畫面" class="step-image-laptop" />
 </div>
-
-<style>
-.supervision-diagram-container {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--vp-c-bg-soft);
-  border-radius: 16px;
-  border: 1px solid var(--vp-c-divider);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.sup-root-box {
-  background: var(--vp-c-bg);
-  border: 2px solid #0071e3;
-  padding: 0.6rem 1.8rem;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.12);
-  text-align: center;
-}
-
-.sup-root-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--vp-c-text-1);
-}
-
-.sup-cards-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  width: 100%;
-}
-
-@media (max-width: 640px) {
-  .sup-cards-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-.sup-card {
-  background: var(--vp-c-bg);
-  border-radius: 14px;
-  padding: 1.25rem;
-  border: 1px solid var(--vp-c-divider);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.sup-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-}
-
-.sup-card.blue {
-  border-top: 4px solid #0071e3;
-}
-
-.sup-card.purple {
-  border-top: 4px solid #a855f7;
-}
-
-.sup-card-header {
-  margin-bottom: 1rem;
-}
-
-.sup-card-header h4 {
-  margin: 0.35rem 0 0 0;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--vp-c-text-1);
-}
-
-.sup-badge {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: #eff6ff;
-  color: #0071e3;
-}
-.dark .sup-badge {
-  background: #1e293b;
-  color: #60a5fa;
-}
-
-.purple-badge {
-  background: #faf5ff;
-  color: #a855f7;
-}
-.dark .purple-badge {
-  background: #2e1065;
-  color: #c084fc;
-}
-
-.sup-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.sup-card-img-box {
-  width: 100%;
-  margin-bottom: 0.75rem;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--vp-c-divider);
-  background: #000;
-  display: flex;
-  justify-content: center;
-}
-
-.sup-mini-img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  display: block;
-}
-
-.sup-info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.info-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--vp-c-text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.info-text {
-  font-size: 0.85rem;
-  color: var(--vp-c-text-1);
-  line-height: 1.45;
-}
-
-.highlight-blue {
-  color: #0071e3;
-  font-weight: 600;
-}
-.dark .highlight-blue {
-  color: #60a5fa;
-}
-
-.highlight-purple {
-  color: #a855f7;
-  font-weight: 600;
-}
-.dark .highlight-purple {
-  color: #c084fc;
-}
-</style>
 
 ---
 
@@ -309,3 +114,17 @@ IsSupervised: YES
 在 macOS 桌面左上角點選「」>「系統設定」：
 - **組織資訊確認**：點入側邊欄頂部的「Apple 帳戶」，點選其中的 **「個人資訊」**，即可檢視所屬的 **機構名稱**。
 - **裝置管理描述檔**：前往 **「一般」>「裝置管理」**，點選進去會看到已安裝的企業 MDM 註冊設定檔，且**不會顯示「-」減號或移除按鈕**（受監管狀態下完全鎖定，使用者無法自行手動刪除）。
+
+<style>
+.step-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.step-image-laptop {
+  display: inline-block;
+  max-width: 640px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+</style>
