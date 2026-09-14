@@ -38,9 +38,6 @@
    <div class="step-image-container">
      <img src="/images/lab5_step1_show_package_menu.png" alt="右鍵選擇顯示套裝內容" class="step-image" />
    </div>
-   <div class="step-image-container">
-     <img src="/images/lab5_step1_pkg_contents.png" alt="Contents 資料夾中的 Info.plist" class="step-image" />
-   </div>
 
 2. 開啟 **「Contents」** 資料夾，找到 **`Info.plist`** 檔案。
 3. 在文字編輯器（TextEdit）或 Xcode 中開啟 `Info.plist`，使用「尋找」功能搜尋 **`CFBundleIdentifier`**，複製其下方的字串（本練習為 `com.box.desktop`）：
@@ -91,7 +88,11 @@
   <img src="/images/lab5_step1_add_package_form.png" alt="加入新程式套件表單填寫" class="step-image" />
 </div>
 
-儲存後，該套件將正式顯示在你的 macOS 套裝清單中！
+儲存後，該套件將正式顯示在你的 macOS 套裝清單中：
+
+<div class="step-image-container">
+  <img src="/images/lab5_step1_package_created_list.png" alt="macOS 套裝清單中成功顯示 Box-01 套件" class="step-image" />
+</div>
 
 ---
 
