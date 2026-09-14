@@ -1,20 +1,30 @@
 # Lab 5: macOS 套件建立與部署實作
 
 **預估時間：** 15 分鐘  
-**實作目標：** 接續 Lab 4，學習如何為非 Mac App Store 上架的軟體（以 Box 為例）提取套裝識別碼 (Bundle ID) 與 SHA-256 雜湊值，在 Apple 商務中建立自訂套件並加入「藍圖」，實現企業專屬軟體的自動化背景派送。
+**實作目標：** 接續 Lab 4，學習如何為非 Mac App Store 上架的軟體（以 Box 為例）提取套裝 ID 與 SHA-256 雜湊值，在 Apple 商務中建立自訂套件並加入「藍圖」，實現企業專屬軟體的自動化背景派送。
 
 ---
 
 ## 🎯 實作前置資訊準備
 
-講師已為各位學員準備好實作套件的伺服器存放位置與相關參數：
+講師已為各位學員準備好實作套件的伺服器存放位置與相關參數（點擊右上角即可直接複製）：
 
-- **套件網絡伺服器 URL**：  
-  `https://apple.box.com/shared/static/my1q4f12uw88uaybixx2mee2qnukz1y8.pkg`
-- **套裝識別碼（套裝 ID / Bundle ID）**：`com.box.desktop`
-- **SHA-256 雜湊加密碼 (Checksum)**：  
-  `527dce43865032d4dfb9a68790ff52f4e108f48e24b016985a86e8824fa2fa89`
-- **版本編號**：`1.0`
+- **套件網絡伺服器 URL**：
+  ```
+  https://apple.box.com/shared/static/my1q4f12uw88uaybixx2mee2qnukz1y8.pkg
+  ```
+- **套裝 ID**：
+  ```
+  com.box.desktop
+  ```
+- **SHA-256 雜湊加密碼**：
+  ```
+  527dce43865032d4dfb9a68790ff52f4e108f48e24b016985a86e8824fa2fa89
+  ```
+- **版本編號**：
+  ```
+  1.0
+  ```
 - **套件名稱命名規則**：`Box-XX`（請依學員座號命名，例如學員 01 請命名為 `Box-01`）
 
 ---
@@ -23,7 +33,7 @@
 
 在日常 IT 運維中，如果你拿到一個未知的 `.pkg` 或 App，請依照以下步驟提取「套裝 ID」與「雜湊值」：
 
-### 任務 A：取得套裝識別碼 (Bundle ID)
+### 任務 A：取得套裝 ID
 1. 在 Finder 的「應用程式」資料夾中找到該 App（例如 Box）。
 2. 按住 **Control** 並按一下 App 圖示，在快顯功能表中選擇 **「顯示套裝內容」**：
    <div class="step-image-container">
@@ -56,7 +66,7 @@
      <img src="/images/lab5_step2_shasum_terminal.png" alt="Terminal 終端機計算 SHA-256 雜湊" class="step-image" />
    </div>
 
-*(本實作請直接使用上方準備好的雜湊值)*
+*(本實作請直接複製上方準備好的雜湊值)*
 
 ---
 
@@ -66,7 +76,7 @@
 1. 使用管理員帳號登入 [business.apple.com](https://business.apple.com)。
 2. 進入頂部導覽列 **「裝置」** > 左側選單 **「內置管理」** > 點選 **「macOS 套裝」**。
 3. 點選「你的 macOS 套件」旁的 **「+」**（加入新程式套件）：
-4. 依序填入下列必要資訊：
+4. 依序填入從前置資訊中獲得的必要欄位：
    - **套件名稱**：輸入 `Box-XX`（例如學員 01 輸入 `Box-01`）
    - **macOS 套件 URL**：`https://apple.box.com/shared/static/my1q4f12uw88uaybixx2mee2qnukz1y8.pkg`
    - **SHA-256 雜湊**：`527dce43865032d4dfb9a68790ff52f4e108f48e24b016985a86e8824fa2fa89`
