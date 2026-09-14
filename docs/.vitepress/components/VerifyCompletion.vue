@@ -22,30 +22,34 @@ const currentDate = new Date().toLocaleDateString('zh-TW', {
 let stream = null
 let scanInterval = null
 
-// 核心比對邏輯：比對是否包含 mdm.idv.tw、student 帳號、Lab 2 DEP/MDM 狀態、Lab 3 鎖定畫面文字、或 Lab 4 Outlook
+// 核心比對邏輯：比對是否包含 mdm.idv.tw、student 帳號、Lab 2 DEP/MDM 狀態、Lab 3 鎖定畫面文字、Lab 4 Outlook、或 Lab 5 Box
 const verifyContent = (rawText) => {
   if (!rawText) return false
   let text = rawText.toLowerCase().replace(/[^a-z0-9]/g, '')
   
-  // 1. 支援 Lab 4 Outlook 應用程式安裝驗證
+  // 1. 支援 Lab 5 Box 套件安裝驗證
+  if (text.includes('box01') || text.includes('boxdesktop') || (text.includes('box') && text.includes('pkg'))) return true
+  if (text.includes('box')) return true
+
+  // 2. 支援 Lab 4 Outlook 應用程式安裝驗證
   if (text.includes('outlook') || text.includes('microsoftoutlook')) return true
 
-  // 2. 支援 Lab 3 鎖定畫面「Apple at Work - studentXX」與 FileVault
+  // 3. 支援 Lab 3 鎖定畫面「Apple at Work - studentXX」與 FileVault
   if (text.includes('appleatwork') && text.includes('student')) return true
   if (text.includes('appleatwork')) return true
   if (text.includes('filevaultison') || text.includes('filevault')) return true
 
-  // 3. 支援 Lab 2 的 DEP / Supervised / MDM Enrollment 終端機狀態
+  // 4. 支援 Lab 2 的 DEP / Supervised / MDM Enrollment 終端機狀態
   if (text.includes('enrolledviadep') || text.includes('supervisedyes') || text.includes('enrolledviadepyes')) return true
   if (text.includes('mdmenrollmentyes') || text.includes('userapproved')) return true
   if (text.includes('enrolled') && text.includes('dep')) return true
   if (text.includes('supervised') && text.includes('yes')) return true
 
-  // 4. 支援 student01~student10 與 mdm.idv.tw
+  // 5. 支援 student01~student10 與 mdm.idv.tw
   if (text.includes('student') && (text.includes('mdm') || text.includes('idv') || text.includes('tw'))) return true
   if (text.includes('student')) return true
 
-  // 5. 支援標準網址與特徵
+  // 6. 支援標準網址與特徵
   if (text.includes('mdmidvtw')) return true
   if (text.includes('mdm') && text.includes('idv')) return true
   if (text.includes('mdm') && text.includes('tw')) return true
@@ -62,7 +66,7 @@ const verifyContent = (rawText) => {
   if (normalized.includes('mdmidvtw')) return true
   if (normalized.includes('mdm') || normalized.includes('idv')) return true
   if (normalized.includes('supervised') || normalized.includes('enrolled')) return true
-  if (normalized.includes('outlook')) return true
+  if (normalized.includes('outlook') || normalized.includes('box')) return true
 
   return false
 }
