@@ -174,4 +174,19 @@ Microsoft Entra ID 的排程目錄同步預設為每 40 分鐘執行一次循環
 .dark .dept-tag.fin { background: #1a2e05; color: #bef264; }
 .dark .dept-tag.ops { background: #082f49; color: #7dd3fc; }
 .dark .dept-tag.it { background: #052e16; color: #86efac; }
+
+/* 防止大表欄位在寬螢幕下被硬折成兩行，保持文字單行優雅展開 */
+.vp-doc table th,
+.vp-doc table td {
+  white-space: nowrap !important;
+}
+
+/* 確保表格容器在小螢幕支援平滑水平滾動，大螢幕完整單行延展 */
+.vp-doc table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
 </style>
