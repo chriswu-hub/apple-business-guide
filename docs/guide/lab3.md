@@ -5,22 +5,14 @@
 
 ---
 
-## 🎯 前置準備（延續 Lab 2 納管之 Mac）
+## 🎯 前置準備（延續 Lab 1 & 2 環境）
 
-本實作延續 Lab 2 已完成自動註冊之測試 Mac 與學員座號（`student01` ~ `student10`）：
-
-| 座號 | 分配學員帳號 | 目標藍圖 | 鎖定畫面資產標籤 | 核心檢核 |
-| :--- | :--- | :--- | :--- | :--- |
-| **學員 01** | `student01@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student01` | 密碼防禦 / 鎖定畫面 |
-| **學員 02** | `student02@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student02` | 密碼防禦 / 鎖定畫面 |
-| **學員 03** | `student03@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student03` | 密碼防禦 / 鎖定畫面 |
-| **學員 04** | `student04@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student04` | 密碼防禦 / 鎖定畫面 |
-| **學員 05** | `student05@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student05` | 密碼防禦 / 鎖定畫面 |
-| **學員 06** | `student06@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student06` | 密碼防禦 / 鎖定畫面 |
-| **學員 07** | `student07@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student07` | 密碼防禦 / 鎖定畫面 |
-| **學員 08** | `student08@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student08` | 密碼防禦 / 鎖定畫面 |
-| **學員 09** | `student09@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student09` | 密碼防禦 / 鎖定畫面 |
-| **學員 10** | `student10@mdm.idv.tw` | 商務部門-Mac | ` Apple at Work - student10` | 密碼防禦 / 鎖定畫面 |
+::: info 📌【學員環境與設備延續】
+本實作延續你在 **[Lab 1 前置準備與學員座號總表](/guide/lab1#🎯-前置準備與學員座號總表)** 所分配的專屬座號：
+- **學員帳號**：`studentXX@mdm.idv.tw`（例如 Seat 01 請使用 `student01@mdm.idv.tw`）
+- **目標藍圖**：`商務部門-Mac`
+- **鎖定畫面自訂標籤**：` Apple at Work - studentXX`
+:::
 
 ---
 

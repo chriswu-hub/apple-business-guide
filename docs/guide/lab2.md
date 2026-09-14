@@ -5,22 +5,14 @@
 
 ---
 
-## 🎯 前置準備（學員座號與設備序號對照）
+## 🎯 前置準備（延續 Lab 1 座號分配）
 
-每位學員拿到一台已預先透過 Configurator 加入 Apple 商務的實體 Mac。請先確認外殼底部的 **Mac 序號 (Serial Number)**：
-
-| 座號 | 分配學員帳號 | 目標藍圖 | 驗證檢核點 |
-| :--- | :--- | :--- | :--- |
-| **學員 01** | `student01@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 02** | `student02@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 03** | `student03@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 04** | `student04@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 05** | `student05@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 06** | `student06@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 07** | `student07@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 08** | `student08@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 09** | `student09@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
-| **學員 10** | `student10@mdm.idv.tw` | 商務部門-Mac | `Enrolled via DEP: Yes` / `MDM enrollment: Yes (User Approved)` |
+::: info 📌【學員環境與設備延續】
+本實作直接延續你在 **[Lab 1 前置準備與學員座號總表](/guide/lab1#🎯-前置準備與學員座號總表)** 所分配的專屬座號：
+- **學員帳號**：`studentXX@mdm.idv.tw`（例如 Seat 01 請使用 `student01@mdm.idv.tw`）
+- **目標藍圖**：`商務部門-Mac`
+- **實體設備**：請拿起你面前分配到的實體測試 Mac，核對外殼底部之 **Mac 序號 (Serial Number)**。
+:::
 
 ---
 
