@@ -94,13 +94,40 @@
 
 在為客戶或內部團隊規劃註冊策略時，請依循以下決策矩陣：
 
-```
-裝置是誰的？
-├── 員工個人的 → 帳號導向式使用者註冊（BYOD）
-└── 機構的
-    ├── 全新 / 清除後 → 裝置自動註冊（Zero-Touch，完全監管）
-    └── 已在使用中   → 帳號導向式裝置註冊（現有 Mac 收編）
-```
+<div class="decision-guide-grid">
+  <div class="guide-card">
+    <div class="guide-header blue-hdr">
+      <span class="guide-who">員工個人的</span>
+      <span class="guide-badge">BYOD</span>
+    </div>
+    <div class="guide-body">
+      <h4>帳號導向式使用者註冊</h4>
+      <p>員工自帶設備，透過獨立加密磁區做到公私完全分離，設備不受監管。</p>
+    </div>
+  </div>
+
+  <div class="guide-card">
+    <div class="guide-header green-hdr">
+      <span class="guide-who">機構的（全新 / 清除後）</span>
+      <span class="guide-badge">ADE 零接觸</span>
+    </div>
+    <div class="guide-body">
+      <h4>裝置自動註冊</h4>
+      <p>開箱聯網自動強制註冊，完全受監管，為大量標準化採購的首選。</p>
+    </div>
+  </div>
+
+  <div class="guide-card">
+    <div class="guide-header amber-hdr">
+      <span class="guide-who">機構的（已在使用中）</span>
+      <span class="guide-badge">設備收編</span>
+    </div>
+    <div class="guide-body">
+      <h4>帳號導向式裝置註冊</h4>
+      <p>針對已在日常運作中的現有 Mac 設備統一收編納管，Mac 會受監管。</p>
+    </div>
+  </div>
+</div>
 
 ---
 
@@ -705,5 +732,67 @@
 }
 .sub-tag.amber-text {
   color: #d97706;
+}
+
+/* 5.3 選擇指南卡片樣式 */
+.decision-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.guide-card {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.guide-header {
+  padding: 0.6rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.blue-hdr { background: #eff6ff; color: #0071e3; }
+.dark .blue-hdr { background: #1e293b; color: #60a5fa; }
+
+.green-hdr { background: #f0fdf4; color: #16a34a; }
+.dark .green-hdr { background: #143522; color: #4ade80; }
+
+.amber-hdr { background: #fffbeb; color: #d97706; }
+.dark .amber-hdr { background: #2d2618; color: #fbbf24; }
+
+.guide-badge {
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.dark .guide-badge {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.guide-body {
+  padding: 1rem;
+}
+
+.guide-body h4 {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+}
+
+.guide-body p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.5;
 }
 </style>

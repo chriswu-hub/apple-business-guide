@@ -22,60 +22,74 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
   <div class="sup-root-box">
     <div class="sup-root-title">如何取得「監管模式」？</div>
   </div>
-  <div class="sup-split-line">
-    <div class="line-stem"></div>
-    <div class="line-bar"></div>
-    <div class="line-branches">
-      <div class="branch-arrow">▼</div>
-      <div class="branch-arrow">▼</div>
-    </div>
-  </div>
-  <div class="sup-columns">
+
+  <div class="sup-cards-row">
+    <!-- 途徑 1 -->
     <div class="sup-card blue">
       <div class="sup-card-header">
         <span class="sup-badge">途徑 1</span>
         <h4>自動裝置註冊 (ADE)</h4>
       </div>
-      <ul class="sup-list">
-        <li><strong>採購來源</strong>：原廠直營或授權經銷商綁定入庫</li>
-        <li><strong>部署體驗</strong>：開箱聯網自動強制監管，零接觸自動設定</li>
-        <li><strong>權限特性</strong>：<strong>永久鎖定</strong>，不可移除 MDM 描述檔</li>
-      </ul>
+      <div class="sup-card-body">
+        <div class="sup-info-item">
+          <span class="info-label">採購來源</span>
+          <span class="info-text">原廠直營或授權經銷商綁定入庫</span>
+        </div>
+        <div class="sup-info-item">
+          <span class="info-label">部署體驗</span>
+          <span class="info-text">開箱聯網自動強制監管，零接觸自動設定</span>
+        </div>
+        <div class="sup-info-item">
+          <span class="info-label">權限特性</span>
+          <span class="info-text highlight-blue">永久鎖定，不可移除 MDM 描述檔</span>
+        </div>
+      </div>
     </div>
 
+    <!-- 途徑 2 -->
     <div class="sup-card purple">
       <div class="sup-card-header">
         <span class="sup-badge purple-badge">途徑 2</span>
         <h4>Apple Configurator</h4>
       </div>
-      <ul class="sup-list">
-        <li><strong>採購來源</strong>：一般零售門市散買、二手或既有設備收編</li>
-        <li><strong>部署體驗</strong>：需清除重置，以 iPhone 靠近掃描配對光球</li>
-        <li><strong>權限特性</strong>：具備 <strong>30 天手動移除寬限期</strong>，過後永久鎖定</li>
-      </ul>
+      <div class="sup-card-body">
+        <div class="sup-info-item">
+          <span class="info-label">採購來源</span>
+          <span class="info-text">一般零售門市散買、二手或既有設備收編</span>
+        </div>
+        <div class="sup-info-item">
+          <span class="info-label">部署體驗</span>
+          <span class="info-text">需清除重置，以 iPhone 靠近掃描配對光球</span>
+        </div>
+        <div class="sup-info-item">
+          <span class="info-label">權限特性</span>
+          <span class="info-text highlight-purple">具備 30 天手動移除寬限期，過後永久鎖定</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
 .supervision-diagram-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin: 2rem 0;
-  padding: 1.75rem 1rem;
+  padding: 1.5rem;
   background: var(--vp-c-bg-soft);
   border-radius: 16px;
   border: 1px solid var(--vp-c-divider);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .sup-root-box {
   background: var(--vp-c-bg);
   border: 2px solid #0071e3;
-  padding: 0.75rem 1.75rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.12);
-  z-index: 2;
+  padding: 0.6rem 1.8rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.12);
+  text-align: center;
 }
 
 .sup-root-title {
@@ -84,63 +98,33 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
   color: var(--vp-c-text-1);
 }
 
-.sup-split-line {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 520px;
-}
-
-.line-stem {
-  width: 2px;
-  height: 20px;
-  background: var(--vp-c-brand-1);
-}
-
-.line-bar {
-  width: 100%;
-  height: 2px;
-  background: var(--vp-c-brand-1);
-}
-
-.line-branches {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  color: var(--vp-c-brand-1);
-  font-size: 0.85rem;
-  margin-top: -2px;
-}
-
-.branch-arrow {
-  line-height: 1;
-}
-
-.sup-columns {
+.sup-cards-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
   width: 100%;
-  max-width: 680px;
-  margin-top: 0.5rem;
 }
 
 @media (max-width: 640px) {
-  .sup-columns {
+  .sup-cards-row {
     grid-template-columns: 1fr;
-  }
-  .sup-split-line {
-    display: none;
   }
 }
 
 .sup-card {
   background: var(--vp-c-bg);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 1.25rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
   border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sup-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .sup-card.blue {
@@ -152,12 +136,12 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
 }
 
 .sup-card-header {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .sup-card-header h4 {
   margin: 0.35rem 0 0 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--vp-c-text-1);
 }
@@ -171,7 +155,6 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
   background: #eff6ff;
   color: #0071e3;
 }
-
 .dark .sup-badge {
   background: #1e293b;
   color: #60a5fa;
@@ -181,22 +164,51 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
   background: #faf5ff;
   color: #a855f7;
 }
-
 .dark .purple-badge {
   background: #2e1065;
   color: #c084fc;
 }
 
-.sup-list {
-  margin: 0;
-  padding-left: 1.1rem;
-  font-size: 0.825rem;
-  color: var(--vp-c-text-2);
-  line-height: 1.6;
+.sup-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.sup-list li {
-  margin-bottom: 0.35rem;
+.sup-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--vp-c-text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-text {
+  font-size: 0.85rem;
+  color: var(--vp-c-text-1);
+  line-height: 1.45;
+}
+
+.highlight-blue {
+  color: #0071e3;
+  font-weight: 600;
+}
+.dark .highlight-blue {
+  color: #60a5fa;
+}
+
+.highlight-purple {
+  color: #a855f7;
+  font-weight: 600;
+}
+.dark .highlight-purple {
+  color: #c084fc;
 }
 </style>
 
