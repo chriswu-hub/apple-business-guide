@@ -29,7 +29,7 @@ export default defineConfig({
         ]
       },
       {
-        text: '實作考核 (Labs)',
+        text: '實戰關卡',
         items: [
           { text: 'Lab 1: Entra ID 目錄同步實作', link: '/guide/lab1' },
           { text: 'Lab 2: 裝置自動註冊模擬', link: '/guide/lab2' },
@@ -69,7 +69,7 @@ export default defineConfig({
         ]
       },
       {
-        text: '培訓考核與實作',
+        text: '實戰關卡',
         items: [
           { text: 'Lab 1: Entra ID 目錄同步實作', link: '/guide/lab1' },
           { text: 'Lab 2: 裝置自動註冊模擬', link: '/guide/lab2' },

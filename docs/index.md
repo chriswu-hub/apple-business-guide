@@ -7,10 +7,10 @@ hero:
   tagline: 涵蓋 Apple 商務統一架構、Microsoft Entra ID 身分聯合、零接觸部署 (ADE)、藍圖配置與 5 大 Hands-on Labs 實戰
   actions:
     - theme: brand
-      text: 開始探索教學 ➔
+      text: 開始探索學習 ➔
       link: /guide/introduction
     - theme: alt
-      text: 🧪 實作工作坊 (Labs)
+      text: 🧪 實戰演練 (Hands-on)
       link: /guide/lab1
     - theme: alt
       text: 🏆 結訓認證
@@ -40,7 +40,7 @@ features:
 <div class="home-labs-section">
   <div class="labs-header">
     <span class="labs-badge">WORKSHOP PLAYBOOK</span>
-    <h2 class="labs-title">5 大實體 Hands-on Lab 實戰路徑</h2>
+    <h2 class="labs-title">5 大實戰關卡路徑</h2>
     <p class="labs-desc">專為企業 IT 與技術顧問設計的端到端實作課程，動手體驗企業級自動化與安全合規。</p>
   </div>
 
