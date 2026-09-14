@@ -86,7 +86,7 @@
 6. 確認無誤後，點選下方藍色按鈕 **「儲存」**：
 
 <div class="step-image-container">
-  <img src="/images/lab5_step3_add_package_form.png" alt="加入新程式套件表單填寫" class="step-image" />
+  <img src="/images/lab5_step1_add_package_form.png" alt="加入新程式套件表單填寫" class="step-image" />
 </div>
 
 儲存後，該套件將正式顯示在你的 macOS 套裝清單中！
@@ -98,17 +98,17 @@
 2. 點選在 Lab 2 建立的 **「商務部門-Mac」** 藍圖。
 3. 切換至 **「App」** 標籤頁，點選右側紅框的 **「編輯」** 按鈕：
    <div class="step-image-container">
-     <img src="/images/lab5_step4_blueprint_app_edit.png" alt="藍圖 App 標籤頁點選編輯" class="step-image" />
+     <img src="/images/lab5_step2_blueprint_app_edit.png" alt="藍圖 App 標籤頁點選編輯" class="step-image" />
    </div>
 
 4. 在「編輯 App」彈出清單中，勾選剛剛建立的套件 **「Box-XX」**（例如 `Box-01`），點選 **「儲存」**：
    <div class="step-image-container">
-     <img src="/images/lab5_step4_select_package.png" alt="勾選 Box-01 套件並儲存" class="step-image" />
+     <img src="/images/lab5_step2_select_package.png" alt="勾選 Box-01 套件並儲存" class="step-image" />
    </div>
 
 5. 確認藍圖 App 清單中已成功包含 Microsoft Outlook、OneDrive 以及 **Box-XX**，點選右下角 **「儲存」** 完成藍圖更新！
    <div class="step-image-container">
-     <img src="/images/lab5_step4_package_added.png" alt="藍圖中已成功加入 Box-01 套件" class="step-image" />
+     <img src="/images/lab5_step2_package_added.png" alt="藍圖中已成功加入 Box-01 套件" class="step-image" />
    </div>
 
 ---
