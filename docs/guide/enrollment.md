@@ -30,29 +30,45 @@
 
 根據裝置所有權與使用狀態，Apple 提供三種截然不同的註冊管道：
 
-```
-                    ┌─────────────────────────┐
-                    │      裝置是誰的？       │
-                    └────────────┬────────────┘
-                                 │
-                 ┌───────────────┴───────────────┐
-                 ▼                               ▼
-       ┌──────────────────┐            ┌──────────────────┐
-       │   員工個人所有   │            │     機構所有     │
-       └─────────┬────────┘            └─────────┬────────┘
-                 │                               │
-                 ▼                               ▼
-     ┌──────────────────────┐        ┌───────────────────────┐
-     │ 帳號導向式使用者註冊 │        │       裝置狀態？      │
-     │       (BYOD)         │        └───┬───────────────┬───┘
-     └──────────────────────┘            │               │
-                            全新 / 已清除 │               │ 已在使用中
-                                         ▼               ▼
-                             ┌────────────────┐ ┌────────────────────┐
-                             │  裝置自動註冊  │ │ 帳號導向式裝置註冊 │
-                             │  (Zero-Touch)  │ │ (現有設備收編納管) │
-                             └────────────────┘ └────────────────────┘
-```
+<div class="decision-tree-container">
+  <div class="tree-root">
+    <div class="tree-node root-node">裝置是誰的？</div>
+  </div>
+  <div class="tree-branches-split">
+    <div class="branch-col">
+      <div class="branch-connector">
+        <span class="branch-tag">員工個人所有</span>
+        <div class="tree-arrow">▼</div>
+      </div>
+      <div class="tree-leaf blue-leaf">
+        <div class="leaf-title">帳號導向式使用者註冊 (BYOD)</div>
+        <div class="leaf-desc">獨立加密磁區隔離 • 不受監管</div>
+      </div>
+    </div>
+    <div class="branch-col">
+      <div class="branch-connector">
+        <span class="branch-tag green-tag">機構所有</span>
+        <div class="tree-arrow">▼</div>
+      </div>
+      <div class="tree-sub-branches">
+        <div class="sub-col">
+          <div class="sub-tag">全新 / 清除後 ➔</div>
+          <div class="tree-leaf green-leaf">
+            <div class="leaf-title">裝置自動註冊 (ADE)</div>
+            <div class="leaf-desc">開箱即用 • 完全受監管</div>
+          </div>
+        </div>
+        <div class="sub-col">
+          <div class="sub-tag amber-text">已在使用中 ➔</div>
+          <div class="tree-leaf amber-leaf">
+            <div class="leaf-title">帳號導向式裝置註冊</div>
+            <div class="leaf-desc">現有設備收編 • Mac 受監管</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 ### 1. 帳號導向式使用者註冊（Account-Driven User Enrollment - BYOD）
 - **裝置歸屬**：員工個人所有（Bring Your Own Device）。
@@ -560,5 +576,134 @@
   color: var(--vp-c-brand-1);
   transform: rotate(90deg);
   margin: -2px 0;
+}
+
+/* 5.2 註冊方式決策樹樣式 */
+.decision-tree-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--vp-c-bg-soft);
+  border-radius: 16px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.tree-root {
+  margin-bottom: 1.25rem;
+}
+
+.tree-node.root-node {
+  background: var(--vp-c-bg);
+  border: 2px solid var(--vp-c-brand-1);
+  padding: 0.6rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--vp-c-text-1);
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.1);
+}
+
+.tree-branches-split {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 760px;
+}
+
+@media (max-width: 680px) {
+  .tree-branches-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.branch-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.branch-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.branch-tag {
+  background: #eff6ff;
+  color: #0071e3;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+.dark .branch-tag {
+  background: #1e293b;
+  color: #60a5fa;
+}
+
+.branch-tag.green-tag {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+.dark .branch-tag.green-tag {
+  background: #143522;
+  color: #4ade80;
+}
+
+.tree-arrow {
+  color: var(--vp-c-text-3);
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+.tree-leaf {
+  width: 100%;
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.tree-leaf.blue-leaf { border-top: 3px solid #0071e3; }
+.tree-leaf.green-leaf { border-top: 3px solid #16a34a; }
+.tree-leaf.amber-leaf { border-top: 3px solid #f59e0b; }
+
+.leaf-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+}
+
+.leaf-desc {
+  font-size: 0.75rem;
+  color: var(--vp-c-text-2);
+  margin-top: 4px;
+}
+
+.tree-sub-branches {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.sub-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sub-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+.sub-tag.amber-text {
+  color: #d97706;
 }
 </style>
