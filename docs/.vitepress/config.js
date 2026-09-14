@@ -30,7 +30,6 @@ export default defineConfig({
           { text: 'App 部署與訂閱管理', link: '/guide/apps' },
           { text: '套件部署簡介', link: '/guide/packages' },
           { text: '監管模式與安全性政策深潛', link: '/guide/ade' },
-          { text: 'MDM 管理與設定檔', link: '/guide/mdm' },
           { text: 'macOS 終端機指令集', link: '/guide/mdm-commands' }
         ]
       },
