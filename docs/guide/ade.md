@@ -53,6 +53,9 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
         <h4>Apple Configurator</h4>
       </div>
       <div class="sup-card-body">
+        <div class="sup-card-img-box">
+          <img src="/images/configurator_mac_orb.png" alt="Mac 螢幕出現動態星雲光球配對畫面" class="sup-mini-img" />
+        </div>
         <div class="sup-info-item">
           <span class="info-label">採購來源</span>
           <span class="info-text">一般零售門市散買、二手或既有設備收編</span>
@@ -173,6 +176,24 @@ Apple 在系統底層設有嚴格的隱私與安全邊界，**使用者自行下
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.sup-card-img-box {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  background: #000;
+  display: flex;
+  justify-content: center;
+}
+
+.sup-mini-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
 }
 
 .sup-info-item {
