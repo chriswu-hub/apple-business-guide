@@ -1,12 +1,6 @@
 # Apple 商務概覽
 
-**Apple 商務 = 統一平台**
-
-Apple 商務（Apple Business）是現代化企業部署、管理與維護 Apple 裝置生態系的核心統一入口。
-
-- **整合自**：Apple 商務管理 (Apple Business Manager) + Apple 商務必備 (Apple Business Essentials) + Apple Business Connect
-- **上線日期**：2026 年 4 月
-- **平台入口**：[business.apple.com](https://business.apple.com)
+本單元說明 Apple 商務的統一平台定位、與舊有商務服務之演進整合關係，以及企業日常營運與裝置管理的核心價值主張。
 
 ---
 
@@ -17,7 +11,20 @@ Apple 商務（Apple Business）是現代化企業部署、管理與維護 Apple
 
 ---
 
-## 🌟 六大核心功能
+## 1.1 Apple 商務統一平台
+
+**Apple 商務（Apple Business）** 是現代化企業部署、管理與維護 Apple 裝置生態系的核心統一入口，將企業過去分散的服務無縫整合為單一雲端體驗：
+
+- **整合三大商務服務**：
+  - **Apple 商務管理 (Apple Business Manager)**：原裝置註冊 (DEP) 與大量軟體採購 (VPP)。
+  - **Apple 商務必備 (Apple Business Essentials)**：內建裝置管理 (MDM)、雲端儲存與專屬支援服務。
+  - **Apple Business Connect**：企業品牌標誌、在地地圖資訊與電話識別管理。
+- **正式上線**：2026 年 4 月
+- **官方統一入口**：[business.apple.com](https://business.apple.com)
+
+---
+
+## 1.2 六大核心功能
 
 Apple 商務將企業日常 IT 管理與商務營運整合為六大支柱能力：
 
