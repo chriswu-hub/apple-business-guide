@@ -50,11 +50,29 @@
 2. 使用講師提供的 Entra ID 管理員帳號登入。
 3. 依序點選左側選單 **「身分識別 (Identity)」** > **「使用者 (Users)」** > **「所有使用者」**。
 4. 點選上方 **「+ 新增使用者」** > **「建立新使用者」**：
-   - **使用者主體名稱 (UPN)**：輸入你的座號名稱（例如 `student01`），網域下拉選單選擇 `@mdm.idv.tw`
-   - **電子郵件暱稱**：`student01`
-   - **顯示名稱**：`Student 01 - Apple at Work`
-   - **密碼**：取消勾選「自動產生密碼」，設定自訂密碼（請牢記此密碼，建議使用表格中的 `Apple@2026Lab`）。
-5. 點選 **「檢閱並建立」** 完成帳號新增。
+   - **使用者主體名稱 (UPN)**：輸入你的座號名稱（例如 `student00` 或 `student01`），網域下拉選單選擇 `@mdm.idv.tw`
+   - **電子郵件暱稱**：勾選「衍生自使用者主體名稱」
+   - **顯示名稱**：`Student 00 - Apple at Work`
+   - **密碼**：取消勾選「自動產生密碼」，設定自訂密碼（建議直接使用前置表格中的 `Apple@2026Lab`）。
+
+<div class="step-image-container">
+  <img src="/images/lab1_step1_create_user_basic.png" alt="建立新的使用者基本資料填寫" class="step-image" />
+</div>
+
+5. 點選上方或下方 **「屬性 (Properties)」** 標籤頁：
+   ::: warning ⚠️【重要提醒：名字與姓氏填寫規範】
+   **名字與姓氏請務必填寫前置總表中分配給你的「模擬職位名稱」**（例如：姓氏輸入 `林`，名字輸入 `蘋果` 或你的模擬姓名），因為這組名字**稍後將於 Apple 商務人員名冊中驗證**是否成功同步！
+   :::
+
+<div class="step-image-container">
+  <img src="/images/lab1_step1_user_properties.png" alt="屬性頁面填寫名字與姓氏紅框" class="step-image" />
+</div>
+
+6. 切換至 **「檢閱 + 建立」** 標籤頁確認所有身分資訊與屬性正確，最後在畫面左下角按下 **「建立」** 完成帳號新增：
+
+<div class="step-image-container">
+  <img src="/images/lab1_step1_review_create.png" alt="檢閱與建立頁面點選建立按鈕" class="step-image" />
+</div>
 
 ---
 
