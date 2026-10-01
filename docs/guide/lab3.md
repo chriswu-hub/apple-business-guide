@@ -34,8 +34,16 @@
 
 ### 步驟 2：建立個人化與網絡組態
 1. 前往「裝置」>「設定」>「個人化」：
-   - 點選「+」建立 **「鎖定畫面」**。
-   - 在鎖定訊息中輸入你的專屬資產標籤：` Apple at Work - studentXX`（例如 ` Apple at Work - student01`）。
+   - 點選「所有設定」，在下方九宮格中找到 **「鎖定畫面」**（管理鎖定畫面和用戶工作階段的顯示方式和功能）：
+   <div class="step-image-container">
+     <img src="/images/lab3_step2_lockscreen_setting.png" alt="設定 > 個人化 > 鎖定畫面" class="step-image" />
+   </div>
+
+   - 點選「+」進入編輯，開啟「外觀」，並在 **「鎖定畫面訊息」** 欄位中輸入你的專屬資產標籤：` Apple at Work - studentXX`（例如 ` Apple at Work - student01`），完成後點選「儲存」：
+   <div class="step-image-container">
+     <img src="/images/lab3_step2_lockscreen_message.png" alt="鎖定畫面訊息輸入  Apple at Work - student01" class="step-image" />
+   </div>
+
 2. 前往「裝置」>「設定」>「網絡」：
    - 點選「+」建立 **「Wi-Fi」**，SSID 設定為 **`CorpWiFi-Test`**（WPA2 企業級）。
 
@@ -101,3 +109,18 @@
 👉 [前往「實作檢核與結訓認證」頁面](/guide/verify)
 
 使用手機相機掃描 Mac 鎖定畫面的 **` Apple at Work - studentXX`**、或終端機 `MDM enrollment: Yes (User Approved)`，系統確認通過後將即時頒發專屬數位結訓證書！
+
+<style>
+.step-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.step-image {
+  display: inline-block;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+</style>
