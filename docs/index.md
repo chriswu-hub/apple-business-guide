@@ -48,7 +48,7 @@ features:
     <a href="/apple-business-guide/guide/lab1.html" class="lab-card">
       <div class="lab-num">Lab 01</div>
       <div class="lab-card-title">Entra ID 目錄同步</div>
-      <div class="lab-card-desc">建立學員專屬 User，透過「隨選佈建」5 秒即時推送到 Apple 商務。</div>
+      <div class="lab-card-desc">建立學員專屬 User，透過 SCIM 自動同步至 Apple 商務人員名冊。</div>
     </a>
     <a href="/apple-business-guide/guide/lab2.html" class="lab-card">
       <div class="lab-num">Lab 02</div>
