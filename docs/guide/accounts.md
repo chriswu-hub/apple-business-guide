@@ -58,11 +58,40 @@ Apple 商務提供彈性的使用者與群組維護方式：
 
 ## 4.4 職務與權限
 
-Apple 商務支援嚴謹的**角色型存取控制 (RBAC)**，避免單一管理員權限過大：
+Apple 商務支援嚴謹的角色型存取控制 (RBAC)，依據管理範疇劃分了完整的官方職務體系，避免單一管理員權限過大：
 
-| 職務 (Role) | 權限範圍 | 適用對象 |
+<div class="step-image-container double-image">
+  <img src="/images/role_permissions_part1.png" alt="Apple 商務職務清單：機構管理員、IT 管理員、市場推廣管理員、廣告管理員、職員" class="step-image" />
+  <img src="/images/role_permissions_part2.png" alt="Apple 商務職務清單：成員經理、裝置註冊經理、內容經理、職員" class="step-image" />
+</div>
+
+| 官方職務 | 權限範圍說明 | 適用角色 |
 | :--- | :--- | :--- |
-| **管理者 (Administrator)** | 擁有機構全部最高權限，可管理所有設定、網域、付款資訊與其他管理員。 | IT 總監、系統架構師 |
-| **裝置管理者 (Device Manager)** | 負責管理硬體庫存、指派 MDM 伺服器、監控自動裝置註冊 (ADE) 狀態。 | 桌面端 IT、硬體資產管理員 |
-| **人員管理者 (People Manager)** | 負責使用者、群組的建立、修改、重設密碼與角色指派。 | 人資 IT、身分治理專員 |
-| **App 管理者 (Content Manager)** | 負責大量採購與管理 App 及服務。 | 軟體採購專員、專案經理 |
+| **機構管理員** | 可管理及分派 Apple Business 的所有功能，包括同意條款及細則。擁有機構全部最高權限。 | IT 總監、系統架構主管 |
+| **IT 管理員** | 可以管理成員、裝置，以及 App 和書籍的許可證。如要限制 IT 管理員可以管理的成員和許可證，可將其分派至機構單位。 | 企業系統管理員、IT 維運主管 |
+| **市場推廣管理員** | 可以管理已分派的品牌、地點及相關功能；亦可邀請用戶並管理已共享的取用權限。 | 品牌行銷經理、公關主管 |
+| **廣告管理員** | 可在「地圖」上為你機構的品牌建立和管理廣告。可邀請和管理其他廣告管理員。 | 行銷企劃、數位廣告專員 |
+| **成員經理** | 負責特定機構單位。他們可獲分派至任何機構單位，管理個別人士和內容。 | 部門主管、分部管理員 |
+| **裝置註冊經理** | 管理裝置和裝置管理服務。負責硬體庫存納管與指派。 | 桌面端 IT、硬體資產管理員 |
+| **內容經理** | 負責特定機構單位的大量採購事宜。他們可獲分派至任何機構單位，管理 App 的許可證。 | 軟體採購專員、資產管理專員 |
+| **職員** | 員工可使用由你機構管理的 Apple 裝置和服務，但無法登入 Apple Business 後台。 | 一般企業員工、終端使用者 |
+
+<style>
+.step-image-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.double-image {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.double-image .step-image {
+  max-width: 380px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+</style>
