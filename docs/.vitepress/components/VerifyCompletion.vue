@@ -1,899 +1,776 @@
 <script setup>
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
-const scannedText = ref('')
-const isVerified = ref(false)
-const studentName = ref('')
-const ocrStatus = ref('')
-const isProcessing = ref(false)
-const recognizedDebugText = ref('')
-const isCameraOpen = ref(false)
-const cameraError = ref('')
-const liveOcrText = ref('')
-const isCapturing = ref(false)
-const currentFacingMode = ref('environment')
+const students = [
+  { seat: '01', name: '陳志豪', dept: '業務部', email: 'student01@mdm.idv.tw', device: '實體 Mac #01' },
+  { seat: '02', name: '林美玲', dept: '行銷部', email: 'student02@mdm.idv.tw', device: '實體 Mac #02' },
+  { seat: '03', name: '張家榮', dept: '研發部', email: 'student03@mdm.idv.tw', device: '實體 Mac #03' },
+  { seat: '04', name: '王雅婷', dept: '人資部', email: 'student04@mdm.idv.tw', device: '實體 Mac #04' },
+  { seat: '05', name: '李冠宇', dept: '業務部', email: 'student05@mdm.idv.tw', device: '實體 Mac #05' },
+  { seat: '06', name: '吳佩璇', dept: '行銷部', email: 'student06@mdm.idv.tw', device: '實體 Mac #06' },
+  { seat: '07', name: '許晉瑋', dept: '研發部', email: 'student07@mdm.idv.tw', device: '實體 Mac #07' },
+  { seat: '08', name: '黃詩涵', dept: '財務部', email: 'student08@mdm.idv.tw', device: '實體 Mac #08' },
+  { seat: '09', name: '楊承翰', dept: '營運部', email: 'student09@mdm.idv.tw', device: '實體 Mac #09' },
+  { seat: '10', name: '劉怡君', dept: '資訊部', email: 'student10@mdm.idv.tw', device: '實體 Mac #10' },
+]
 
-const currentDate = new Date().toLocaleDateString('zh-TW', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
+const viewMode = ref('waiting')
+const selectedSeat = ref('01')
+const verifyTime = ref('')
+
+const currentStudent = computed(() => {
+  return students.find(s => s.seat === selectedSeat.value) || students[0]
 })
 
-let stream = null
-let scanInterval = null
+const verifyCode = computed(() => {
+  return 'ABM-2026-SEAT' + selectedSeat.value + '-PASS'
+})
 
-// 核心比對邏輯：比對是否包含 mdm.idv.tw、student 帳號、Lab 2 DEP/MDM 狀態、Lab 3 鎖定畫面文字、Lab 4 Outlook、或 Lab 5 Box
-const verifyContent = (rawText) => {
-  if (!rawText) return false
-  let text = rawText.toLowerCase().replace(/[^a-z0-9]/g, '')
-  
-  // 1. 支援 Lab 5 Box 套件安裝驗證
-  if (text.includes('box01') || text.includes('boxdesktop') || (text.includes('box') && text.includes('pkg'))) return true
-  if (text.includes('box')) return true
+const mobileClaimUrl = computed(() => {
+  return 'https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?claim=true&seat=' + selectedSeat.value
+})
 
-  // 2. 支援 Lab 4 Outlook 應用程式安裝驗證
-  if (text.includes('outlook') || text.includes('microsoftoutlook')) return true
+const qrCodeImageUrl = computed(() => {
+  const target = encodeURIComponent(mobileClaimUrl.value)
+  return 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&ecc=H&data=' + target
+})
 
-  // 3. 支援 Lab 3 鎖定畫面「Apple at Work - studentXX」與 FileVault
-  if (text.includes('appleatwork') && text.includes('student')) return true
-  if (text.includes('appleatwork')) return true
-  if (text.includes('filevaultison') || text.includes('filevault')) return true
-
-  // 4. 支援 Lab 2 的 DEP / Supervised / MDM Enrollment 終端機狀態
-  if (text.includes('enrolledviadep') || text.includes('supervisedyes') || text.includes('enrolledviadepyes')) return true
-  if (text.includes('mdmenrollmentyes') || text.includes('userapproved')) return true
-  if (text.includes('enrolled') && text.includes('dep')) return true
-  if (text.includes('supervised') && text.includes('yes')) return true
-
-  // 5. 支援 student01~student10 與 mdm.idv.tw
-  if (text.includes('student') && (text.includes('mdm') || text.includes('idv') || text.includes('tw'))) return true
-  if (text.includes('student')) return true
-
-  // 6. 支援標準網址與特徵
-  if (text.includes('mdmidvtw')) return true
-  if (text.includes('mdm') && text.includes('idv')) return true
-  if (text.includes('mdm') && text.includes('tw')) return true
-  if (text.includes('idv') && text.includes('tw')) return true
-  if (text.includes('mdm')) return true
-
-  let normalized = text
-    .replace(/rn/g, 'm')
-    .replace(/nn/g, 'm')
-    .replace(/[1l]/g, 'i')
-    .replace(/[0]/g, 'o')
-    .replace(/vv/g, 'w')
-  
-  if (normalized.includes('mdmidvtw')) return true
-  if (normalized.includes('mdm') || normalized.includes('idv')) return true
-  if (normalized.includes('supervised') || normalized.includes('enrolled')) return true
-  if (normalized.includes('outlook') || normalized.includes('box')) return true
-
-  return false
-}
-
-// 方案 B：輸入框即時比對
-const checkInput = () => {
-  if (verifyContent(scannedText.value)) {
-    isVerified.value = true
-    stopCamera()
-  }
-}
-
-// ==========================================
-// 方案 A：一鍵開啟鏡頭即時辨識 (支援切換前後鏡頭)
-// ==========================================
-const initCameraStream = async (facing = 'environment') => {
-  // 先停止當前串流
-  if (stream) {
-    stream.getTracks().forEach(t => t.stop())
-    stream = null
-  }
-
-  const video = document.getElementById('qr-video')
-  if (!video) return
-
-  // iOS Safari 相機約束最佳配置
-  const constraints = {
-    audio: false,
-    video: {
-      facingMode: facing === 'environment' ? { ideal: 'environment' } : { ideal: 'user' },
-      width: { ideal: 1280 },
-      height: { ideal: 720 }
-    }
-  }
-
-  try {
-    stream = await navigator.mediaDevices.getUserMedia(constraints)
-    video.srcObject = stream
-    video.setAttribute('playsinline', 'true')
-    video.setAttribute('autoplay', 'true')
-    video.setAttribute('muted', 'true')
-    await video.play()
-    currentFacingMode.value = facing
-    startLiveScanning(video)
-  } catch (err) {
-    // 容錯降級嘗試
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true })
-      video.srcObject = stream
-      await video.play()
-      startLiveScanning(video)
-    } catch (finalErr) {
-      console.error('Camera Fatal Error:', finalErr)
-      cameraError.value = '無法啟動相機，請確認已在 Safari 設定中給予相機權限。'
-    }
-  }
-}
-
-const startCamera = async () => {
-  cameraError.value = ''
-  isCameraOpen.value = true
-  liveOcrText.value = '鏡頭已啟動，請對準螢幕上的文字或 QR Code...'
-
-  if (!window.jsQR) {
-    const s1 = document.createElement('script')
-    s1.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
-    document.head.appendChild(s1)
-  }
-  if (!window.Tesseract) {
-    const s2 = document.createElement('script')
-    s2.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
-    document.head.appendChild(s2)
-  }
-
-  // 稍等 DOM 渲染完成後啟動預設後鏡頭
-  setTimeout(() => {
-    initCameraStream('environment')
-  }, 100)
-}
-
-// 手動一鍵切換鏡頭 (前後鏡頭切換)
-const toggleCameraFacing = async () => {
-  const targetFacing = currentFacingMode.value === 'environment' ? 'user' : 'environment'
-  await initCameraStream(targetFacing)
-}
-
-const stopCamera = () => {
-  if (scanInterval) {
-    clearInterval(scanInterval)
-    scanInterval = null
-  }
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop())
-    stream = null
-  }
-  isCameraOpen.value = false
-  liveOcrText.value = ''
-}
-
-// 自動循環掃描：QR Code (0.1秒秒讀)
-const startLiveScanning = (video) => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-
-  if (scanInterval) clearInterval(scanInterval)
-
-  scanInterval = setInterval(() => {
-    if (!video || video.readyState !== video.HAVE_ENOUGH_DATA || isVerified.value) return
-
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-    
-    // QR Code 掃描
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    if (window.jsQR) {
-      const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: 'dontInvert'
-      })
-
-      if (code && code.data && verifyContent(code.data)) {
-        isVerified.value = true
-        scannedText.value = code.data
-        stopCamera()
-      }
-    }
-  }, 150)
-}
-
-// 點擊「對準文字，立即辨識」按鈕
-const captureAndRecognizeText = async () => {
-  const video = document.getElementById('qr-video')
-  if (!video) return
-
-  isCapturing.value = true
-  liveOcrText.value = '🔍 正在分析畫面文字，請保持相機穩定...'
-
-  const canvas = document.createElement('canvas')
-  canvas.width = video.videoWidth
-  canvas.height = video.videoHeight
-  const ctx = canvas.getContext('2d')
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-
-  try {
-    if (!window.Tesseract) {
-      await new Promise(r => setTimeout(r, 1000))
-    }
-    const result = await window.Tesseract.recognize(dataUrl, 'eng+chi_tra')
-    const rawText = result?.data?.text || ''
-    console.log('相機文字辨識結果:', rawText)
-
-    if (verifyContent(rawText)) {
-      isVerified.value = true
-      scannedText.value = 'http://mdm.idv.tw'
-      stopCamera()
-    } else {
-      liveOcrText.value = `未匹配成功。偵測到：「${rawText.trim().slice(0, 40) || '無'}」，請對準「http://mdm.idv.tw」再按一次！`
-    }
-  } catch (err) {
-    liveOcrText.value = '辨識發生異常，請重試或改用下方方案 B。'
-  } finally {
-    isCapturing.value = false
-  }
-}
-
-// ==========================================
-// 方案 C：相片 OCR 辨識 (備用)
-// ==========================================
-const optimizePhotoForOCR = (file) => {
-  return new Promise((resolve) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const img = new Image()
-      img.onload = () => {
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
-
-        let width = img.width
-        let height = img.height
-        const maxDim = 1200
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width)
-            width = maxDim
-          } else {
-            width = Math.round((width * maxDim) / height)
-            height = maxDim
-          }
-        }
-
-        canvas.width = width
-        canvas.height = height
-        ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/jpeg', 0.9))
-      }
-      img.src = e.target.result
-    }
-    reader.readAsDataURL(file)
+onMounted(() => {
+  verifyTime.value = new Date().toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   })
+
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search)
+    const source = params.get('source')
+    const seat = params.get('seat')
+    const claim = params.get('claim')
+    const verified = params.get('verified')
+
+    if (seat) {
+      const padSeat = seat.toString().padStart(2, '0')
+      if (students.some(s => s.seat === padSeat)) {
+        selectedSeat.value = padSeat
+      }
+    }
+
+    if (claim === 'true' || verified === 'true') {
+      viewMode.value = 'mobile_cert'
+    } else if (source === 'mdm' || source === 'profile' || source === 'webclip') {
+      viewMode.value = 'mac_qrcode'
+    } else {
+      viewMode.value = 'waiting'
+    }
+  }
+})
+
+function switchToMacQrcode(seat) {
+  selectedSeat.value = seat
+  viewMode.value = 'mac_qrcode'
 }
 
-const handleImageUpload = async (event) => {
-  const file = event.target.files[0]
-  if (!file) return
+function switchToMobileCert(seat) {
+  selectedSeat.value = seat
+  viewMode.value = 'mobile_cert'
+}
 
-  isProcessing.value = true
-  ocrStatus.value = '📸 正在分析照片...'
-  recognizedDebugText.value = ''
-
-  try {
-    if (!window.Tesseract) {
-      ocrStatus.value = '⏳ 正在載入 OCR 模組...'
-      await new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'
-        script.onload = resolve
-        script.onerror = reject
-        document.head.appendChild(script)
-      })
-    }
-
-    const optimizedImage = await optimizePhotoForOCR(file)
-    ocrStatus.value = '🔍 正在辨識文字中...'
-
-    const result = await window.Tesseract.recognize(
-      optimizedImage,
-      'eng+chi_tra',
-      {
-        logger: m => {
-          if (m.status === 'recognizing text') {
-            ocrStatus.value = `🔍 辨識進度: ${Math.round(m.progress * 100)}%`
-          }
-        }
-      }
-    )
-
-    const rawRecognizedText = result?.data?.text || ''
-    recognizedDebugText.value = rawRecognizedText
-
-    if (verifyContent(rawRecognizedText)) {
-      isVerified.value = true
-      scannedText.value = 'http://mdm.idv.tw'
-      ocrStatus.value = ''
-    } else {
-      ocrStatus.value = ''
-      alert(`未能成功辨識網址。\n【辨識到的文字】：\n「${rawRecognizedText.trim() || '未偵測到文字'}」`)
-    }
-  } catch (err) {
-    console.error('OCR Error:', err)
-    ocrStatus.value = ''
-    alert(`辨識異常：${err.message}`)
-  } finally {
-    isProcessing.value = false
-    event.target.value = ''
+function printCertificate() {
+  if (typeof window !== 'undefined') {
+    window.print()
   }
 }
-
-const resetVerify = () => {
-  isVerified.value = false
-  scannedText.value = ''
-  ocrStatus.value = ''
-  isProcessing.value = false
-  recognizedDebugText.value = ''
-  stopCamera()
-}
-
-onBeforeUnmount(() => {
-  stopCamera()
-})
 </script>
 
 <template>
-  <div class="verify-container">
-    <!-- 尚未通過驗證的互動卡片 -->
-    <div v-if="!isVerified" class="verify-card">
-      <div class="verify-header">
-        <div class="verify-icon">📱</div>
-        <div>
-          <h3 class="verify-title">結訓成果檢核與驗證</h3>
-          <p class="verify-subtitle">請使用手機掃描螢幕上的目標網址或 QR Code 完成認證</p>
+  <div class="verify-page-root">
+    <!-- 模式 1：尚未驗證（等待受管設備點擊） -->
+    <div v-if="viewMode === 'waiting'" class="verify-waiting-card">
+      <div class="status-icon-bubble waiting">
+        🔒
+      </div>
+      <div class="waiting-title">請於受管 Mac 點擊 Safari 書籤</div>
+      <p class="waiting-desc">
+        系統尚未偵測到來自受管 Mac 的憑證連線。<br />
+        請在完成藍圖派送的測試 Mac 上，打開 <strong>Safari</strong> 並點選 <strong>「Apple Business 實務指南」</strong> 書籤以產出專屬結訓 QR Code！
+      </p>
+
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-title">Mac 點擊書籤</div>
+          <div class="flow-detail">驗證 MDM 通道並於 Mac 螢幕產出動態 QR Code</div>
+        </div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-title">手機相機掃描</div>
+          <div class="flow-detail">拿學員手機掃描 Mac 上的專屬 QR Code</div>
+        </div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-title">領取數位證書</div>
+          <div class="flow-detail">證書即時載入手機，可直接截圖或存檔</div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">學員姓名 (選填)</label>
-        <input 
-          v-model="studentName" 
-          type="text" 
-          placeholder="例如：王小明" 
-          class="form-input"
-        />
-      </div>
-
-      <!-- 🌟 方案 A：一鍵開啟鏡頭即時文字 / QR 掃描 -->
-      <div class="form-group highlight-box">
-        <label class="form-label">
-          <span>⚡️ 方案 A：一鍵開啟鏡頭掃描 (支援文字與 QR Code)</span>
-        </label>
-        <p class="tip-text">
-          點擊下方按鈕直接喚醒後置鏡頭，對準螢幕上的文字 <code>http://mdm.idv.tw</code> 或 QR Code 即可辨識：
-        </p>
-        
-        <div v-if="!isCameraOpen">
-          <button @click="startCamera" class="camera-launch-btn">
-            📷 點此開啟相機即時掃描
-          </button>
-        </div>
-
-        <!-- 即時相機視窗與掃描框 -->
-        <div v-else class="camera-viewport-container">
-          <div class="camera-box">
-            <video id="qr-video" class="video-preview"></video>
-            <div class="scanner-laser"></div>
-            <div class="scanner-frame"></div>
-            <!-- 切換前後鏡頭浮鈕 -->
-            <button @click="toggleCameraFacing" class="camera-switch-btn" title="切換鏡頭">
-              🔄 切換{{ currentFacingMode === 'environment' ? '前置' : '後置' }}鏡頭
-            </button>
-          </div>
-          
-          <div class="camera-action-bar">
-            <!-- 專為文字辨識設計的一鍵快拍辨識鈕 -->
-            <button 
-              @click="captureAndRecognizeText" 
-              :disabled="isCapturing"
-              class="recognize-text-btn"
-            >
-              {{ isCapturing ? '🔍 分析文字中...' : '🎯 對準文字，點此立即辨識' }}
-            </button>
-          </div>
-
-          <p v-if="liveOcrText" class="live-ocr-hint">{{ liveOcrText }}</p>
-
-          <button @click="stopCamera" class="stop-camera-btn">
-            ✕ 關閉相機
-          </button>
-        </div>
-        <p v-if="cameraError" class="camera-error">{{ cameraError }}</p>
-      </div>
-
-      <!-- 方案 B：iPhone 鍵盤相機原況文字 (Live Text) -->
-      <div class="form-group">
-        <label class="form-label">
-          <span>📷 方案 B：iPhone 鍵盤原況文字 (Live Text) 掃描</span>
-        </label>
-        <p class="tip-text">
-          👉 點擊下方輸入框，在 iPhone 鍵盤點選 <strong>「相機圖示 (掃描文字)」</strong> 對準螢幕上的 <code>http://mdm.idv.tw</code>：
-        </p>
-        <input 
-          v-model="scannedText" 
-          @input="checkInput"
-          type="text" 
-          name="scanned_mdm_url"
-          inputmode="text"
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-          placeholder="點此喚起鍵盤並點選相機圖示..." 
-          class="form-input scan-input"
-        />
-      </div>
-
-      <!-- 方案 C：拍照或上傳圖片辨識 -->
-      <div class="form-group alt-method">
-        <label class="form-label">
-          <span>📸 方案 C：拍照或從相簿上傳</span>
-        </label>
-        <div class="btn-group">
-          <label class="upload-btn" :class="{ 'btn-disabled': isProcessing }">
-            <span>📷 直接拍照</span>
-            <input 
-              type="file" 
-              accept="image/*" 
-              capture="environment" 
-              @change="handleImageUpload"
-              :disabled="isProcessing"
-              class="hidden-file-input"
-            />
-          </label>
-          <label class="upload-btn btn-secondary" :class="{ 'btn-disabled': isProcessing }">
-            <span>🖼 從相簿選取</span>
-            <input 
-              type="file" 
-              accept="image/*" 
-              @change="handleImageUpload"
-              :disabled="isProcessing"
-              class="hidden-file-input"
-            />
-          </label>
-        </div>
-        <div v-if="ocrStatus" class="ocr-status">{{ ocrStatus }}</div>
+      <div class="demo-bar">
+        <span class="demo-label">現場講師 Demo 快捷切換：</span>
+        <select v-model="selectedSeat" class="seat-select">
+          <option v-for="s in students" :key="s.seat" :value="s.seat">
+            Seat {{ s.seat }} - {{ s.name }} ({{ s.dept }})
+          </option>
+        </select>
+        <button class="action-btn-manual secondary" @click="switchToMacQrcode(selectedSeat)">模擬 Mac 顯示 QR Code</button>
+        <button class="action-btn-manual" @click="switchToMobileCert(selectedSeat)">模擬手機解鎖證書</button>
       </div>
     </div>
 
-    <!-- 驗證通過顯示的結訓證書與成功卡片 -->
-    <div v-else class="success-card">
-      <div class="badge-icon">🎉</div>
-      <h2 class="success-title">驗證通過，恭喜完成培訓！</h2>
-      <p class="success-desc">
-        系統已成功辨識目標實作節點 <code>http://mdm.idv.tw</code>，已完成 Apple Business 企業裝置管理核心培訓所有環節。
+    <!-- 模式 2：Mac 端驗證通過 ➜ 顯示專屬 QR Code -->
+    <div v-else-if="viewMode === 'mac_qrcode'" class="mac-qrcode-card">
+      <div class="success-pill">
+        <span class="dot"></span>
+        ✓ Mac 裝置驗證成功！MDM 通道暢通
+      </div>
+
+      <h2 class="qrcode-section-title">請拿手機掃描下方 QR Code 領取結訓證書</h2>
+      <p class="qrcode-section-desc">
+        已確認本機為 <strong>Seat {{ currentStudent.seat }}（{{ currentStudent.name }} · {{ currentStudent.dept }}）</strong> 所屬之受管 Mac。<br />
+        請打開手機「相機」App 對準螢幕上的 QR Code 進行掃描：
       </p>
 
-      <!-- 數位完訓證書卡片 -->
-      <div class="certificate">
+      <div class="qrcode-container">
+        <div class="qrcode-box">
+          <div class="qrcode-render-wrapper">
+            <img
+              :src="qrCodeImageUrl"
+              :key="currentStudent.seat"
+              alt="結訓驗證專屬 QR Code"
+              class="qrcode-img"
+              loading="eager"
+            />
+            <div class="qrcode-center-logo">
+              <span></span>
+            </div>
+          </div>
+          <div class="qrcode-badge">Seat {{ currentStudent.seat }} 專屬憑證</div>
+        </div>
+      </div>
+
+      <div class="qrcode-link-tip">
+        手機掃描目標：<br />
+        <code>{{ mobileClaimUrl }}</code>
+      </div>
+
+      <div class="switch-seat-bar">
+        <span>切換座號預覽：</span>
+        <select v-model="selectedSeat" class="seat-select">
+          <option v-for="s in students" :key="s.seat" :value="s.seat">
+            Seat {{ s.seat }} - {{ s.name }} ({{ s.dept }})
+          </option>
+        </select>
+        <button class="action-btn-manual" style="margin-left: 8px;" @click="switchToMobileCert(selectedSeat)">直接在本機查看證書 ➜</button>
+      </div>
+    </div>
+
+    <!-- 模式 3：手機端掃描通過 ➜ 呈現結訓證書 -->
+    <div v-else-if="viewMode === 'mobile_cert'" class="certificate-wrapper">
+      <div class="success-banner">
+        <div class="success-title">
+          <span class="check-badge">✓</span>
+          恭喜！結訓數位證書已解鎖
+        </div>
+        <div class="success-meta">
+          驗證來源：QR Code 掃描通關 ｜ 座號：Seat {{ currentStudent.seat }} ｜ 學員：{{ currentStudent.name }}
+        </div>
+      </div>
+
+      <div class="certificate-card">
         <div class="cert-border">
-          <div class="cert-badge"> Apple at Work</div>
-          <h3 class="cert-title">結訓認證證明</h3>
-          <p class="cert-name">{{ studentName || '結訓學員' }}</p>
-          <p class="cert-body">
-            已成功掌握 Apple Business、自動裝置註冊 (ADE)、MDM 管理配置與安全合規實務技術。
-          </p>
-          <div class="cert-footer">
-            <span>認證日期：{{ currentDate }}</span>
-            <span class="cert-status">✓ Verified by MDM System</span>
+          <div class="cert-header">
+            <div class="apple-logo"></div>
+            <div class="cert-org">Apple at Work Enterprise Training</div>
+            <div class="cert-main-title">實務工作坊結訓認證</div>
+          </div>
+
+          <div class="cert-body">
+            <p class="cert-presents">茲證明</p>
+            <h2 class="cert-student-name">{{ currentStudent.name }}</h2>
+            <div class="cert-student-info">
+              <span class="dept-badge">{{ currentStudent.dept }}</span>
+              <span class="seat-badge">Seat {{ currentStudent.seat }}</span>
+              <span class="email-badge">{{ currentStudent.email }}</span>
+            </div>
+
+            <p class="cert-text">
+              已成功完成 <strong>Apple Business 企業部署與管理實務課程</strong>，全數通過以下核心技能實作考核：
+            </p>
+
+            <div class="skills-grid">
+              <div class="skill-pill">✓ Entra ID 目錄同步 (SCIM)</div>
+              <div class="skill-pill">✓ 零接觸自動註冊 (ADE)</div>
+              <div class="skill-pill">✓ 企業安全藍圖（防火牆/密碼原則）</div>
+              <div class="skill-pill">✓ 免 Apple 帳號 App 大量分派</div>
+              <div class="skill-pill">✓ 自訂設定與 APNs 靜默派送</div>
+            </div>
+
+            <div class="cert-footer">
+              <div class="cert-footer-col">
+                <div class="footer-label">指派藍圖</div>
+                <div class="footer-val">{{ currentStudent.seat }}的商務部門-Mac</div>
+                <div class="footer-label" style="margin-top: 8px;">頒發日期</div>
+                <div class="footer-val">{{ verifyTime }}</div>
+              </div>
+
+              <div class="cert-seal">
+                <div class="seal-inner">
+                  <span class="seal-star">★ ★ ★</span>
+                  <span class="seal-text">MDM VERIFIED</span>
+                  <span class="seal-code">{{ verifyCode }}</span>
+                </div>
+              </div>
+
+              <div class="cert-footer-col text-right">
+                <div class="footer-label">認證單位</div>
+                <div class="footer-val">Apple at Work Training Team</div>
+                <div class="footer-label" style="margin-top: 8px;">驗證通道</div>
+                <div class="footer-val">QR Code Verified</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <button @click="resetVerify" class="retry-btn">
-        重新掃描驗證
-      </button>
+      <div class="cert-actions">
+        <button class="cert-btn primary" @click="printCertificate">
+          📸 截圖保存 / 另存為 PDF 證書
+        </button>
+        <div class="cert-switch">
+          <span>切換座號：</span>
+          <select v-model="selectedSeat" class="seat-select-inline">
+            <option v-for="s in students" :key="s.seat" :value="s.seat">
+              Seat {{ s.seat }} - {{ s.name }}
+            </option>
+          </select>
+          <button class="back-to-qr-btn" @click="viewMode = 'mac_qrcode'">回 QR Code</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.verify-container {
+.verify-page-root {
+  margin: 1.5rem 0;
+}
+.verify-waiting-card {
+  border: 2px dashed var(--vp-c-divider);
+  border-radius: 16px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--vp-c-bg-soft);
   margin: 2rem 0;
 }
-
-.verify-card, .success-card {
-  border: 1px solid var(--vp-c-divider);
-  background-color: var(--vp-c-bg-soft);
-  border-radius: 16px;
-  padding: 1.75rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-}
-
-.verify-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.verify-icon {
-  font-size: 2.2rem;
-}
-
-.verify-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--vp-c-text-1);
-}
-
-.verify-subtitle {
-  margin: 0.25rem 0 0 0;
-  font-size: 0.875rem;
-  color: var(--vp-c-text-2);
-}
-
-.form-group {
-  margin-bottom: 1.25rem;
-}
-
-.highlight-box {
-  background: rgba(0, 113, 227, 0.04);
-  border: 1px solid rgba(0, 113, 227, 0.2);
-  border-radius: 12px;
-  padding: 1.25rem;
-}
-
-.form-label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--vp-c-text-1);
-}
-
-.tip-text {
-  font-size: 0.8rem;
-  color: var(--vp-c-text-2);
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
-}
-
-.camera-launch-btn {
+.status-icon-bubble {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  padding: 0.85rem 1.5rem;
-  border-radius: 10px;
-  background-color: #0071e3;
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
-  transition: all 0.2s;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
-
-.camera-launch-btn:hover {
-  background-color: #0077ed;
-  transform: translateY(-1px);
+.status-icon-bubble.waiting {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
 }
-
-.camera-viewport-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 1rem;
-}
-
-.camera-box {
-  position: relative;
-  width: 100%;
-  max-width: 320px;
-  height: 240px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #000;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.video-preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.camera-switch-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 4px 10px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  z-index: 10;
-  backdrop-filter: blur(4px);
-}
-
-.scanner-frame {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
-  border: 2px dashed #0071e3;
-  border-radius: 8px;
-  pointer-events: none;
-}
-
-.scanner-laser {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #0071e3;
-  box-shadow: 0 0 8px #0071e3;
-  animation: scanning 2s infinite ease-in-out;
-}
-
-@keyframes scanning {
-  0% { top: 10%; opacity: 0; }
-  50% { opacity: 1; }
-  100% { top: 90%; opacity: 0; }
-}
-
-.camera-action-bar {
-  margin-top: 0.75rem;
-  width: 100%;
-  max-width: 320px;
-}
-
-.recognize-text-btn {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  background-color: #10b981;
-  color: #ffffff;
-  font-size: 0.95rem;
+.waiting-title {
+  font-size: 1.35rem;
   font-weight: 700;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
-  transition: all 0.2s;
-}
-
-.recognize-text-btn:hover:not(:disabled) {
-  background-color: #059669;
-}
-
-.recognize-text-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.live-ocr-hint {
-  font-size: 0.8rem;
-  color: var(--vp-c-text-2);
-  margin: 0.5rem 0;
-  text-align: center;
-  max-width: 320px;
-  line-height: 1.4;
-}
-
-.stop-camera-btn {
-  margin-top: 0.5rem;
-  padding: 0.4rem 1rem;
-  border-radius: 6px;
-  background: var(--vp-c-bg-mute);
-  border: 1px solid var(--vp-c-border);
-  font-size: 0.8rem;
-  color: var(--vp-c-text-2);
-  cursor: pointer;
-}
-
-.camera-error {
-  font-size: 0.8rem;
-  color: #ef4444;
-  margin-top: 0.5rem;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  border-radius: 8px;
-  border: 1px solid var(--vp-c-border);
-  background-color: var(--vp-c-bg);
   color: var(--vp-c-text-1);
-  box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--vp-c-brand-1);
-  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
-}
-
-.scan-input {
-  font-family: var(--vp-font-family-mono);
-  font-weight: 500;
-}
-
-.alt-method {
-  border-top: 1px dashed var(--vp-c-divider);
-  padding-top: 1.25rem;
-  margin-top: 1.5rem;
-}
-
-.btn-group {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.upload-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.65rem 1.25rem;
-  border-radius: 8px;
-  background-color: var(--vp-c-brand-1);
-  border: 1px solid var(--vp-c-brand-1);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.upload-btn:hover {
-  background-color: var(--vp-c-brand-2);
-}
-
-.btn-secondary {
-  background-color: var(--vp-c-bg-mute);
-  border-color: var(--vp-c-border);
-  color: var(--vp-c-text-1);
-}
-
-.btn-secondary:hover {
-  background-color: var(--vp-c-bg);
-  border-color: var(--vp-c-brand-1);
-}
-
-.btn-disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.hidden-file-input {
-  display: none;
-}
-
-.ocr-status {
-  font-size: 0.85rem;
-  color: var(--vp-c-brand-1);
-  margin-top: 0.75rem;
-  font-weight: 600;
-}
-
-/* 成功卡片與證書 */
-.success-card {
-  text-align: center;
-  background: linear-gradient(180deg, var(--vp-c-bg-soft) 0%, rgba(0, 113, 227, 0.05) 100%);
-  border: 1px solid #10b981;
-}
-
-.badge-icon {
-  font-size: 3rem;
   margin-bottom: 0.5rem;
-  animation: bounce 0.6s ease;
 }
-
-.success-title {
-  color: #10b981;
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 0.5rem 0;
-}
-
-.success-desc {
-  font-size: 0.95rem;
+.waiting-desc {
   color: var(--vp-c-text-2);
-  max-width: 550px;
-  margin: 0 auto 1.5rem auto;
+  max-width: 620px;
+  margin: 0 auto 1.5rem;
   line-height: 1.6;
 }
-
-.certificate {
+.flow-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  max-width: 720px;
+  margin: 1.5rem auto 2rem;
+}
+@media (max-width: 640px) {
+  .flow-steps {
+    flex-direction: column;
+  }
+}
+.flow-step {
+  flex: 1;
   background: var(--vp-c-bg);
-  border: 2px solid #e5e7eb;
+  padding: 1.2rem 1rem;
   border-radius: 12px;
-  padding: 1.5rem;
-  margin: 1.5rem auto;
-  max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--vp-c-divider);
+  text-align: center;
 }
-
-.dark .certificate {
-  border-color: #3f3f46;
-}
-
-.cert-border {
-  border: 1px dashed var(--vp-c-brand-1);
-  border-radius: 8px;
-  padding: 1.25rem;
-}
-
-.cert-badge {
-  font-size: 0.8rem;
-  font-weight: 700;
+.flow-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
-  letter-spacing: 1px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.flow-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.25rem;
+}
+.flow-detail {
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.4;
+}
+.flow-arrow {
+  color: var(--vp-c-brand-1);
+  font-weight: 700;
+  font-size: 1.2rem;
 }
 
-.cert-title {
-  font-size: 1.35rem;
+.mac-qrcode-card {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 20px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--vp-c-bg-soft);
+  margin: 2rem 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+.success-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 1.2rem;
+}
+.success-pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 8px #16a34a;
+}
+.qrcode-section-title {
+  font-size: 1.5rem;
   font-weight: 800;
-  margin: 0.5rem 0;
+  margin-bottom: 0.5rem;
   color: var(--vp-c-text-1);
 }
-
-.cert-name {
-  font-size: 1.2rem;
+.qrcode-section-desc {
+  color: var(--vp-c-text-2);
+  max-width: 580px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+.qrcode-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+.qrcode-box {
+  background: #ffffff;
+  padding: 1.2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  display: inline-block;
+}
+.qrcode-render-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 240px;
+  height: 240px;
+}
+.qrcode-img {
+  width: 240px;
+  height: 240px;
+  display: block;
+  border-radius: 8px;
+}
+.qrcode-center-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e2e8f0;
+}
+.qrcode-center-logo span {
+  font-size: 1.8rem;
   font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+  margin-top: -3px;
+}
+.qrcode-badge {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  background: #f1f5f9;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+}
+.qrcode-link-tip {
+  font-size: 0.82rem;
+  color: var(--vp-c-text-2);
+  margin-top: 1rem;
+}
+.qrcode-link-tip code {
+  font-size: 0.8rem;
   color: var(--vp-c-brand-1);
-  text-decoration: underline;
-  margin: 0.5rem 0;
+}
+.switch-seat-bar {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vp-c-divider);
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
 }
 
-.cert-body {
+.certificate-wrapper {
+  margin: 2rem 0;
+}
+.success-banner {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.success-title {
+  color: #16a34a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.check-badge {
+  background: #16a34a;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.85rem;
+}
+.success-meta {
   color: var(--vp-c-text-2);
-  line-height: 1.5;
-  margin: 0.75rem 0;
+  font-size: 0.88rem;
+  margin-top: 0.25rem;
+}
+
+.certificate-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  color: #1e293b;
+}
+.dark .certificate-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #f1f5f9;
+  border: 1px solid rgba(51, 65, 85, 0.8);
+}
+.cert-border {
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  position: relative;
+}
+.dark .cert-border {
+  border-color: #334155;
+}
+.cert-header {
+  text-align: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1.5rem;
+}
+.dark .cert-header {
+  border-color: #334155;
+}
+.apple-logo {
+  font-size: 2.8rem;
+  line-height: 1;
+}
+.cert-org {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #64748b;
+  margin-top: 0.4rem;
+}
+.cert-main-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
+  letter-spacing: 1px;
+}
+.cert-body {
+  text-align: center;
+  padding: 2rem 0;
+}
+.cert-presents {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+.cert-student-name {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0.25rem 0 1rem;
+  color: #0f172a;
+}
+.dark .cert-student-name {
+  color: #38bdf8;
+}
+.cert-student-info {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.dept-badge, .seat-badge, .email-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.dept-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.seat-badge {
+  background: #fef3c7;
+  color: #b45309;
+}
+.email-badge {
+  background: #f1f5f9;
+  color: #475569;
+}
+.dark .email-badge {
+  background: #334155;
+  color: #cbd5e1;
+}
+.cert-text {
+  max-width: 580px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.7;
+  color: #475569;
+}
+.dark .cert-text {
+  color: #94a3b8;
+}
+.skills-grid {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+.skill-pill {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.dark .skill-pill {
+  color: #4ade80;
 }
 
 .cert-footer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 1.5rem;
+  text-align: left;
+}
+@media (max-width: 600px) {
+  .cert-footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  .cert-footer-col.text-right {
+    text-align: center;
+  }
+}
+.dark .cert-footer {
+  border-color: #334155;
+}
+.cert-footer-col {
+  flex: 1;
+}
+.footer-label {
   font-size: 0.75rem;
-  color: var(--vp-c-text-3);
-  margin-top: 1rem;
-  border-top: 1px solid var(--vp-c-divider);
-  padding-top: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+.footer-val {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.cert-seal {
+  width: 100px;
+  height: 100px;
+  border: 3px double #b45309;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1rem;
+}
+.seal-inner {
+  text-align: center;
+  color: #b45309;
+}
+.seal-star {
+  font-size: 0.65rem;
+  display: block;
+}
+.seal-text {
+  font-size: 0.68rem;
+  font-weight: 800;
+  display: block;
+}
+.seal-code {
+  font-size: 0.6rem;
+  display: block;
+  font-family: monospace;
+}
+.text-right {
+  text-align: right;
 }
 
-.cert-status {
-  color: #10b981;
+.cert-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.cert-btn.primary {
+  background: var(--vp-c-brand-1);
+  color: #fff;
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
   font-weight: 600;
-}
-
-.retry-btn {
-  margin-top: 1rem;
-  padding: 0.5rem 1.25rem;
-  font-size: 0.85rem;
-  color: var(--vp-c-text-2);
-  border: 1px solid var(--vp-c-border);
-  background-color: var(--vp-c-bg);
-  border-radius: 6px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
-.retry-btn:hover {
+.cert-switch {
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.seat-select-inline {
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
   color: var(--vp-c-text-1);
-  border-color: var(--vp-c-text-2);
+}
+.back-to-qr-btn {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--vp-c-text-1);
 }
 
-@keyframes bounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+.demo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vp-c-divider);
+}
+.demo-label {
+  font-size: 0.88rem;
+  color: var(--vp-c-text-2);
+}
+.seat-select {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+}
+.action-btn-manual {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  background: var(--vp-c-brand-1);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+.action-btn-manual.secondary {
+  background: var(--vp-c-bg);
+  color: var(--vp-c-brand-1);
+  border: 1px solid var(--vp-c-brand-1);
+}
+
+@media print {
+  .verify-waiting-card, .mac-qrcode-card, .cert-actions, .success-banner, nav, header, aside, .VPNav, .VPSidebar, .VPDocFooter {
+    display: none !important;
+  }
+  .certificate-card {
+    box-shadow: none;
+    border: none;
+  }
 }
 </style>
