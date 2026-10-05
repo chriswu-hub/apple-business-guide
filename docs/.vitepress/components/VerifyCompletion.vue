@@ -108,13 +108,13 @@ function printCertificate() {
           <div class="flow-title">Mac 點擊書籤</div>
           <div class="flow-detail">驗證 MDM 通道並於 Mac 螢幕產出動態 QR Code</div>
         </div>
-        <div class="flow-arrow">➔</div>
+        <div class="flow-arrow">&rarr;</div>
         <div class="flow-step">
           <div class="flow-num">2</div>
           <div class="flow-title">手機相機掃描</div>
           <div class="flow-detail">拿學員手機掃描 Mac 上的專屬 QR Code</div>
         </div>
-        <div class="flow-arrow">➔</div>
+        <div class="flow-arrow">&rarr;</div>
         <div class="flow-step">
           <div class="flow-num">3</div>
           <div class="flow-title">領取數位證書</div>
@@ -177,7 +177,7 @@ function printCertificate() {
             Seat {{ s.seat }} - {{ s.name }} ({{ s.dept }})
           </option>
         </select>
-        <button class="action-btn-manual" style="margin-left: 8px;" @click="switchToMobileCert(selectedSeat)">直接在本機查看證書 ➜</button>
+        <button class="action-btn-manual" style="margin-left: 8px;" @click="switchToMobileCert(selectedSeat)">直接在本機查看證書 &rarr;</button>
       </div>
     </div>
 
