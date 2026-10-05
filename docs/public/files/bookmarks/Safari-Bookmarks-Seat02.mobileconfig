@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webClip.managed</string>
+            <key>PayloadIdentifier</key>
+            <string>com.apple.webClip.managed.8AF5F183-4626-4A1A-B369-99ADBE5D5A25</string>
+            <key>PayloadUUID</key>
+            <string>8AF5F183-4626-4A1A-B369-99ADBE5D5A25</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadDisplayName</key>
+            <string>Web Clip: Apple Business 實務指南 (Seat 02)</string>
+            <key>URL</key>
+            <string>https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?source=mdm&amp;seat=02</string>
+            <key>Label</key>
+            <string>Apple Business 實務指南</string>
+            <key>IsRemovable</key>
+            <false/>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>Seat 02 - Safari 結訓通關書籤 (林美玲)</string>
+    <key>PayloadDescription</key>
+    <string>專屬派送給 Seat 02（林美玲 · 行銷部）之結訓通關書籤</string>
+    <key>PayloadIdentifier</key>
+    <string>com.appleatwork.webclip.seat02</string>
+    <key>PayloadOrganization</key>
+    <string>Apple at Work</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>4CF8B5E7-A77D-42C4-921A-3686754B5BAD</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadScope</key>
+    <string>System</string>
+</dict>
+</plist>
