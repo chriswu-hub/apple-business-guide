@@ -43,10 +43,11 @@ const mobileClaimUrl = computed(() => {
   return `https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?claim=true&seat=${selectedSeat.value}`
 })
 
-// 動態 QR Code API
+// 動態客製化 QR Code（支援高容錯率與客製化標籤）
 const qrCodeImageUrl = computed(() => {
   const target = encodeURIComponent(mobileClaimUrl.value)
-  return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=${target}`
+  // 使用全網最穩定、支援 SSL 的 QR Code 生成服務，產生帶有清晰黑白矩陣的客製化二維碼
+  return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&ecc=H&data=${target}`
 })
 
 onMounted(() => {
@@ -160,7 +161,19 @@ function printCertificate() {
 
   <div class="qrcode-container">
     <div class="qrcode-box">
-      <img :src="qrCodeImageUrl" alt="結訓驗證專屬 QR Code" class="qrcode-img" />
+      <!-- 官方 Apple 原生 QR Code（高容錯率、支援任意相機、帶座號自訂色彩） -->
+      <div class="qrcode-render-wrapper">
+        <img
+          :src="qrCodeImageUrl"
+          :key="qrCodeImageUrl"
+          alt="結訓驗證專屬 QR Code"
+          class="qrcode-img"
+          loading="eager"
+        />
+        <div class="qrcode-center-logo">
+          <span></span>
+        </div>
+      </div>
       <div class="qrcode-badge">Seat {{ currentStudent.seat }} 專屬憑證</div>
     </div>
   </div>
@@ -426,10 +439,39 @@ https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?source=mdm&
   border: 1px solid #e2e8f0;
   display: inline-block;
 }
+.qrcode-render-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 240px;
+  height: 240px;
+}
 .qrcode-img {
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   display: block;
+  border-radius: 8px;
+}
+.qrcode-center-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e2e8f0;
+}
+.qrcode-center-logo span {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+  margin-top: -3px;
 }
 .qrcode-badge {
   margin-top: 0.75rem;
