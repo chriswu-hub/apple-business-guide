@@ -10,7 +10,7 @@
 ::: info 📌【學員環境與設備延續】
 本實作直接延續你在 **[Lab 1 前置準備與學員座號總表](/guide/lab1#🎯-前置準備與學員座號總表)** 所分配的專屬座號：
 - **學員帳號**：`studentXX@mdm.idv.tw`（例如 Seat 01 請使用 `student01@mdm.idv.tw`）
-- **目標藍圖**：`商務部門-Mac`
+- **目標藍圖**：`XX的商務部門-Mac`（例如 Seat 01 請命名為 **`01的商務部門-Mac`**）
 - **實體設備**：請拿起你面前分配到的實體測試 Mac，核對外殼底部之 **Mac 序號 (Serial Number)**。
 :::
 
@@ -45,7 +45,7 @@
      <img src="/images/blueprint_step2_select_type.png" alt="建立藍圖選擇用戶裝置藍圖" class="step-image" />
    </div>
 
-3. 將藍圖名稱命名為 **`商務部門-Mac`**：
+3. 將藍圖名稱命名為 **`XX的商務部門-Mac`**（例如 Seat 01 請輸入 **`01的商務部門-Mac`**，確保多人實作時藍圖不衝突）：
    <div class="step-image-container">
      <img src="/images/blueprint_step3_config.png" alt="藍圖命名商務部門-Mac與設定" class="step-image" />
    </div>

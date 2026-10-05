@@ -26,16 +26,16 @@
 
 | 座號 | 學員帳號 (UPN) | 模擬職位與部門 | 初始密碼 | 目標藍圖 | 實體設備 |
 | :---: | :--- | :--- | :---: | :---: | :---: |
-| <span class="seat-pill">Seat 01</span> | `student01@mdm.idv.tw` | **陳志豪** · <span class="dept-tag sales">業務部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #01 |
-| <span class="seat-pill">Seat 02</span> | `student02@mdm.idv.tw` | **林美玲** · <span class="dept-tag mkt">行銷部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #02 |
-| <span class="seat-pill">Seat 03</span> | `student03@mdm.idv.tw` | **張家榮** · <span class="dept-tag dev">研發部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #03 |
-| <span class="seat-pill">Seat 04</span> | `student04@mdm.idv.tw` | **王雅婷** · <span class="dept-tag hr">人資部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #04 |
-| <span class="seat-pill">Seat 05</span> | `student05@mdm.idv.tw` | **李冠宇** · <span class="dept-tag sales">業務部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #05 |
-| <span class="seat-pill">Seat 06</span> | `student06@mdm.idv.tw` | **吳佩璇** · <span class="dept-tag mkt">行銷部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #06 |
-| <span class="seat-pill">Seat 07</span> | `student07@mdm.idv.tw` | **許晉瑋** · <span class="dept-tag dev">研發部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #07 |
-| <span class="seat-pill">Seat 08</span> | `student08@mdm.idv.tw` | **黃詩涵** · <span class="dept-tag fin">財務部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #08 |
-| <span class="seat-pill">Seat 09</span> | `student09@mdm.idv.tw` | **楊承翰** · <span class="dept-tag ops">營運部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #09 |
-| <span class="seat-pill">Seat 10</span> | `student10@mdm.idv.tw` | **劉怡君** · <span class="dept-tag it">資訊部</span> | `Apple@2026Lab` | 商務部門-Mac | 實體 Mac #10 |
+| <span class="seat-pill">Seat 01</span> | `student01@mdm.idv.tw` | **陳志豪** · <span class="dept-tag sales">業務部</span> | `Apple@2026Lab` | 01的商務部門-Mac | 實體 Mac #01 |
+| <span class="seat-pill">Seat 02</span> | `student02@mdm.idv.tw` | **林美玲** · <span class="dept-tag mkt">行銷部</span> | `Apple@2026Lab` | 02的商務部門-Mac | 實體 Mac #02 |
+| <span class="seat-pill">Seat 03</span> | `student03@mdm.idv.tw` | **張家榮** · <span class="dept-tag dev">研發部</span> | `Apple@2026Lab` | 03的商務部門-Mac | 實體 Mac #03 |
+| <span class="seat-pill">Seat 04</span> | `student04@mdm.idv.tw` | **王雅婷** · <span class="dept-tag hr">人資部</span> | `Apple@2026Lab` | 04的商務部門-Mac | 實體 Mac #04 |
+| <span class="seat-pill">Seat 05</span> | `student05@mdm.idv.tw` | **李冠宇** · <span class="dept-tag sales">業務部</span> | `Apple@2026Lab` | 05的商務部門-Mac | 實體 Mac #05 |
+| <span class="seat-pill">Seat 06</span> | `student06@mdm.idv.tw` | **吳佩璇** · <span class="dept-tag mkt">行銷部</span> | `Apple@2026Lab` | 06的商務部門-Mac | 實體 Mac #06 |
+| <span class="seat-pill">Seat 07</span> | `student07@mdm.idv.tw` | **許晉瑋** · <span class="dept-tag dev">研發部</span> | `Apple@2026Lab` | 07的商務部門-Mac | 實體 Mac #07 |
+| <span class="seat-pill">Seat 08</span> | `student08@mdm.idv.tw` | **黃詩涵** · <span class="dept-tag fin">財務部</span> | `Apple@2026Lab` | 08的商務部門-Mac | 實體 Mac #08 |
+| <span class="seat-pill">Seat 09</span> | `student09@mdm.idv.tw` | **楊承翰** · <span class="dept-tag ops">營運部</span> | `Apple@2026Lab` | 09的商務部門-Mac | 實體 Mac #09 |
+| <span class="seat-pill">Seat 10</span> | `student10@mdm.idv.tw` | **劉怡君** · <span class="dept-tag it">資訊部</span> | `Apple@2026Lab` | 10的商務部門-Mac | 實體 Mac #10 |
 
 ::: info 💡【全場權威名冊】
 本大表為本次實體工作坊之全場權威分配表。後續所有實作任務（Lab 2 自動註冊、Lab 3 安全性藍圖、Lab 4 App 部署與 Lab 5 自訂套件）均直接沿用你在上方分配的專屬座號！

@@ -98,7 +98,7 @@
 
 ### 步驟 2：將套件加入「藍圖」進行派送
 1. 導覽至左側選單「裝置」>「內置管理」> 點選 **「藍圖」**。
-2. 點選在 Lab 2 建立的 **「商務部門-Mac」** 藍圖。
+2. 點選在 Lab 2 建立的 **「XX的商務部門-Mac」** 藍圖（例如 `01的商務部門-Mac`）。
 3. 切換至 **「App」** 標籤頁，點選右側紅框的 **「編輯」** 按鈕，彈出「編輯 App」視窗：
    <div class="step-image-container">
      <img src="/images/lab5_step2_blueprint_app_edit.png" alt="編輯 App 彈出視窗並勾選 Box-01 套件" class="step-image" />
