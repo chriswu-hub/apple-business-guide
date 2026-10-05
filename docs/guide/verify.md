@@ -2,7 +2,10 @@
 
 恭喜你完成了 Apple Business、自動裝置註冊 (ADE) 與 MDM 安全管理的完整學習！
 
-本頁面整合了 **「受管 Safari 書籤自動認證」** 機制。當你的 Mac 成功接收由 Apple 商務藍圖派送的自訂描述檔（Web Clip）後，只需從 Safari 點擊該書籤，即可自動解鎖專屬數位結訓證書！
+本單元設計了 **「Mac 受管書籤 ➜ 手機掃描領取數位證書」** 的雙螢幕跨裝置通關驗證機制：
+1. **Mac 端驗證**：在受管 Mac 上打開 Safari，點擊 Apple 商務藍圖派送的 **「Apple Business 實務指南」** 書籤。
+2. **生成專屬 QR Code**：Mac 螢幕即時確認 MDM 原則生效，並動態產生該座號專屬的結訓通關 QR Code。
+3. **手機端領證**：拿出手機能相機掃描 Mac 螢幕上的 QR Code，立即於手機解鎖個人專屬結訓數位證書！
 
 ---
 
@@ -22,9 +25,9 @@ const students = [
   { seat: '10', name: '劉怡君', dept: '資訊部', email: 'student10@mdm.idv.tw', device: '實體 Mac #10' },
 ]
 
-const isVerified = ref(false)
+// 頁面模式：'waiting' (未驗證) | 'mac_qrcode' (Mac端顯示QR碼) | 'mobile_cert' (手機端領取證書)
+const viewMode = ref('waiting')
 const selectedSeat = ref('01')
-const verifySource = ref('')
 const verifyTime = ref('')
 
 const currentStudent = computed(() => {
@@ -33,6 +36,17 @@ const currentStudent = computed(() => {
 
 const verifyCode = computed(() => {
   return `ABM-2026-SEAT${selectedSeat.value}-PASS`
+})
+
+// 手機掃描 QR Code 後要前往的網址
+const mobileClaimUrl = computed(() => {
+  return `https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?claim=true&seat=${selectedSeat.value}`
+})
+
+// 動態 QR Code API
+const qrCodeImageUrl = computed(() => {
+  const target = encodeURIComponent(mobileClaimUrl.value)
+  return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=${target}`
 })
 
 onMounted(() => {
@@ -46,6 +60,7 @@ onMounted(() => {
     const params = new URLSearchParams(window.location.search)
     const source = params.get('source')
     const seat = params.get('seat')
+    const claim = params.get('claim')
     const verified = params.get('verified')
 
     if (seat) {
@@ -55,18 +70,29 @@ onMounted(() => {
       }
     }
 
-    // 方案 1: 偵測到來自受管書籤（source 為 mdm / profile / webclip 或 verified=true）
-    if (source === 'mdm' || source === 'profile' || source === 'webclip' || verified === 'true') {
-      isVerified.value = true
-      verifySource.value = 'Apple 商務藍圖 (APNs WebClip Profile)'
+    // 情況 A：手機掃描 QR Code 進來 (claim=true 或 verified=true) ➜ 直接呈現數位證書！
+    if (claim === 'true' || verified === 'true') {
+      viewMode.value = 'mobile_cert'
+    }
+    // 情況 B：Mac 從 Safari 受管書籤點擊進來 (source=mdm 或 profile 或 webclip) ➜ 呈現 QR Code 讓手機掃描！
+    else if (source === 'mdm' || source === 'profile' || source === 'webclip') {
+      viewMode.value = 'mac_qrcode'
+    }
+    // 情況 C：一般開啟
+    else {
+      viewMode.value = 'waiting'
     }
   }
 })
 
-function manualVerify(seat) {
+function switchToMacQrcode(seat) {
   selectedSeat.value = seat
-  isVerified.value = true
-  verifySource.value = '講師快速認證 (Manual Overwrite)'
+  viewMode.value = 'mac_qrcode'
+}
+
+function switchToMobileCert(seat) {
+  selectedSeat.value = seat
+  viewMode.value = 'mobile_cert'
 }
 
 function printCertificate() {
@@ -76,53 +102,95 @@ function printCertificate() {
 }
 </script>
 
-<!-- 狀態 1：尚未透過受管書籤連線 -->
-<div v-if="!isVerified" class="verify-waiting-card">
+<!-- ================= 模式 1：尚未驗證（等待受管設備點擊） ================= -->
+<div v-if="viewMode === 'waiting'" class="verify-waiting-card">
   <div class="status-icon-bubble waiting">
     🔒
   </div>
-  <div class="waiting-title">等待 Apple 商務受管設備點擊通關</div>
+  <div class="waiting-title">請於受管 Mac 點擊 Safari 書籤</div>
   <p class="waiting-desc">
-    系統尚未偵測到來自 Apple 商務藍圖派送的專屬書籤憑證。<br>
-    請在已完成藍圖配置的測試 Mac 上，打開 <strong>Safari</strong> 並點選派送的 <strong>「Apple Business 實務指南」</strong> 書籤進站！
+    系統尚未偵測到來自受管 Mac 的憑證連線。<br>
+    請在完成藍圖派送的測試 Mac 上，打開 <strong>Safari</strong> 並點選 <strong>「Apple Business 實務指南」</strong> 書籤以產出專屬結訓 QR Code！
   </p>
 
-  <div class="steps-guide">
-    <div class="guide-item">
-      <span class="step-num">1</span>
-      <div>確認藍圖中已加入<strong>自訂設定 (.mobileconfig)</strong></div>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-title">Mac 點擊書籤</div>
+      <div class="flow-detail">驗證 MDM 通道並於 Mac 螢幕產出動態 QR Code</div>
     </div>
-    <div class="guide-item">
-      <span class="step-num">2</span>
-      <div>於測試 Mac 打開 Safari 書籤列點擊連結</div>
+    <div class="flow-arrow">➔</div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-title">手機相機掃描</div>
+      <div class="flow-detail">拿學員手機掃描 Mac 上的專屬 QR Code</div>
     </div>
-    <div class="guide-item">
-      <span class="step-num">3</span>
-      <div>自動識別座號並解鎖個人化結訓證書</div>
+    <div class="flow-arrow">➔</div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-title">領取數位證書</div>
+      <div class="flow-detail">證書即時載入手機，可直接截圖或存檔</div>
     </div>
   </div>
 
   <div class="demo-bar">
-    <span class="demo-label">現場講師 Demo 或備用通關：</span>
-    <select v-model="selectedSeat" class="seat-select" @change="manualVerify(selectedSeat)">
+    <span class="demo-label">現場講師 Demo 快捷切換：</span>
+    <select v-model="selectedSeat" class="seat-select">
       <option v-for="s in students" :key="s.seat" :value="s.seat">
         Seat {{ s.seat }} - {{ s.name }} ({{ s.dept }})
       </option>
     </select>
-    <button class="action-btn-manual" @click="manualVerify(selectedSeat)">手動通關解鎖</button>
+    <button class="action-btn-manual secondary" @click="switchToMacQrcode(selectedSeat)">模擬 Mac 顯示 QR Code</button>
+    <button class="action-btn-manual" @click="switchToMobileCert(selectedSeat)">模擬手機解鎖證書</button>
   </div>
 </div>
 
-<!-- 狀態 2：方案 1 + 方案 2 雙重通過（噴出專屬證書） -->
-<div v-else class="certificate-wrapper">
-  <!-- 成功通關提示 Banner -->
+<!-- ================= 模式 2：Mac 端驗證通過 ➜ 顯示專屬 QR Code ================= -->
+<div v-else-if="viewMode === 'mac_qrcode'" class="mac-qrcode-card">
+  <div class="success-pill">
+    <span class="dot"></span>
+    ✓ Mac 裝置驗證成功！MDM 通道暢通
+  </div>
+
+  <h2 class="qrcode-section-title">請拿手機掃描下方 QR Code 領取結訓證書</h2>
+  <p class="qrcode-section-desc">
+    已確認本機為 <strong>Seat {{ currentStudent.seat }}（{{ currentStudent.name }} · {{ currentStudent.dept }}）</strong> 所屬之受管 Mac。<br>
+    請打開手機「相機」App 對準螢幕上的 QR Code 進行掃描：
+  </p>
+
+  <div class="qrcode-container">
+    <div class="qrcode-box">
+      <img :src="qrCodeImageUrl" alt="結訓驗證專屬 QR Code" class="qrcode-img" />
+      <div class="qrcode-badge">Seat {{ currentStudent.seat }} 專屬憑證</div>
+    </div>
+  </div>
+
+  <div class="qrcode-link-tip">
+    手機掃描目標：<br>
+    <code>{{ mobileClaimUrl }}</code>
+  </div>
+
+  <div class="switch-seat-bar">
+    <span>切換座號預覽：</span>
+    <select v-model="selectedSeat" class="seat-select">
+      <option v-for="s in students" :key="s.seat" :value="s.seat">
+        Seat {{ s.seat }} - {{ s.name }} ({{ s.dept }})
+      </option>
+    </select>
+    <button class="action-btn-manual" style="margin-left: 8px;" @click="switchToMobileCert(selectedSeat)">直接在本機查看證書 ➜</button>
+  </div>
+</div>
+
+<!-- ================= 模式 3：手機端掃描通過 ➜ 呈現結訓證書 ================= -->
+<div v-else-if="viewMode === 'mobile_cert'" class="certificate-wrapper">
+  <!-- 通關提示 Banner -->
   <div class="success-banner">
     <div class="success-title">
       <span class="check-badge">✓</span>
-      MDM 受管裝置通關成功！
+      恭喜！結訓數位證書已解鎖
     </div>
     <div class="success-meta">
-      驗證通道：{{ verifySource }} ｜ 檢核座號：Seat {{ currentStudent.seat }} ｜ 設備：{{ currentStudent.device }}
+      驗證來源：QR Code 掃描通關 ｜ 座號：Seat {{ currentStudent.seat }} ｜ 學員：{{ currentStudent.name }}
     </div>
   </div>
 
@@ -176,7 +244,7 @@ function printCertificate() {
             <div class="footer-label">認證單位</div>
             <div class="footer-val">Apple at Work Training Team</div>
             <div class="footer-label" style="margin-top: 8px;">驗證通道</div>
-            <div class="footer-val">APNs Managed WebClip</div>
+            <div class="footer-val">QR Code Verified</div>
           </div>
         </div>
       </div>
@@ -186,34 +254,36 @@ function printCertificate() {
   <!-- 操作按鈕列 -->
   <div class="cert-actions">
     <button class="cert-btn primary" @click="printCertificate">
-      🖨️ 列印 / 另存為 PDF 證書
+      📸 截圖保存 / 另存為 PDF 證書
     </button>
     <div class="cert-switch">
-      <span>切換座號檢視：</span>
+      <span>切換座號：</span>
       <select v-model="selectedSeat" class="seat-select-inline">
         <option v-for="s in students" :key="s.seat" :value="s.seat">
           Seat {{ s.seat }} - {{ s.name }}
         </option>
       </select>
+      <button class="back-to-qr-btn" @click="viewMode = 'mac_qrcode'">回 QR Code</button>
     </div>
   </div>
 </div>
 
 ---
 
-## 🛠️ 如何配置專屬通關書籤？
+## 🛠️ Mac 端 Safari 書籤 URL 配置說明
 
-若要讓每位學員從 Mac Safari 點擊書籤時自動帶入自己的座號，只需在準備 `.mobileconfig` 時，將 URL 指向以下格式：
+在派送給各座號測試 Mac 的自訂描述檔（Web Clip）中，請將網址設定為帶有 `source=mdm&seat=XX` 的專屬通關網址：
 
 ```
-https://chriswu-hub.github.io/apple-business-guide/guide/verify?source=mdm&seat=XX
+https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?source=mdm&seat=XX
 ```
 
 > **例如 Seat 01**：  
-> `https://chriswu-hub.github.io/apple-business-guide/guide/verify?source=mdm&seat=01`  
-> 只要在 Safari 點開此連結，系統就會立即認證通過，並在結訓證書上自動印上 **陳志豪（Seat 01 · 業務部）**！
+> `https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?source=mdm&seat=01`  
+> 當學員在測試 Mac 點擊該書籤時，螢幕就會直接進入 **「Mac 裝置驗證成功」** 並展示 **Seat 01 專屬的結訓 QR Code**！
 
 <style>
+/* 等待狀態卡片 */
 .verify-waiting-card {
   border: 2px dashed var(--vp-c-divider);
   border-radius: 16px;
@@ -248,73 +318,143 @@ https://chriswu-hub.github.io/apple-business-guide/guide/verify?source=mdm&seat=
   margin: 0 auto 1.5rem;
   line-height: 1.6;
 }
-.steps-guide {
+.flow-steps {
   display: flex;
-  gap: 1rem;
-  max-width: 650px;
-  margin: 0 auto 2rem;
-  text-align: left;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  max-width: 720px;
+  margin: 1.5rem auto 2rem;
 }
 @media (max-width: 640px) {
-  .steps-guide {
+  .flow-steps {
     flex-direction: column;
   }
+  .flow-arrow {
+    transform: rotate(90deg);
+  }
 }
-.guide-item {
+.flow-step {
   flex: 1;
   background: var(--vp-c-bg);
-  padding: 1rem;
+  padding: 1.2rem 1rem;
   border-radius: 12px;
   border: 1px solid var(--vp-c-divider);
-  font-size: 0.88rem;
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
+  text-align: center;
 }
-.step-num {
+.flow-num {
   width: 28px;
   height: 28px;
   border-radius: 50%;
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
   font-weight: 700;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  margin-bottom: 0.5rem;
 }
-.demo-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--vp-c-divider);
+.flow-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.25rem;
 }
-.demo-label {
-  font-size: 0.9rem;
+.flow-detail {
+  font-size: 0.8rem;
   color: var(--vp-c-text-2);
+  line-height: 1.4;
 }
-.seat-select {
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
+.flow-arrow {
+  color: var(--vp-c-brand-1);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* Mac 端 QR Code 卡片 */
+.mac-qrcode-card {
   border: 1px solid var(--vp-c-divider);
-  background: var(--vp-c-bg);
+  border-radius: 20px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--vp-c-bg-soft);
+  margin: 2rem 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+.success-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 1.2rem;
+}
+.success-pill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 8px #16a34a;
+}
+.qrcode-section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
   color: var(--vp-c-text-1);
 }
-.action-btn-manual {
-  padding: 0.4rem 1rem;
-  border-radius: 8px;
-  background: var(--vp-c-brand-1);
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
+.qrcode-section-desc {
+  color: var(--vp-c-text-2);
+  max-width: 580px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
 }
-.action-btn-manual:hover {
-  opacity: 0.9;
+.qrcode-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+.qrcode-box {
+  background: #ffffff;
+  padding: 1.2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  display: inline-block;
+}
+.qrcode-img {
+  width: 220px;
+  height: 220px;
+  display: block;
+}
+.qrcode-badge {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  background: #f1f5f9;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+}
+.qrcode-link-tip {
+  font-size: 0.82rem;
+  color: var(--vp-c-text-2);
+  margin-top: 1rem;
+}
+.qrcode-link-tip code {
+  font-size: 0.8rem;
+  color: var(--vp-c-brand-1);
+}
+.switch-seat-bar {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vp-c-divider);
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
 }
 
 /* 證書卡片 */
@@ -484,6 +624,17 @@ https://chriswu-hub.github.io/apple-business-guide/guide/verify?source=mdm&seat=
   padding-top: 1.5rem;
   text-align: left;
 }
+@media (max-width: 600px) {
+  .cert-footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  .cert-footer-col.text-right {
+    text-align: center;
+  }
+}
 .dark .cert-footer {
   border-color: #334155;
 }
@@ -552,6 +703,9 @@ https://chriswu-hub.github.io/apple-business-guide/guide/verify?source=mdm&seat=
 .cert-switch {
   font-size: 0.9rem;
   color: var(--vp-c-text-2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 .seat-select-inline {
   padding: 0.3rem 0.6rem;
@@ -560,9 +714,53 @@ https://chriswu-hub.github.io/apple-business-guide/guide/verify?source=mdm&seat=
   background: var(--vp-c-bg);
   color: var(--vp-c-text-1);
 }
+.back-to-qr-btn {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--vp-c-text-1);
+}
+
+.demo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vp-c-divider);
+}
+.demo-label {
+  font-size: 0.88rem;
+  color: var(--vp-c-text-2);
+}
+.seat-select {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+}
+.action-btn-manual {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  background: var(--vp-c-brand-1);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+.action-btn-manual.secondary {
+  background: var(--vp-c-bg);
+  color: var(--vp-c-brand-1);
+  border: 1px solid var(--vp-c-brand-1);
+}
 
 @media print {
-  .verify-waiting-card, .cert-actions, .success-banner, nav, header, aside, .VPNav, .VPSidebar, .VPDocFooter {
+  .verify-waiting-card, .mac-qrcode-card, .cert-actions, .success-banner, nav, header, aside, .VPNav, .VPSidebar, .VPDocFooter {
     display: none !important;
   }
   .certificate-card {
