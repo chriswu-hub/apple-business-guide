@@ -17,6 +17,7 @@ const students = [
 const viewMode = ref('waiting')
 const selectedSeat = ref('01')
 const verifyTime = ref('')
+const showDemoBar = ref(false)
 
 const currentStudent = computed(() => {
   return students.find(s => s.seat === selectedSeat.value) || students[0]
@@ -54,6 +55,11 @@ onMounted(() => {
       if (students.some(s => s.seat === padSeat)) {
         selectedSeat.value = padSeat
       }
+    }
+
+    // 只有帶有 demo=true 的特權參數，才會開啟講師快捷切換工具列
+    if (params.get('demo') === 'true' || params.get('admin') === 'true') {
+      showDemoBar.value = true
     }
 
     if (claim === 'true' || verified === 'true') {
@@ -116,7 +122,7 @@ function printCertificate() {
         </div>
       </div>
 
-      <div class="demo-bar">
+      <div v-if="showDemoBar" class="demo-bar">
         <span class="demo-label">現場講師 Demo 快捷切換：</span>
         <select v-model="selectedSeat" class="seat-select">
           <option v-for="s in students" :key="s.seat" :value="s.seat">
@@ -164,7 +170,7 @@ function printCertificate() {
         <code>{{ mobileClaimUrl }}</code>
       </div>
 
-      <div class="switch-seat-bar">
+      <div v-if="showDemoBar" class="switch-seat-bar">
         <span>切換座號預覽：</span>
         <select v-model="selectedSeat" class="seat-select">
           <option v-for="s in students" :key="s.seat" :value="s.seat">
@@ -247,7 +253,7 @@ function printCertificate() {
         <button class="cert-btn primary" @click="printCertificate">
           📸 截圖保存 / 另存為 PDF 證書
         </button>
-        <div class="cert-switch">
+        <div v-if="showDemoBar" class="cert-switch">
           <span>切換座號：</span>
           <select v-model="selectedSeat" class="seat-select-inline">
             <option v-for="s in students" :key="s.seat" :value="s.seat">
