@@ -164,8 +164,8 @@ function printCertificate() {
       <!-- 官方 Apple 原生 QR Code（高容錯率、支援任意相機、帶座號自訂色彩） -->
       <div class="qrcode-render-wrapper">
         <img
-          :src="qrCodeImageUrl"
-          :key="qrCodeImageUrl"
+          :src="`https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&ecc=H&data=${encodeURIComponent('https://chriswu-hub.github.io/apple-business-guide/guide/verify.html?claim=true&seat=' + currentStudent.seat)}`"
+          :key="currentStudent.seat"
           alt="結訓驗證專屬 QR Code"
           class="qrcode-img"
           loading="eager"
