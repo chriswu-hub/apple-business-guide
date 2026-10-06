@@ -64,16 +64,6 @@
 1. 在 Mac 上開啟「Finder」>「應用程式」，點擊啟動 **Microsoft Outlook**。
 2. 確認能正常開啟歡迎畫面。
 
----
-
-## 🏆 結訓成果自動檢核
-
-完成後，請前往我們的結訓檢核專區：
-
-👉 [前往「實作檢核與結訓認證」頁面](/guide/verify)
-
-使用手機相機掃描 Mac 螢幕上已安裝完成的 **`Microsoft Outlook`** 視窗、圖示或終端機查詢結果，系統確認通過後將立即頒發專屬數位結訓證書！
-
 <style>
 .step-image-container {
   margin: 1.5rem 0;

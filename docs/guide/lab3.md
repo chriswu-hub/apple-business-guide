@@ -110,16 +110,6 @@
    - 防火牆：成功轉變為綠色 **✓「開啟」**！
    - 藍圖狀態：顯示為 **「最新 (Up to date)」**！
 
----
-
-## 🏆 結訓成果自動檢核
-
-完成 Lab 3 後，請前往我們的結訓檢核專區：
-
-👉 [前往「實作檢核與結訓認證」頁面](/guide/verify)
-
-使用手機相機掃描 Mac 鎖定畫面的 **` Apple at Work - studentXX`**、或終端機 `MDM enrollment: Yes (User Approved)`，系統確認通過後將即時頒發專屬數位結訓證書！
-
 <style>
 .step-image-container {
   margin: 1.5rem 0;

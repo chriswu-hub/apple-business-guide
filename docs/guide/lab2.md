@@ -157,16 +157,6 @@ MDM server: https://...
 在 Apple 商務原生架構下，**「開箱快速建立本機帳號 ➔ 進桌面後由 Platform SSO 接管」** 是業界公認最穩健、零等待超時風險的最佳部署模式！
 :::
 
----
-
-## 🏆 結訓成果自動檢核
-
-完成上述步驟後，請前往我們的檢核專區：
-
-👉 [前往「實作檢核與結訓認證」頁面](/guide/verify)
-
-使用手機相機掃描 Mac 終端機顯示的 **`Enrolled via DEP: Yes`** 或 `Supervised: Yes`，系統確認通過後將立即頒發專屬結訓認證證書！
-
 <style>
 .step-image-container {
   margin: 1.5rem 0;
