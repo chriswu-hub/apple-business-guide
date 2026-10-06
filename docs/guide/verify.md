@@ -29,7 +29,7 @@
 
 | 座號 | 學員姓名與部門 | 後台自訂設定名稱 | 目標藍圖 | 描述檔下載 (Box 雲端) |
 | :---: | :--- | :--- | :---: | :---: |
-| <span class="seat-pill">Seat 01</span> | **陳志豪** · 業務部 | `Seat01_結訓通關書籤` | `01的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/3t1hrx75heo6t083qj9jgg0swo0mdu3g) |
+| <span class="seat-pill">Seat 01</span> | **陳志豪** · 業務部 | `Seat01_結訓通關書籤` | `01的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/9a668aiaqfefpxszlsacbry2knxybe3d) |
 | <span class="seat-pill">Seat 02</span> | **林美玲** · 行銷部 | `Seat02_結訓通關書籤` | `02的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/0hli2lyux2xf5k93scpvq32lkrora6zy) |
 | <span class="seat-pill">Seat 03</span> | **張家榮** · 研發部 | `Seat03_結訓通關書籤` | `03的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/2imx3k277pthuvae4kg1j1xkcvpphwkt) |
 | <span class="seat-pill">Seat 04</span> | **王雅婷** · 人資部 | `Seat04_結訓通關書籤` | `04的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/sxn8yhf4oe3taerx4vg8a22zl8jf0k9q) |
@@ -38,7 +38,7 @@
 | <span class="seat-pill">Seat 07</span> | **許晉瑋** · 研發部 | `Seat07_結訓通關書籤` | `07的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/3iwyw14louekwlge5lnvzwpsn4mqm3jq) |
 | <span class="seat-pill">Seat 08</span> | **黃詩涵** · 財務部 | `Seat08_結訓通關書籤` | `08的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/6pzeyujbt09zgwz2ppwzyt5k12m5sw2d) |
 | <span class="seat-pill">Seat 09</span> | **楊承翰** · 營運部 | `Seat09_結訓通關書籤` | `09的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/tq209gltuy90nrocw51wmz4bqmkvwyyt) |
-| <span class="seat-pill">Seat 10</span> | **劉怡君** · 資訊部 | `Seat10_結訓通關書籤` | `10的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/9a668aiaqfefpxszlsacbry2knxybe3d) |
+| <span class="seat-pill">Seat 10</span> | **劉怡君** · 資訊部 | `Seat10_結訓通關書籤` | `10的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/3t1hrx75heo6t083qj9jgg0swo0mdu3g) |
 
 ---
 
