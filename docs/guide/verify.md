@@ -39,13 +39,3 @@
 | <span class="seat-pill">Seat 08</span> | **黃詩涵** · 財務部 | `Seat08_結訓通關書籤` | `08的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/6pzeyujbt09zgwz2ppwzyt5k12m5sw2d) |
 | <span class="seat-pill">Seat 09</span> | **楊承翰** · 營運部 | `Seat09_結訓通關書籤` | `09的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/tq209gltuy90nrocw51wmz4bqmkvwyyt) |
 | <span class="seat-pill">Seat 10</span> | **劉怡君** · 資訊部 | `Seat10_結訓通關書籤` | `10的商務部門-Mac` | [下載 .mobileconfig](https://apple.box.com/s/3t1hrx75heo6t083qj9jgg0swo0mdu3g) |
-
----
-
-## 🛠️ 講師端後台預先配置指南
-
-在實體課程開始前，講師只需依序在 Apple 商務後台完成 10 個自訂設定的建立：
-1. 進入 [business.apple.com](https://business.apple.com) > **「裝置」** > **「設定」** > 點選 **「自訂設定」** 的 **「+」**。
-2. **名稱** 輸入 `SeatXX_結訓通關書籤`（例如 `Seat01_結訓通關書籤`）。
-3. **上傳檔案** 選擇對應的 `Safari-Bookmarks-SeatXX.mobileconfig` 並點選儲存。
-4. 重複完成 10 個設定後，即可交由學員在結訓檢核時進行「自主尋找並分派至各自藍圖」的闖關挑戰！
