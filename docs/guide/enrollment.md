@@ -228,7 +228,7 @@
 
 ---
 
-## 5.5 Apple Configurator 新增裝置（Demo 實戰）
+## 5.5 Apple Configurator 新增裝置
 
 ### 💡 什麼時候需要 Apple Configurator？
 Apple Configurator 主要是為了解決企業在推動 Apple 商務之前，**歷史遺留的舊設備**或**零星特殊受贈資產**無法入庫的痛點。
