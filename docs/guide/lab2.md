@@ -35,27 +35,27 @@
 
 ---
 
-### 步驟 3：建立與指派「藍圖 (Blueprints)」
-1. 導覽至左側選單「裝置」>「內置管理」> 點選 **「藍圖」**，點選藍圖旁的 **「+」**（新增藍圖）：
+### 步驟 3：建立與指派「預設集 (Blueprints)」
+1. 導覽至頂部選單「裝置」> 左側側邊欄點選 **「預設集」**，點選預設集旁的 **「+」**（新增預設集）：
    <div class="step-image-container">
-     <img src="/images/blueprint_step1_plus.png" alt="點選藍圖旁的+新增藍圖" class="step-image" />
+     <img src="/images/blueprint_step1_plus_presets.png" alt="點選預設集旁的+新增預設集" class="step-image" />
    </div>
 
-2. 在建立藍圖選單中，選擇 **「用戶裝置藍圖」**（使用建議預設設定來管理用戶裝置），點選「繼續」：
+2. 在建立預設集選單中，選擇 **「用戶裝置藍圖」**（或「用戶裝置預設集」，使用建議預設設定來管理用戶裝置），點選「繼續」：
    <div class="step-image-container">
-     <img src="/images/blueprint_step2_select_type.png" alt="建立藍圖選擇用戶裝置藍圖" class="step-image" />
+     <img src="/images/blueprint_step2_select_type.png" alt="建立預設集選擇用戶裝置藍圖" class="step-image" />
    </div>
 
-3. 將藍圖名稱命名為 **`XX的商務部門-Mac`**（例如 Seat 01 請輸入 **`01的商務部門-Mac`**，確保多人實作時藍圖不衝突）：
+3. 將名稱命名為 **`XX的商務部門-Mac`**（例如 Seat 01 請輸入 **`01的商務部門-Mac`**，確保多人實作時不衝突）：
    <div class="step-image-container">
-     <img src="/images/blueprint_step3_config.png" alt="藍圖命名商務部門-Mac與設定" class="step-image" />
+     <img src="/images/blueprint_step3_config.png" alt="預設集命名商務部門-Mac與設定" class="step-image" />
    </div>
 
-4. **設定藍圖組態與用戶**：
-   - 設定 **用户裝置藍圖 Wi-Fi**、**密碼規則 - 強制執行** 與 **軟件更新 - 自動**。
+4. **設定預設集組態與用戶**：
+   - 設定 **Wi-Fi**、**密碼規則 - 強制執行** 與 **軟件更新 - 自動**。
    - **App**：稍後設定即可。
    - **用戶**：點選「+ 加入用戶」，加入自己的帳號（例如：你的學員帳號 `studentXX@mdm.idv.tw`）。
-   - 完成後點選右下角 **「建立藍圖」**。
+   - 完成後點選右下角 **「建立預設集」**（或「建立藍圖」）。
 
 ---
 
