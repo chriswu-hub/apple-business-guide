@@ -24,18 +24,18 @@
   </div>
 </div>
 
-| 座號 | 學員帳號 (UPN) | 模擬職位與部門 | 初始密碼 | 目標藍圖 | 實體設備 |
-| :---: | :--- | :--- | :---: | :---: | :---: |
-| <span class="seat-pill">Seat 01</span> | `student01@mdm.idv.tw` | **陳志豪** · <span class="dept-tag sales">業務部</span> | `Apple@2026Lab` | 01的商務部門-Mac | 實體 Mac #01 |
-| <span class="seat-pill">Seat 02</span> | `student02@mdm.idv.tw` | **林美玲** · <span class="dept-tag mkt">行銷部</span> | `Apple@2026Lab` | 02的商務部門-Mac | 實體 Mac #02 |
-| <span class="seat-pill">Seat 03</span> | `student03@mdm.idv.tw` | **張家榮** · <span class="dept-tag dev">研發部</span> | `Apple@2026Lab` | 03的商務部門-Mac | 實體 Mac #03 |
-| <span class="seat-pill">Seat 04</span> | `student04@mdm.idv.tw` | **王雅婷** · <span class="dept-tag hr">人資部</span> | `Apple@2026Lab` | 04的商務部門-Mac | 實體 Mac #04 |
-| <span class="seat-pill">Seat 05</span> | `student05@mdm.idv.tw` | **李冠宇** · <span class="dept-tag sales">業務部</span> | `Apple@2026Lab` | 05的商務部門-Mac | 實體 Mac #05 |
-| <span class="seat-pill">Seat 06</span> | `student06@mdm.idv.tw` | **吳佩璇** · <span class="dept-tag mkt">行銷部</span> | `Apple@2026Lab` | 06的商務部門-Mac | 實體 Mac #06 |
-| <span class="seat-pill">Seat 07</span> | `student07@mdm.idv.tw` | **許晉瑋** · <span class="dept-tag dev">研發部</span> | `Apple@2026Lab` | 07的商務部門-Mac | 實體 Mac #07 |
-| <span class="seat-pill">Seat 08</span> | `student08@mdm.idv.tw` | **黃詩涵** · <span class="dept-tag fin">財務部</span> | `Apple@2026Lab` | 08的商務部門-Mac | 實體 Mac #08 |
-| <span class="seat-pill">Seat 09</span> | `student09@mdm.idv.tw` | **楊承翰** · <span class="dept-tag ops">營運部</span> | `Apple@2026Lab` | 09的商務部門-Mac | 實體 Mac #09 |
-| <span class="seat-pill">Seat 10</span> | `student10@mdm.idv.tw` | **劉怡君** · <span class="dept-tag it">資訊部</span> | `Apple@2026Lab` | 10的商務部門-Mac | 實體 Mac #10 |
+| 座號 | 學員帳號 (UPN) | 模擬職位與部門 | 初始臨時密碼 | 首次登入正式密碼 | 目標藍圖 | 實體設備 |
+| :---: | :--- | :--- | :---: | :---: | :---: | :---: |
+| <span class="seat-pill">Seat 01</span> | `student01@mdm.idv.tw` | **陳志豪** · <span class="dept-tag sales">業務部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 01的商務部門-Mac | 實體 Mac #01 |
+| <span class="seat-pill">Seat 02</span> | `student02@mdm.idv.tw` | **林美玲** · <span class="dept-tag mkt">行銷部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 02的商務部門-Mac | 實體 Mac #02 |
+| <span class="seat-pill">Seat 03</span> | `student03@mdm.idv.tw` | **張家榮** · <span class="dept-tag dev">研發部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 03的商務部門-Mac | 實體 Mac #03 |
+| <span class="seat-pill">Seat 04</span> | `student04@mdm.idv.tw` | **王雅婷** · <span class="dept-tag hr">人資部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 04的商務部門-Mac | 實體 Mac #04 |
+| <span class="seat-pill">Seat 05</span> | `student05@mdm.idv.tw` | **李冠宇** · <span class="dept-tag sales">業務部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 05的商務部門-Mac | 實體 Mac #05 |
+| <span class="seat-pill">Seat 06</span> | `student06@mdm.idv.tw` | **吳佩璇** · <span class="dept-tag mkt">行銷部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 06的商務部門-Mac | 實體 Mac #06 |
+| <span class="seat-pill">Seat 07</span> | `student07@mdm.idv.tw` | **許晉瑋** · <span class="dept-tag dev">研發部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 07的商務部門-Mac | 實體 Mac #07 |
+| <span class="seat-pill">Seat 08</span> | `student08@mdm.idv.tw` | **黃詩涵** · <span class="dept-tag fin">財務部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 08的商務部門-Mac | 實體 Mac #08 |
+| <span class="seat-pill">Seat 09</span> | `student09@mdm.idv.tw` | **楊承翰** · <span class="dept-tag ops">營運部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 09的商務部門-Mac | 實體 Mac #09 |
+| <span class="seat-pill">Seat 10</span> | `student10@mdm.idv.tw` | **劉怡君** · <span class="dept-tag it">資訊部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 10的商務部門-Mac | 實體 Mac #10 |
 
 ::: info 💡【全場權威名冊】
 本大表為本次實體工作坊之全場權威分配表。後續所有實作任務（Lab 2 自動註冊、Lab 3 安全性藍圖、Lab 4 App 部署與 Lab 5 自訂套件）均直接沿用你在上方分配的專屬座號！
@@ -53,7 +53,7 @@
    - **使用者主體名稱 (UPN)**：輸入你的座號名稱（例如 `student00` 或 `student01`），網域下拉選單選擇 `@mdm.idv.tw`
    - **電子郵件暱稱**：勾選「衍生自使用者主體名稱」
    - **顯示名稱**：`Student xx - Apple at Work (輸入你的座號名稱)`
-   - **密碼**：取消勾選「自動產生密碼」，設定自訂密碼（建議直接使用前置表格中的 `Apple@2026Lab`）。
+   - **密碼**：取消勾選「自動產生密碼」，設定初始臨時密碼：**`Temp@2026Lab`**。
 
 <div class="step-image-container">
   <img src="/images/lab1_step1_create_user_basic.png" alt="建立新的使用者基本資料填寫" class="step-image" />
@@ -93,7 +93,12 @@
 3. 輸入你的學員帳號：`studentXX@mdm.idv.tw` 並點選繼續。
 4. **觀察轉址行為**：
    - 系統會辨識該網域已啟用聯合驗證，並**自動跳轉至 Microsoft 組織登入畫面**。
-5. 輸入你在步驟 1 設定的密碼後自行建立密碼和完成綁定驗證應用程式，確認能順利通過驗證並登入！
+5. **首次登入變更密碼為正式密碼**：
+   - 首次登入時輸入初始臨時密碼：`Temp@2026Lab`。
+   - 依 Entra ID 安全原則要求，在更新密碼畫面中：
+     - **目前密碼**：`Temp@2026Lab`
+     - **新密碼 / 確認新密碼**：統一輸入全場正式密碼 **`Apple@2026Lab`**！
+   - 依畫面提示完成安全綁定（或略過），確認能順利通過驗證並登入！
 
 <style>
 .env-info-grid {
