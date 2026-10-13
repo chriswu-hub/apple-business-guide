@@ -1,7 +1,7 @@
 # Lab 4: App 大量部署實作
 
 **預估時間：** 10 分鐘  
-**實作目標：** 接續 Lab 3，在 Apple 商務中透過大量採購取得「Microsoft Outlook」的免費企業許可，將其加入「XX的商務部門-Mac」藍圖中，體驗 Mac 本機免 Apple 帳號背景靜默安裝與開啟驗證。
+**實作目標：** 接續 Lab 3，在 Apple 商務中透過大量採購取得「Microsoft Outlook」的免費企業許可，將其加入「XX的商務部門-Mac」預設集中，體驗 Mac 本機免 Apple 帳號背景靜默安裝與開啟驗證。
 
 ---
 
@@ -9,7 +9,7 @@
 
 本實作延續前述 Lab 已納管的實體測試 Mac：
 
-| 實作項目 | 採購軟體 | 指派藍圖 | 預期成果 |
+| 實作項目 | 採購軟體 | 指派預設集 | 預期成果 |
 | :--- | :--- | :--- | :--- |
 | **Lab 4: App 部署** | Microsoft Outlook | XX的商務部門-Mac | Mac 自動安裝完成並可正常開啟 |
 
@@ -32,11 +32,11 @@
 
 ---
 
-### 步驟 2：將 App 加入「藍圖」並設定自動安裝
-1. 導覽至左側選單「裝置」>「內置管理」> 點選 **「藍圖」**。
-2. 點選先前建立的 **「XX的商務部門-Mac」** 藍圖（例如 `01的商務部門-Mac`），切換至 **「App」** 標籤頁，點選右側的 **「編輯」** 按鈕：
+### 步驟 2：將 App 加入「預設集」並設定自動安裝
+1. 導覽至頂部選單「裝置」> 左側側邊欄點選 **「預設集」**。
+2. 點選先前建立的 **「XX的商務部門-Mac」** 預設集（例如 `01的商務部門-Mac`），切換至 **「App」** 標籤頁，點選右側的 **「編輯」** 按鈕：
    <div class="step-image-container">
-     <img src="/images/lab4_step2_blueprint_app_tab.png" alt="商務部門-Mac 藍圖 > App 標籤頁 > 點選編輯" class="step-image" />
+     <img src="/images/lab4_step2_presets_app_tab.png" alt="商務用戶部門-Mac 預設集 > App 標籤頁 > 點選編輯" class="step-image" />
    </div>
 
 3. 在「編輯 App」彈出視窗中，勾選剛剛取得的 **「Microsoft Outlook」**，點選 **「儲存」**：
