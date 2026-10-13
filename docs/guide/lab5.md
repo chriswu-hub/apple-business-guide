@@ -1,7 +1,7 @@
 # Lab 5: macOS 套件建立與部署實作
 
 **預估時間：** 15 分鐘  
-**實作目標：** 接續 Lab 4，學習如何為非 Mac App Store 上架的軟體（以 Box 為例）提取套裝 ID 與 SHA-256 雜湊值，在 Apple 商務中建立自訂套件並加入「藍圖」，實現企業專屬軟體的自動化背景派送。
+**實作目標：** 接續 Lab 4，學習如何為非 Mac App Store 上架的軟體（以 Box 為例）提取套裝 ID 與 SHA-256 雜湊值，在 Apple 商務中建立自訂套件並加入「預設集」，實現企業專屬軟體的自動化背景派送。
 
 ---
 
@@ -96,18 +96,18 @@
 
 ---
 
-### 步驟 2：將套件加入「藍圖」進行派送
-1. 導覽至左側選單「裝置」>「內置管理」> 點選 **「藍圖」**。
-2. 點選在 Lab 2 建立的 **「XX的商務部門-Mac」** 藍圖（例如 `01的商務部門-Mac`）。
+### 步驟 2：將套件加入「預設集」進行派送
+1. 導覽至頂部選單「裝置」> 左側側邊欄點選 **「預設集」**。
+2. 點選在 Lab 2 建立的 **「XX的商務部門-Mac」** 預設集（例如 `01的商務部門-Mac`）。
 3. 切換至 **「App」** 標籤頁，點選右側紅框的 **「編輯」** 按鈕，彈出「編輯 App」視窗：
    <div class="step-image-container">
      <img src="/images/lab5_step2_blueprint_app_edit.png" alt="編輯 App 彈出視窗並勾選 Box-01 套件" class="step-image" />
    </div>
 
 4. 在彈出清單中，勾選剛剛建立的套件 **「Box-XX」**（例如 `Box-01`），點選 **「儲存」**。
-5. 確認藍圖 App 清單中已成功包含 Microsoft Outlook、OneDrive 以及 **Box-XX**，點選右下角 **「儲存」** 完成藍圖更新！
+5. 確認預設集 App 清單中已成功包含 Microsoft Outlook、OneDrive 以及 **Box-XX**，點選右下角 **「儲存」** 完成預設集更新！
    <div class="step-image-container">
-     <img src="/images/lab5_step2_package_added.png" alt="藍圖中已成功加入 Box-01 套件" class="step-image" />
+     <img src="/images/lab5_step2_package_added.png" alt="預設集中已成功加入 Box-01 套件" class="step-image" />
    </div>
 
 ---

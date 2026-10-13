@@ -38,7 +38,7 @@
   </div>
 </div>
 
-| 座號 | 學員帳號 (UPN) | 模擬職位與部門 | 初始臨時密碼 | 首次登入正式密碼 | 目標藍圖 | 實體設備 |
+| 座號 | 學員帳號 (UPN) | 模擬職位與部門 | 初始臨時密碼 | 首次登入正式密碼 | 目標預設集 | 實體設備 |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: |
 | <span class="seat-pill">Seat 01</span> | `student01@mdm.idv.tw` | **陳志豪** · <span class="dept-tag sales">業務部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 01的商務部門-Mac | 實體 Mac #01 |
 | <span class="seat-pill">Seat 02</span> | `student02@mdm.idv.tw` | **林美玲** · <span class="dept-tag mkt">行銷部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 02的商務部門-Mac | 實體 Mac #02 |
@@ -52,7 +52,7 @@
 | <span class="seat-pill">Seat 10</span> | `student10@mdm.idv.tw` | **劉怡君** · <span class="dept-tag it">資訊部</span> | `Temp@2026Lab` | `Apple@2026Lab` | 10的商務部門-Mac | 實體 Mac #10 |
 
 ::: info 💡【全場權威名冊】
-本大表為本次實體工作坊之全場權威分配表。後續所有實作任務（Lab 2 自動註冊、Lab 3 安全性藍圖、Lab 4 App 部署與 Lab 5 自訂套件）均直接沿用你在上方分配的專屬座號！
+本大表為本次實體工作坊之全場權威分配表。後續所有實作任務（Lab 2 自動註冊、Lab 3 安全性預設集、Lab 4 App 部署與 Lab 5 自訂套件）均直接沿用你在上方分配的專屬座號！
 :::
 
 ---

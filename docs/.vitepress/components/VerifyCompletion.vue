@@ -99,7 +99,7 @@ function printCertificate() {
       <div class="waiting-title">請於受管 Mac 點擊 Safari 書籤</div>
       <p class="waiting-desc">
         系統尚未偵測到來自受管 Mac 的憑證連線。<br />
-        請在完成藍圖派送的測試 Mac 上，打開 <strong>Safari</strong> 並點選 <strong>「Apple Business 實務指南」</strong> 書籤以產出專屬結訓 QR Code！
+        請在完成預設集派送的測試 Mac 上，打開 <strong>Safari</strong> 並點選 <strong>「Apple Business 實務指南」</strong> 書籤以產出專屬結訓 QR Code！
       </p>
 
       <div class="flow-steps">
@@ -217,14 +217,14 @@ function printCertificate() {
             <div class="skills-grid">
               <div class="skill-pill">✓ Entra ID 目錄同步 (SCIM)</div>
               <div class="skill-pill">✓ 零接觸自動註冊 (ADE)</div>
-              <div class="skill-pill">✓ 企業安全藍圖（防火牆/密碼原則）</div>
+              <div class="skill-pill">✓ 企業安全預設集（防火牆原則）</div>
               <div class="skill-pill">✓ 免 Apple 帳號 App 大量分派</div>
               <div class="skill-pill">✓ 自訂設定與 APNs 靜默派送</div>
             </div>
 
             <div class="cert-footer">
               <div class="cert-footer-col">
-                <div class="footer-label">指派藍圖</div>
+                <div class="footer-label">指派預設集</div>
                 <div class="footer-val">{{ currentStudent.seat }}的商務部門-Mac</div>
                 <div class="footer-label" style="margin-top: 8px;">頒發日期</div>
                 <div class="footer-val">{{ verifyTime }}</div>
