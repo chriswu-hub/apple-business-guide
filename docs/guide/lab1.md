@@ -7,9 +7,23 @@
 
 ## 🎯 前置準備與學員座號總表
 
+::: tip 📶【實體工作坊現場網路環境】
+開始實作前，請確認你的個人電腦與實體測試 Mac 皆已連線至現場專用 Wi-Fi：
+- **無線網路 (SSID)**：`Apple Training`
+- **連線密碼**：`apple0401`
+:::
+
 為避免多位學員在同一個租戶中發生帳號撞名衝突，整個實體工作坊（Lab 1 至 Lab 5）全面採用 **「學員專屬座號制 (Seat ID)」**。請根據現場講師分配的座號（`01` ~ `10`），核對你專屬的帳號與模擬職務：
 
 <div class="env-info-grid">
+  <div class="env-info-card">
+    <div class="env-info-label">現場 Wi-Fi (SSID)</div>
+    <div class="env-info-val">Apple Training</div>
+  </div>
+  <div class="env-info-card">
+    <div class="env-info-label">Wi-Fi 密碼</div>
+    <div class="env-info-val">apple0401</div>
+  </div>
   <div class="env-info-card">
     <div class="env-info-label">組織網域 (Domain)</div>
     <div class="env-info-val">mdm.idv.tw</div>
