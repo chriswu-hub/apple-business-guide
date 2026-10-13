@@ -56,7 +56,7 @@
    - **密碼**：取消勾選「自動產生密碼」，設定初始臨時密碼：**`Temp@2026Lab`**。
 
 <div class="step-image-container">
-  <img src="/images/lab1_step1_create_user_basic.png" alt="建立新的使用者基本資料填寫" class="step-image" />
+  <img src="/images/lab1_step1_create_user_basic_v2.png" alt="建立新的使用者基本資料填寫" class="step-image" />
 </div>
 
 5. 點選上方或下方 **「屬性 (Properties)」** 標籤頁：
