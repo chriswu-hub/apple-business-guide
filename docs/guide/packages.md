@@ -45,7 +45,7 @@
 如果你要更改以下任何選項，你需要更新現有套件或建立新套件。
 :::
 
-進入 Apple 商務點選 **「裝置」>「內置管理」>「macOS 套裝」**，即可檢視並管理所有已建立的 macOS 套件清單：
+進入 Apple 商務點選 **「裝置」>「內建管理」>「macOS 套裝」**，即可檢視並管理所有已建立的 macOS 套件清單：
 
 <div class="step-image-container">
   <img src="/images/macos_packages_overview.png" alt="Apple 商務裝置 > macOS 套裝管理介面" class="step-image" />
