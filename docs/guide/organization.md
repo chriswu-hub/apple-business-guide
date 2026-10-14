@@ -32,7 +32,7 @@ business.apple.com → 填寫資訊 → 驗證機構(兩種方式，最多5天) 
 瀏覽 [business.apple.com](https://business.apple.com)，在登入畫面下方點選 **「立即註冊」**：
 
 <div class="step-image-container">
-  <img src="/images/step1_landing.png" alt="Apple Business 登入與立即註冊" class="step-image" />
+  <img src="/images/step1_landing_v2.png" alt="Apple Business 登入與立即註冊" class="step-image" />
 </div>
 
 ---
@@ -41,7 +41,7 @@ business.apple.com → 填寫資訊 → 驗證機構(兩種方式，最多5天) 
 填寫組織的基本登記資訊（包含機構名稱、商戶電郵、網站、國家/地區及登記地址）：
 
 <div class="step-image-container">
-  <img src="/images/step2_organization.png" alt="加入機構詳細資料" class="step-image" />
+  <img src="/images/step2_organization_v2.png" alt="加入機構詳細資料" class="step-image" />
 </div>
 
 ---
