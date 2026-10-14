@@ -21,7 +21,7 @@ export default defineConfig({
         text: '裝置部署與管理',
         items: [
           { text: '註冊方式與部署', link: '/guide/enrollment' },
-          { text: '加入藍圖與配置設定', link: '/guide/presets' },
+          { text: '加入預設集與配置設定', link: '/guide/presets' },
           { text: 'App 部署與訂閱管理', link: '/guide/apps' },
           { text: '套件部署簡介', link: '/guide/packages' },
           { text: '監管模式與安全性政策深潛', link: '/guide/ade' },
@@ -33,7 +33,7 @@ export default defineConfig({
         items: [
           { text: 'Lab 1: Entra ID 目錄同步實作', link: '/guide/lab1' },
           { text: 'Lab 2: 裝置自動註冊模擬', link: '/guide/lab2' },
-          { text: 'Lab 3: 建立企業安全性藍圖', link: '/guide/lab3' },
+          { text: 'Lab 3: 建立企業安全性預設集', link: '/guide/lab3' },
           { text: 'Lab 4: App 大量部署實作', link: '/guide/lab4' },
           { text: 'Lab 5: macOS 套件建立與部署', link: '/guide/lab5' },
           { text: '🏆 實作檢核與結訓認證', link: '/guide/verify' }
@@ -55,7 +55,7 @@ export default defineConfig({
         text: '裝置部署與管理',
         items: [
           { text: '註冊方式與部署', link: '/guide/enrollment' },
-          { text: '加入藍圖與配置設定', link: '/guide/presets' },
+          { text: '加入預設集與配置設定', link: '/guide/presets' },
           { text: 'App 部署與訂閱管理', link: '/guide/apps' },
           { text: '套件部署簡介', link: '/guide/packages' },
           { text: '監管模式與安全性政策深潛', link: '/guide/ade' },
@@ -73,7 +73,7 @@ export default defineConfig({
         items: [
           { text: 'Lab 1: Entra ID 目錄同步實作', link: '/guide/lab1' },
           { text: 'Lab 2: 裝置自動註冊模擬', link: '/guide/lab2' },
-          { text: 'Lab 3: 建立企業安全性藍圖', link: '/guide/lab3' },
+          { text: 'Lab 3: 建立企業安全性預設集', link: '/guide/lab3' },
           { text: 'Lab 4: App 大量部署實作', link: '/guide/lab4' },
           { text: 'Lab 5: macOS 套件建立與部署', link: '/guide/lab5' },
           { text: '實作檢核與結訓認證', link: '/guide/verify' }

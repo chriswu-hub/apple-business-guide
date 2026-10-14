@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Apple Business 實務指南
   text: 現代化企業的 Apple 裝置管理與部署
-  tagline: 涵蓋 Apple 商務統一架構、Microsoft Entra ID 身分聯合、零接觸部署 (ADE)、藍圖配置與 5 大 Hands-on Labs 實戰
+  tagline: 涵蓋 Apple 商務統一架構、Microsoft Entra ID 身分聯合、零接觸部署 (ADE)、預設集配置與 5 大 Hands-on Labs 實戰
   actions:
     - theme: brand
       text: 開始探索學習 ➔
@@ -27,7 +27,7 @@ features:
     title: 零接觸自動註冊 (ADE)
     details: 採購出貨自動同步序號，開箱聯網即強制受管，搭配 Apple Configurator 實現現有機型快速收編。
   - icon: 📋
-    title: 藍圖與安全性組態
+    title: 預設集與安全性組態
     details: 預先配置 802.1X Wi-Fi、On-Demand VPN、密碼原則、FileVault 磁碟加密與防火牆。
   - icon: 📦
     title: App 與套件分發
@@ -57,8 +57,8 @@ features:
     </a>
     <a href="/apple-business-guide/guide/lab3.html" class="lab-card">
       <div class="lab-num">Lab 03</div>
-      <div class="lab-card-title">企業安全性藍圖</div>
-      <div class="lab-card-desc">配置密碼原則、鎖定畫面標籤與 FileVault，挑戰 Mac 系統即時防禦。</div>
+      <div class="lab-card-title">企業安全性預設集</div>
+      <div class="lab-card-desc">配置鎖定畫面標籤與應用程式層防火牆，挑戰 Mac 系統即時防禦。</div>
     </a>
     <a href="/apple-business-guide/guide/lab4.html" class="lab-card">
       <div class="lab-num">Lab 04</div>
