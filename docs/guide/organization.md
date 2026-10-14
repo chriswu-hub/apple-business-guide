@@ -46,11 +46,11 @@ business.apple.com → 填寫資訊 → 驗證機構(兩種方式，最多5天) 
 
 ---
 
-### 步驟 3：建立管理式 Apple 帳戶
-點選「下一步」後，建立首位管理員的 **管理式 Apple 帳戶**（填寫姓名、公務電郵、密碼以及接收驗證碼的手機號碼）：
+### 步驟 3：建立管理式 Apple 帳號
+點選「下一步」後，建立首位管理員的 **管理式 Apple 帳號**（填寫姓名、公務電郵、密碼以及接收驗證碼的手機號碼）：
 
 <div class="step-image-container">
-  <img src="/images/step3_account.png" alt="建立管理式 Apple 帳戶" class="step-image" />
+  <img src="/images/step3_account_v2.png" alt="建立管理式 Apple 帳號" class="step-image" />
 </div>
 
 ---
