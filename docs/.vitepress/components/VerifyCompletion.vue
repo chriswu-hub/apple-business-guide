@@ -18,6 +18,8 @@ const viewMode = ref('waiting')
 const selectedSeat = ref('01')
 const verifyTime = ref('')
 const showDemoBar = ref(false)
+const isSurveyCompleted = ref(false)
+const hasOpenedSurvey = ref(false)
 
 const currentStudent = computed(() => {
   return students.find(s => s.seat === selectedSeat.value) || students[0]
@@ -80,6 +82,17 @@ function switchToMacQrcode(seat) {
 function switchToMobileCert(seat) {
   selectedSeat.value = seat
   viewMode.value = 'mobile_cert'
+}
+
+function openSurvey() {
+  hasOpenedSurvey.value = true
+  if (typeof window !== 'undefined') {
+    window.open('https://zh.surveymonkey.com/r/QRSJFB5', '_blank')
+  }
+}
+
+function unlockCertificate() {
+  isSurveyCompleted.value = true
 }
 
 function printCertificate() {
@@ -183,73 +196,116 @@ function printCertificate() {
 
     <!-- 模式 3：手機端掃描通過 ➜ 呈現結訓證書 -->
     <div v-else-if="viewMode === 'mobile_cert'" class="certificate-wrapper">
+      <!-- 通關狀態標題 Banner -->
       <div class="success-banner">
         <div class="success-title">
           <span class="check-badge">✓</span>
-          恭喜！結訓數位證書已解鎖
+          <span v-if="isSurveyCompleted">恭喜！結訓數位證書已正式頒發</span>
+          <span v-else>身份核驗成功！請完成問卷以解鎖數位證書</span>
         </div>
         <div class="success-meta">
-          驗證來源：QR Code 掃描通關 ｜ 座號：Seat {{ currentStudent.seat }} ｜ 學員：{{ currentStudent.name }}
+          驗證來源：QR Code 掃描通關 ｜ 座號：Seat {{ currentStudent.seat }} ｜ 學員：{{ currentStudent.name }} ({{ currentStudent.dept }})
         </div>
       </div>
 
-      <div class="certificate-card">
-        <div class="cert-border">
-          <div class="cert-header">
-            <div class="apple-logo"></div>
-            <div class="cert-org">Apple at Work Enterprise Training</div>
-            <div class="cert-main-title">實務工作坊結訓認證</div>
+      <!-- 問卷調查解鎖引導卡 (尚未完成問卷時顯示) -->
+      <div v-if="!isSurveyCompleted" class="survey-gate-card">
+        <div class="survey-gate-header">
+          <span class="survey-icon">📝</span>
+          <div>
+            <div class="survey-gate-title">最後一步：填寫試教課程回饋問卷</div>
+            <div class="survey-gate-subtitle">為持續精進企業客戶與售前技術培訓，請花 3 分鐘填寫問卷，送出後即可解鎖正式證書！</div>
           </div>
+        </div>
 
-          <div class="cert-body">
-            <p class="cert-presents">茲證明</p>
-            <h2 class="cert-student-name">{{ currentStudent.name }}</h2>
-            <div class="cert-student-info">
-              <span class="dept-badge">{{ currentStudent.dept }}</span>
-              <span class="seat-badge">Seat {{ currentStudent.seat }}</span>
-              <span class="email-badge">{{ currentStudent.email }}</span>
+        <div class="survey-gate-actions">
+          <button class="survey-btn-open" @click="openSurvey">
+            📋 點此開啟 SurveyMonkey 問卷 ↗
+          </button>
+          <button
+            class="survey-btn-unlock"
+            :class="{ 'ready': hasOpenedSurvey }"
+            @click="unlockCertificate"
+          >
+            🎓 我已填寫完畢，立即解鎖證書
+          </button>
+        </div>
+        <div v-if="!hasOpenedSurvey" class="survey-tip">
+          💡 請先點擊上方按鈕前往完成問卷，完成後即可點選解鎖按鈕。
+        </div>
+      </div>
+
+      <!-- 證書外層容器 (帶毛玻璃遮罩動態切換) -->
+      <div class="certificate-container-rel">
+        <!-- 未解鎖時的磨砂毛玻璃遮罩覆蓋層 -->
+        <div v-if="!isSurveyCompleted" class="cert-blur-overlay">
+          <div class="lock-card">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">數位證書已加密封存</div>
+            <div class="lock-subtext">完成上方課程回饋問卷後即可點選解鎖</div>
+          </div>
+        </div>
+
+        <!-- 官方結訓數位證書 -->
+        <div class="certificate-card" :class="{ 'blurred-cert': !isSurveyCompleted }">
+          <div class="cert-border">
+            <div class="cert-header">
+              <div class="apple-logo"></div>
+              <div class="cert-org">Apple at Work Enterprise Training</div>
+              <div class="cert-main-title">實務工作坊結訓認證</div>
             </div>
 
-            <p class="cert-text">
-              已成功完成 <strong>Apple Business 企業部署與管理實務課程</strong>，全數通過以下核心技能實作考核：
-            </p>
-
-            <div class="skills-grid">
-              <div class="skill-pill">✓ Entra ID 目錄同步 (SCIM)</div>
-              <div class="skill-pill">✓ 零接觸自動註冊 (ADE)</div>
-              <div class="skill-pill">✓ 企業安全預設集（防火牆原則）</div>
-              <div class="skill-pill">✓ 免 Apple 帳號 App 大量分派</div>
-              <div class="skill-pill">✓ 自訂設定與 APNs 靜默派送</div>
-            </div>
-
-            <div class="cert-footer">
-              <div class="cert-footer-col">
-                <div class="footer-label">指派預設集</div>
-                <div class="footer-val">{{ currentStudent.seat }}的商務部門-Mac</div>
-                <div class="footer-label" style="margin-top: 8px;">頒發日期</div>
-                <div class="footer-val">{{ verifyTime }}</div>
+            <div class="cert-body">
+              <p class="cert-presents">茲證明</p>
+              <h2 class="cert-student-name">{{ currentStudent.name }}</h2>
+              <div class="cert-student-info">
+                <span class="dept-badge">{{ currentStudent.dept }}</span>
+                <span class="seat-badge">Seat {{ currentStudent.seat }}</span>
+                <span class="email-badge">{{ currentStudent.email }}</span>
               </div>
 
-              <div class="cert-seal">
-                <div class="seal-inner">
-                  <span class="seal-star">★ ★ ★</span>
-                  <span class="seal-text">MDM VERIFIED</span>
-                  <span class="seal-code">{{ verifyCode }}</span>
+              <p class="cert-text">
+                已成功完成 <strong>Apple Business 企業部署與管理實務課程</strong>，全數通過以下核心技能實作考核：
+              </p>
+
+              <div class="skills-grid">
+                <div class="skill-pill">✓ Entra ID 目錄同步 (SCIM)</div>
+                <div class="skill-pill">✓ 零接觸自動註冊 (ADE)</div>
+                <div class="skill-pill">✓ 企業安全預設集（防火牆原則）</div>
+                <div class="skill-pill">✓ 免 Apple 帳號 App 大量分派</div>
+                <div class="skill-pill">✓ 自訂設定與 APNs 靜默派送</div>
+              </div>
+
+              <div class="cert-footer">
+                <div class="cert-footer-col">
+                  <div class="footer-label">指派預設集</div>
+                  <div class="footer-val">{{ currentStudent.seat }}的商務部門-Mac</div>
+                  <div class="footer-label" style="margin-top: 8px;">頒發日期</div>
+                  <div class="footer-val">{{ verifyTime }}</div>
+                </div>
+
+                <div class="cert-seal">
+                  <div class="seal-inner">
+                    <span class="seal-star">★ ★ ★</span>
+                    <span class="seal-text">MDM VERIFIED</span>
+                    <span class="seal-code">{{ verifyCode }}</span>
+                  </div>
+                </div>
+
+                <div class="cert-footer-col text-right">
+                  <div class="footer-label">認證單位</div>
+                  <div class="footer-val">Apple at Work Training Team</div>
+                  <div class="footer-label" style="margin-top: 8px;">驗證通道</div>
+                  <div class="footer-val">QR Code Verified</div>
                 </div>
               </div>
-
-              <div class="cert-footer-col text-right">
-                <div class="footer-label">認證單位</div>
-                <div class="footer-val">Apple at Work Training Team</div>
-                <div class="footer-label" style="margin-top: 8px;">驗證通道</div>
-                <div class="footer-val">QR Code Verified</div>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="cert-actions">
+      <!-- 操作按鈕列 -->
+      <div v-if="isSurveyCompleted" class="cert-actions">
         <button class="cert-btn primary" @click="printCertificate">
           📸 截圖保存 / 另存為 PDF 證書
         </button>
@@ -771,12 +827,164 @@ function printCertificate() {
 }
 
 @media print {
-  .verify-waiting-card, .mac-qrcode-card, .cert-actions, .success-banner, nav, header, aside, .VPNav, .VPSidebar, .VPDocFooter {
+  .verify-waiting-card, .mac-qrcode-card, .cert-actions, .success-banner, .survey-gate-card, .cert-blur-overlay, nav, header, aside, .VPNav, .VPSidebar, .VPDocFooter {
     display: none !important;
   }
   .certificate-card {
     box-shadow: none;
     border: none;
+    filter: none !important;
+    opacity: 1 !important;
   }
+}
+
+/* ============================================================
+   方式 A：問卷解鎖機制與毛玻璃模糊遮罩樣式
+   ============================================================ */
+.survey-gate-card {
+  background: var(--vp-c-bg-soft);
+  border: 1.5px solid var(--vp-c-brand-1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 113, 227, 0.08);
+}
+.survey-gate-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+.survey-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+.survey-gate-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.25rem;
+}
+.survey-gate-subtitle {
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.5;
+}
+.survey-gate-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.survey-btn-open {
+  flex: 1;
+  min-width: 220px;
+  background: #0071e3;
+  color: #ffffff;
+  padding: 0.85rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
+  transition: all 0.2s ease;
+}
+.survey-btn-open:hover {
+  background: #0077ed;
+  transform: translateY(-1px);
+}
+.survey-btn-unlock {
+  flex: 1;
+  min-width: 220px;
+  background: var(--vp-c-bg);
+  border: 1.5px solid var(--vp-c-divider);
+  color: var(--vp-c-text-2);
+  padding: 0.85rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.survey-btn-unlock.ready {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+  animation: pulse-ready 1.8s infinite;
+}
+.survey-btn-unlock.ready:hover {
+  background: #15803d;
+}
+.survey-tip {
+  font-size: 0.82rem;
+  color: var(--vp-c-text-2);
+  margin-top: 0.85rem;
+}
+
+@keyframes pulse-ready {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* 證書毛玻璃效果 */
+.certificate-container-rel {
+  position: relative;
+}
+.blurred-cert {
+  filter: blur(8px);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: all 0.4s ease;
+}
+.cert-blur-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.lock-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 18px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  max-width: 380px;
+}
+.dark .lock-card {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(51, 65, 85, 0.9);
+}
+.lock-icon {
+  font-size: 2.6rem;
+  margin-bottom: 0.75rem;
+}
+.lock-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.35rem;
+}
+.lock-subtext {
+  font-size: 0.88rem;
+  color: var(--vp-c-text-2);
+  line-height: 1.5;
 }
 </style>
