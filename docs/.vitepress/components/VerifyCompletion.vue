@@ -20,9 +20,14 @@ const verifyTime = ref('')
 const showDemoBar = ref(false)
 const isSurveyCompleted = ref(false)
 const hasOpenedSurvey = ref(false)
+const customStudentName = ref('')
 
 const currentStudent = computed(() => {
-  return students.find(s => s.seat === selectedSeat.value) || students[0]
+  const base = students.find(s => s.seat === selectedSeat.value) || students[0]
+  return {
+    ...base,
+    displayName: customStudentName.value.trim() ? customStudentName.value.trim() : base.name
+  }
 })
 
 const verifyCode = computed(() => {
@@ -204,7 +209,7 @@ function printCertificate() {
           <span v-else>身份核驗成功！請完成問卷以解鎖數位證書</span>
         </div>
         <div class="success-meta">
-          驗證來源：QR Code 掃描通關 ｜ 座號：Seat {{ currentStudent.seat }} ｜ 學員：{{ currentStudent.name }} ({{ currentStudent.dept }})
+          驗證來源：QR Code 掃描通關 ｜ 座號：Seat {{ currentStudent.seat }} ｜ 學員：{{ currentStudent.displayName }} ({{ currentStudent.dept }})
         </div>
       </div>
 
@@ -235,6 +240,27 @@ function printCertificate() {
         </div>
       </div>
 
+      <!-- 自訂學員姓名列 (解鎖後顯示，方便學員客製化姓名印在證書上) -->
+      <div v-if="isSurveyCompleted" class="custom-name-bar">
+        <div class="custom-name-label">
+          <span class="edit-icon">✏️</span>
+          <span>客製化證書姓名：</span>
+        </div>
+        <input
+          v-model="customStudentName"
+          type="text"
+          class="custom-name-input"
+          :placeholder="'輸入你的姓名（預設：' + currentStudent.name + '）'"
+        />
+        <button
+          v-if="customStudentName"
+          class="custom-name-reset-btn"
+          @click="customStudentName = ''"
+        >
+          重設
+        </button>
+      </div>
+
       <!-- 證書外層容器 (帶毛玻璃遮罩動態切換) -->
       <div class="certificate-container-rel">
         <!-- 未解鎖時的磨砂毛玻璃遮罩覆蓋層 -->
@@ -257,7 +283,7 @@ function printCertificate() {
 
             <div class="cert-body">
               <p class="cert-presents">茲證明</p>
-              <h2 class="cert-student-name">{{ currentStudent.name }}</h2>
+              <h2 class="cert-student-name">{{ currentStudent.displayName }}</h2>
               <div class="cert-student-info">
                 <span class="dept-badge">{{ currentStudent.dept }}</span>
                 <span class="seat-badge">Seat {{ currentStudent.seat }}</span>
@@ -827,7 +853,7 @@ function printCertificate() {
 }
 
 @media print {
-  .verify-waiting-card, .mac-qrcode-card, .cert-actions, .success-banner, .survey-gate-card, .cert-blur-overlay, nav, header, aside, .VPNav, .VPSidebar, .VPDocFooter {
+  .verify-waiting-card, .mac-qrcode-card, .cert-actions, .success-banner, .survey-gate-card, .cert-blur-overlay, .custom-name-bar, nav, header, aside, .VPNav, .VPSidebar, .VPDocFooter {
     display: none !important;
   }
   .certificate-card {
@@ -836,6 +862,59 @@ function printCertificate() {
     filter: none !important;
     opacity: 1 !important;
   }
+}
+
+/* ============================================================
+   客製化姓名輸入列
+   ============================================================ */
+.custom-name-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.custom-name-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+}
+.custom-name-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--vp-c-brand-1);
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font-size: 0.95rem;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.custom-name-input:focus {
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
+}
+.custom-name-reset-btn {
+  padding: 0.45rem 0.85rem;
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.custom-name-reset-btn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
 }
 
 /* ============================================================
